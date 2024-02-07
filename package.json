@@ -7,7 +7,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build:web": "npx expo export -p web"
+    "build:web": "npx expo export -p web",
+    "start:web": "npx serve dist --single",
+    "deploy:web": "npx expo export -p web && netlify deploy --dir dist && netlify deploy --prod"
   },
   "dependencies": {
     "expo": "~50.0.6",
