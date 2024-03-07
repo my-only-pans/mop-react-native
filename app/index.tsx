@@ -9,6 +9,12 @@ function Home() {
       <Link href="/recipes">
         <Text>Recipes</Text>
       </Link>
+      <Link href="/createrecipe">
+        <Text>Create a Recipe</Text>
+      </Link>
+      <Link href="/updaterecipe">
+        <Text>Update Recipe</Text>
+      </Link>
     </View>
   );
 }
