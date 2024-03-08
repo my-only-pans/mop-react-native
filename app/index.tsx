@@ -1,14 +1,16 @@
 import { Link } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
+import Sidebar from "../components/Sidebar";
 
 function Home() {
   return (
-    <View>
-      <Text>This is the Home Screen of My Only Pans</Text>
-      <Link href="/recipes">
-        <Text>Recipes</Text>
-      </Link>
+    <View style={{ padding: 32 }}>
+      <Text>
+        This is a sample page that will be used to route to views that are being
+        developed for mobile
+      </Text>
+      {Platform.OS !== "web" ? <Sidebar /> : null}
     </View>
   );
 }
