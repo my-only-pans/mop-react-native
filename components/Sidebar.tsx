@@ -14,6 +14,9 @@ const routes = [
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
   { href: "/users/login", label: "Login" },
+  { href: "/recipes/create", label: "Create Recipe" },
+  { href: "/recipes/update", label: "Update Recipe" },
+
 ];
 
 const styles = StyleSheet.create({
