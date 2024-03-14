@@ -65,15 +65,20 @@ function Registration() {
     }
 
     axios
-      .post("http://localhost:3000/user", {
-        firstName,
-        lastName,
-        email,
-        phone,
-        username,
-        password,
-        confirmPassword,
-      })
+      .post(
+        Platform.OS === "web"
+          ? "http://localhost:3000/user" // TODO refactor using env
+          : "http://10.0.2.2:3000/user",
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          username,
+          password,
+          confirmPassword,
+        }
+      )
       .then(function (response) {
         setStatus({
           type: "success",
@@ -81,6 +86,7 @@ function Registration() {
         });
       })
       .catch(function (error) {
+        console.log(JSON.stringify(error));
         if (error.response?.data) {
           return setStatus({ type: "failed", message: error.response.data });
         } else {
