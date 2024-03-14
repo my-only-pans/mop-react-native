@@ -1,30 +1,106 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Platform,
-  Dimensions,
 } from "react-native";
+import { firebaseAuth } from "../../../firebase/firebaseApp";
+import axios from "axios";
+import { Snackbar } from "react-native-paper";
+
+interface Status {
+  type: "success" | "failed";
+  message: string;
+}
 
 function Registration() {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [contactnumber, setContactNumber] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmpassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("Hector");
+  const [lastName, setLastname] = useState("Robles");
+  const [email, setEmail] = useState("hjt.robles@gmail.com");
+  const [phone, setPhone] = useState("1231231234");
+  const [username, setUsername] = useState("hrobles");
+  const [password, setPassword] = useState("password123");
+  const [confirmPassword, setConfirmPassword] = useState("password123");
+  const [status, setStatus] = useState<Status | null>(null);
+
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+  const handleSubmit = async () => {
+    const newErrorMessages = [];
+
+    if (!firstName) {
+      newErrorMessages.push("First Name is required");
+    }
+    if (!lastName) {
+      newErrorMessages.push("Last Name is required");
+    }
+    if (!email) {
+      newErrorMessages.push("Email is required");
+    }
+    if (!phone) {
+      newErrorMessages.push("Contact Number is required");
+    }
+    if (!username) {
+      newErrorMessages.push("Username is required");
+    }
+    if (!password) {
+      newErrorMessages.push("Password is required");
+    }
+    if (!confirmPassword) {
+      newErrorMessages.push("Confirm Password is required");
+    }
+    if (password !== confirmPassword) {
+      newErrorMessages.push("Password should match");
+    }
+
+    setErrorMessages(newErrorMessages);
+
+    if (newErrorMessages.length) {
+      return;
+    }
+
+    axios
+      .post("http://localhost:3000/user", {
+        firstName,
+        lastName,
+        email,
+        phone,
+        username,
+        password,
+        confirmPassword,
+      })
+      .then(function (response) {
+        setStatus({
+          type: "success",
+          message: "You have registered successfully. Please login.",
+        });
+      })
+      .catch(function (error) {
+        if (error.response?.data) {
+          return setStatus({ type: "failed", message: error.response.data });
+        } else {
+          return setStatus({ type: "failed", message: error.message });
+        }
+      });
+  };
 
   return (
     <View style={styles.container}>
       <View style={[styles.content]}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Create an account</Text>
+          <View style={styles.errorContainer}>
+            {errorMessages.map((message) => (
+              <Text key={message} style={styles.errorMessage}>
+                {message}
+              </Text>
+            ))}
+          </View>
           <Text style={styles.subHeader}>
             Enter the following information to create an account
           </Text>
@@ -34,13 +110,13 @@ function Registration() {
             <TextInput
               style={styles.input}
               placeholder="First Name"
-              value={firstname}
+              value={firstName}
               onChangeText={setFirstName}
             />
             <TextInput
               style={styles.input}
               placeholder="Last Name"
-              value={lastname}
+              value={lastName}
               onChangeText={setLastname}
             />
             <TextInput
@@ -52,8 +128,8 @@ function Registration() {
             <TextInput
               style={styles.input}
               placeholder="Contact Number"
-              value={contactnumber}
-              onChangeText={setContactNumber}
+              value={phone}
+              onChangeText={setPhone}
             />
           </View>
           <View style={[styles.column]}>
@@ -74,11 +150,11 @@ function Registration() {
               style={styles.input}
               placeholder="Confirm Password"
               secureTextEntry
-              value={confirmpassword}
+              value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnText}>Sign - up</Text>
+            <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+              <Text style={styles.btnText}>Sign-up</Text>
             </TouchableOpacity>
             <Text style={styles.subHeader}>
               Already have an account?<Link href="/"> Sign in</Link>
@@ -86,6 +162,27 @@ function Registration() {
           </View>
         </View>
       </View>
+      <Snackbar
+        visible={!!status}
+        onDismiss={() => setStatus(null)}
+        action={
+          status?.type === "success"
+            ? {
+                label: "Login",
+                onPress: () => {
+                  router.push("/user/login");
+                },
+              }
+            : {
+                label: "Close",
+                onPress: () => {
+                  setStatus(null);
+                },
+              }
+        }
+      >
+        {status?.message}
+      </Snackbar>
     </View>
   );
 }
@@ -95,6 +192,7 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "web" ? 80 : 0,
     alignItems: "center",
     padding: 20,
+    flex: 1,
   },
   content: {
     maxWidth: 900,
@@ -108,6 +206,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 2,
     textAlign: "left",
+  },
+  errorContainer: {
+    height: 150,
+    padding: 20,
+  },
+  errorMessage: {
+    color: "#C1554D",
   },
   row: {
     flexDirection: Platform.OS !== "web" ? "column" : "row",
