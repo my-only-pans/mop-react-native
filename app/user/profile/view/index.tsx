@@ -1,28 +1,32 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from 'react';
+import UpdateProfile from "../update";
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 
+function ProfileView() {
+    const [dietaryPreference, setDietaryPreference] = useState('');
+    const [cuisine, setCuisine] = useState('');
+    const [prepCook, setPrepCook] = useState('');
+    const [servingSize, setServingSize] = useState('');
+    const [editableFields, setEditableFields] = useState(false);
 
-function Registration() {
-    const [firstname, setFirstName] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [contactnumber, setContactNumber] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmpassword, setConfirmPassword] = useState('');
+    const EditMyPreferences = () => {
+        setEditableFields(!editableFields);
+    };
 
     return (
-        
+
         <View style={styles.container}>
 
             <Text style={styles.header}>MyProfile</Text>
 
-            <Image
-                source={require('../../../assets/img-placeholder.png')}
-                style={styles.image}
-            />
+            <View style={styles.profilePicture}>
+                <Image
+                    source={require('../../../../assets/sample.png')}
+                    style={styles.image}
+                />
+            </View>
             <View>
                 <Text style={styles.userFullName}>Leviel Kulet</Text>
                 <Text style={styles.userName}>@levielkulet</Text>
@@ -37,44 +41,49 @@ function Registration() {
             <TextInput
                 style={styles.input}
                 placeholder="Vegan"
-                value={email}
-                onChangeText={setEmail}
-                editable={false}
+                value={dietaryPreference}
+                onChangeText={setDietaryPreference}
+                editable={editableFields}
             />
             <Text style={styles.label}>Cuisine:</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Filipino"
-                value={email}
-                onChangeText={setEmail}
-                editable={false}
+                value={cuisine}
+                onChangeText={setCuisine}
+                editable={editableFields}
             />
             <Text style={styles.label}>Prep & Cook Time:</Text>
             <TextInput
                 style={styles.input}
                 placeholder="1 hour"
-                value={email}
-                onChangeText={setEmail}
-                editable={false}
+                value={prepCook}
+                onChangeText={setPrepCook}
+                editable={editableFields}
             />
             <Text style={styles.label}>Serves:</Text>
             <TextInput
                 style={styles.input}
                 placeholder="2"
-                value={email}
-                onChangeText={setEmail}
-                editable={false}
+                value={servingSize}
+                onChangeText={setServingSize}
+                editable={editableFields}
             />
 
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={EditMyPreferences}>
                 <Text style={styles.btnText}>Edit Preferences</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
+            {/* <Text>{label}</Text> */}
+
+
+            <TouchableOpacity style={styles.btn} onPress={() => { router.push('/user/profile/update');}}>
                 <Text style={styles.btnText}>Edit Profile</Text>
             </TouchableOpacity>
         </View>
     );
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -83,6 +92,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         padding: 20,
+    },
+    profilePicture: {
+        backgroundColor: 'red',
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        alignItems: 'center',
+        overflow: 'hidden',
     },
     // container2: {
     //     flex: 1,
@@ -97,7 +114,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 10,
         textAlign: 'left',
     },
     userFullName: {
@@ -124,6 +141,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 60,
+        color: 'black',
         width: '100%',
         borderColor: '#E6E0E9',
         backgroundColor: '#E6E0E9',
@@ -131,10 +149,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
+
     },
     image: {
         alignItems: 'center',
-        marginTop: 20,
+        // marginTop: 10,
         width: 120,
         height: 120,
     },
@@ -156,4 +175,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Registration;
+export default ProfileView;
