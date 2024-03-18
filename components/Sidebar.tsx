@@ -10,7 +10,7 @@ const routes = [
   { href: "/fridge", label: "My Fridge" },
   { href: "/equipment", label: "My Equipment" },
   { href: "/profile", label: "My Profile" },
-  { href: "/about", label: "About us" },
+  { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
   { href: "/user/login", label: "Login" },
