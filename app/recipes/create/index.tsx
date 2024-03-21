@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Platform, Button } from "react-native";
 import { TextInput } from "react-native-paper";
+import Tags from "react-native-tags";
 //import MultiSteps from "react-native-multi-steps";
 
 interface Props { }
@@ -49,6 +50,8 @@ function CreateRecipe(props: Props) {
     const [owner, setOwner] = useState(); //set to username or userID of current user
     //create error or prompt to login first before they can create a recipe
 
+    const [savedEquipments, setSavedEquipments] = useState(['pan', 'oven', 'knife']);
+
     const [formStep, setFormStep] = useState(1);
 
     const onNext = () => {
@@ -61,6 +64,24 @@ function CreateRecipe(props: Props) {
         if (formStep > 1) {
             setFormStep(prevStep => prevStep - 1);
         }
+    };
+
+    useEffect(() => {
+        // Fetch saved equipments from API or any other source and set them in savedEquipments state
+        // For now, I'll just set sampleEquipments as an example
+        setSavedEquipments(sampleRecipe.equipments);
+    }, []);
+
+    const handleAddEquipment = () => {
+        //const handleAddEquipment = (newEquipment) => {
+        //setEquipments([...equipments, newEquipment]);
+    };
+
+    const handleTagPress = (tag: string) => {
+        // Implement the logic here to handle the tag press
+        // For example, you might want to remove the tag from the list of equipments
+        //const updatedEquipments = savedEquipments.filter(item => item !== tag);
+        //setEquipments(updatedEquipments);
     };
 
 
@@ -123,7 +144,7 @@ function CreateRecipe(props: Props) {
                             <TextInput
                                 label="Cook Time"
                                 // style={styles.input}
-                                placeholder="Cook Time"
+                                placeholder="Cook Time in minutes"
                                 value={cookTime}
                                 onChangeText={setCookTime}
                                 keyboardType="numeric"
@@ -131,7 +152,7 @@ function CreateRecipe(props: Props) {
                             <TextInput
                                 label="Serving"
                                 //style={styles.input}
-                                placeholder="Serving"
+                                placeholder="Serves how many person"
                                 value={serving}
                                 onChangeText={setServing}
                                 keyboardType="numeric"
@@ -152,7 +173,7 @@ function CreateRecipe(props: Props) {
 
                         < View style={[styles.column]}>
 
-                            <TextInput
+                            {/* <TextInput
                                 label="Equipments"
                                 //style={styles.input}
                                 placeholder="Equipments Needed"
@@ -160,7 +181,24 @@ function CreateRecipe(props: Props) {
                                 editable
                                 multiline
                                 numberOfLines={2}
-                            />
+                            /> */}
+
+                            <label>Equipments:
+                                <Tags
+                                    initialTags={savedEquipments} //list of savedEquipments in db
+                                    // onChangeTags={handleAddEquipment} 
+                                    containerStyle={styles.tagsContainer}
+                                    inputStyle={styles.tagInput}
+                                    renderTag={({ tag, index, onPress }) => (
+                                        <TouchableOpacity
+                                            key={`${tag}-${index}`}
+                                            onPress={() => handleTagPress(tag)}
+                                            style={styles.tag}>
+                                            <Text style={styles.tagText}>{tag}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                            </label>
 
                             <TextInput
                                 label="Notes"
@@ -299,5 +337,28 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 20,
+    },
+    tagsContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "flex-start",
+    },
+    tagInput: {
+        backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: "gray",
+        padding: 8,
+        borderRadius: 8,
+        fontSize: 16,
+    },
+    tag: {
+        backgroundColor: "#007bff",
+        padding: 8,
+        margin: 4,
+        borderRadius: 8,
+    },
+    tagText: {
+        color: "white",
+        fontSize: 16,
     },
 });
