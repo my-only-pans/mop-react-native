@@ -18,6 +18,7 @@ const routes = [
   { href: "/recipes/create", label: "Create Recipe" },
   { href: "/recipes/update", label: "Update Recipe" },
   { href: "/test", label: "Test" },
+  { href: "/myrecipes", label: "My Recipes" },
 ];
 
 const styles = StyleSheet.create({
