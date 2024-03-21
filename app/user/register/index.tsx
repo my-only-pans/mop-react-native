@@ -20,13 +20,13 @@ interface Status {
 }
 
 function Registration() {
-  const [firstName, setFirstName] = useState("Hector");
-  const [lastName, setLastname] = useState("Robles");
-  const [email, setEmail] = useState("hjt.robles@gmail.com");
-  const [phone, setPhone] = useState("1231231234");
-  const [username, setUsername] = useState("hrobles");
-  const [password, setPassword] = useState("password123");
-  const [confirmPassword, setConfirmPassword] = useState("password123");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<Status | null>(null);
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
