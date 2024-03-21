@@ -12,6 +12,7 @@ import {
 import { firebaseAuth } from "../../../firebase/firebaseApp";
 import axios from "axios";
 import { Snackbar } from "react-native-paper";
+import getServerUrl from "../../../utils/getServerUrl";
 
 interface Status {
   type: "success" | "failed";
@@ -65,20 +66,15 @@ function Registration() {
     }
 
     axios
-      .post(
-        Platform.OS === "web"
-          ? "http://localhost:3000/user" // TODO refactor using env
-          : "http://10.0.2.2:3000/user",
-        {
-          firstName,
-          lastName,
-          email,
-          phone,
-          username,
-          password,
-          confirmPassword,
-        }
-      )
+      .post(getServerUrl(), {
+        firstName,
+        lastName,
+        email,
+        phone,
+        username,
+        password,
+        confirmPassword,
+      })
       .then(function (response) {
         setStatus({
           type: "success",
