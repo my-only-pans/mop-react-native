@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import About_Us_Page from "../../components/pages/about_us/About_Us_Page";
 
 interface Props {}
