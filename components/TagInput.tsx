@@ -4,6 +4,8 @@ import {
     StyleSheet,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
+import Tags from 'react-native-tags';
+
 
 interface TagInputProps {
     label?: string;
