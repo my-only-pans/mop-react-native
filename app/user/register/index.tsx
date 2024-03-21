@@ -13,6 +13,7 @@ import { firebaseAuth } from "../../../firebase/firebaseApp";
 import axios from "axios";
 import { Snackbar } from "react-native-paper";
 import getServerUrl from "../../../utils/getServerUrl";
+import colors from "../../../theme/colors";
 
 interface Status {
   type: "success" | "failed";
@@ -159,7 +160,11 @@ function Registration() {
               <Text style={styles.btnText}>Sign-up</Text>
             </TouchableOpacity>
             <Text style={styles.subHeader}>
-              Already have an account?<Link href="/"> Sign in</Link>
+              Already have an account?
+              <Link href="/user/login" style={styles.link}>
+                {" "}
+                Sign in
+              </Link>
             </Text>
           </View>
         </View>
@@ -255,6 +260,9 @@ const styles = StyleSheet.create({
     color: "#00332C",
     backgroundColor: "#FAAE2B",
     fontSize: 16,
+  },
+  link: {
+    color: colors.info,
   },
 });
 

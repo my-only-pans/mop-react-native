@@ -139,8 +139,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
     padding: 20,
+    maxWidth: 400,
+    width: "100%",
+    marginHorizontal: "auto",
   },
   img: {
     padding: 80,
