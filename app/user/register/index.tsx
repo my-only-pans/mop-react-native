@@ -67,7 +67,7 @@ function Registration() {
     }
 
     axios
-      .post(getServerUrl(), {
+      .post(`${getServerUrl()}/user`, {
         firstName,
         lastName,
         email,
@@ -170,6 +170,7 @@ function Registration() {
         </View>
       </View>
       <Snackbar
+        wrapperStyle={styles.feedback}
         visible={!!status}
         onDismiss={() => setStatus(null)}
         action={
@@ -263,6 +264,10 @@ const styles = StyleSheet.create({
   },
   link: {
     color: colors.info,
+  },
+  feedback: {
+    position: "absolute",
+    top: 0,
   },
 });
 
