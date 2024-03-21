@@ -3,7 +3,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
-import MultiSteps from "react-native-multi-steps";
 
 
 function ViewMyRecipes(){
