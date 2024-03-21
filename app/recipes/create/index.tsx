@@ -3,10 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Platform, Button } from "react-native";
 import { TextInput } from "react-native-paper";
-import Tags from "react-native-tags";
-//import MultiSteps from "react-native-multi-steps";
-
-interface Props { }
+import TagInput from '../../../components/TagInput';
 
 interface RecipeInput {
     title: string;
@@ -27,23 +24,23 @@ const sampleRecipe = {
     title: 'Ramen',
     description: "This is a ramen",
     serving: 2,
-    equipments: ['pan', 'oven'],
+    equipments: ['pan', 'oven','knife', 'strainer'],
     ingredients: { item: 'chicken', qty: 2, unit: 'pcs' },
-    categories: ['noodles', 'Japanese'],
+    categories: ['noodles', 'Japanese', 'Quick and Easy'],
     prepTime: 10,
     cookTime: 10,
     notes: "this is a sample note",
     owner: "userName",
 }
 
-function CreateRecipe(props: Props) {
+function CreateRecipe(props: RecipeInput) {
     const { } = props;
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [serving, setServing] = useState('');
-    const [equipments, setEquipments] = useState([]);
+    const [equipments, setEquipments] = useState<string[]>([]);
     const [ingredients, setIngredients] = useState({ item: '', qty: '', unit: '' });
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<string[]>([]);
     const [prepTime, setPrepTime] = useState('');
     const [cookTime, setCookTime] = useState('');
     const [notes, setNotes] = useState('');
@@ -66,24 +63,24 @@ function CreateRecipe(props: Props) {
         }
     };
 
-    useEffect(() => {
-        // Fetch saved equipments from API or any other source and set them in savedEquipments state
-        // For now, I'll just set sampleEquipments as an example
-        setSavedEquipments(sampleRecipe.equipments);
-    }, []);
+    // useEffect(() => {
+    //     // Fetch saved equipments from API or any other source and set them in savedEquipments state
+    //     // For now, I'll just set sampleEquipments as an example
+    //     setSavedEquipments(sampleRecipe.equipments);
+    // }, []);
 
-    const handleAddEquipment = () => {
-        //const handleAddEquipment = (newEquipment) => {
-        //setEquipments([...equipments, newEquipment]);
+    const handleAddEquipment = (newEquipment: string[]) => {
+        // Add new equipment to the current state and global state
+        setEquipments([...equipments, ...newEquipment]);
+        //setGlobalEquipments([...GlobalEquipments, ...newEquipment]);
     };
-
-    const handleTagPress = (tag: string) => {
-        // Implement the logic here to handle the tag press
-        // For example, you might want to remove the tag from the list of equipments
-        //const updatedEquipments = savedEquipments.filter(item => item !== tag);
-        //setEquipments(updatedEquipments);
+    
+    const handleAddCategory = (newCategories: string[]) => {
+        // Add new categories to the current state and global state
+        setCategories([...categories, ...newCategories]);
+        //setGlobalCategories([...GlobalCategories, ...newCategories]);
     };
-
+    
 
     return (
         <View style={styles.container}>
@@ -95,16 +92,6 @@ function CreateRecipe(props: Props) {
                         <Text style={styles.subHeader}>
                             Enter the following information to upload your own recipe.
                         </Text>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.btnStep}
-                            onPress={onPrev}>
-                            <Text style={styles.btnText}>Previous Step</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnStep}
-                            onPress={onNext}>
-                            <Text style={styles.btnText}>Next Step</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -172,53 +159,32 @@ function CreateRecipe(props: Props) {
                     {formStep === 2 && (
 
                         < View style={[styles.column]}>
+                            <TagInput
+                                tags={equipments}
+                                label='Equipments:'
+                                placeholder="Add an equipment needed"
+                                onUpdateTags={handleAddEquipment}
+                            />
 
-                            {/* <TextInput
-                                label="Equipments"
-                                //style={styles.input}
-                                placeholder="Equipments Needed"
-                                value=''
-                                editable
-                                multiline
-                                numberOfLines={2}
-                            /> */}
+                            <TagInput
+                                tags={categories}
+                                label='Categories:'
+                                placeholder="Add category tag"
+                                onUpdateTags={handleAddCategory}
 
-                            <label>Equipments:
-                                <Tags
-                                    initialTags={savedEquipments} //list of savedEquipments in db
-                                    // onChangeTags={handleAddEquipment} 
-                                    containerStyle={styles.tagsContainer}
-                                    inputStyle={styles.tagInput}
-                                    renderTag={({ tag, index, onPress }) => (
-                                        <TouchableOpacity
-                                            key={`${tag}-${index}`}
-                                            onPress={() => handleTagPress(tag)}
-                                            style={styles.tag}>
-                                            <Text style={styles.tagText}>{tag}</Text>
-                                        </TouchableOpacity>
-                                    )}
-                                />
-                            </label>
+                            />
 
                             <TextInput
                                 label="Notes"
                                 //style={styles.input}
-                                placeholder="Notes"
+                                placeholder="Additional Notes"
                                 value={notes}
                                 onChangeText={setNotes}
                                 editable
                                 multiline
                                 numberOfLines={2}
                             />
-                            <TextInput
-                                label="Categories"
-                                //style={styles.input}
-                                placeholder="Categories"
-                                value=""
-                                editable
-                                multiline
-                                numberOfLines={2}
-                            />
+
                         </View>
                     )}
                     {/* Step 3 */}
@@ -243,11 +209,22 @@ function CreateRecipe(props: Props) {
                                 </TouchableOpacity>
                                 <Text style={styles.subHeader}>or<Link href="/"> Cancel</Link></Text>
                             </View>
+                            <View style={styles.divider}></View>
                         </View>
+                        
                     )}
 
                 </View>
-
+                <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.btnStep}
+                            onPress={onPrev}>
+                            <Text style={styles.btnText}>Previous Step</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnStep}
+                            onPress={onNext}>
+                            <Text style={styles.btnText}>Next Step</Text>
+                        </TouchableOpacity>
+                    </View>
 
             </View>
 
@@ -360,5 +337,10 @@ const styles = StyleSheet.create({
     tagText: {
         color: "white",
         fontSize: 16,
+    },
+    divider: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        marginVertical: 10,
     },
 });

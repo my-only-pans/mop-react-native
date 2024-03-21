@@ -5,17 +5,8 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity } from "react-nativ
 import { Button } from "react-native-paper";
 import MultiSteps from "react-native-multi-steps";
 
-interface Props { }
 
-interface MyRecipes {
-
-}
-
-interface SavedRecipes {
-
-}
-
-function ViewMyRecipes(props: Props){
+function ViewMyRecipes(){
 
 
     return (
