@@ -1,19 +1,13 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
 import { firebaseAuth } from "../../../firebase/firebaseApp";
 import colors from "../../../theme/colors";
 import axios from "axios";
 import getServerUrl from "../../../utils/getServerUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Snackbar, TextInput } from "react-native-paper";
 
 interface FirebaseUser extends User {
   accessToken?: string; // Extend the interface to include accessToken
@@ -23,80 +17,64 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const getAuthToken = async (firebaseToken: string) => {
-    const {
-      data: { authToken },
-    } = await axios.post(`${getServerUrl()}/user/login`, {
-      firebaseToken,
-    });
-
-    if (!authToken) {
-      throw new Error("Login failed. Please try again.");
-    }
-
-    axios
-      .get(`${getServerUrl()}/user/myProfile`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-      .then(function (response) {
-        console.log(response);
-        setLoading(false);
-
-        const authToken = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("Authorization="));
-
-        if (authToken) {
-          // Extract the value of the 'Authorization' cookie
-          const tokenValue = authToken.split("=")[1];
-          console.log("Authorization token:", tokenValue);
-        } else {
-          console.log("Authorization cookie not found");
-        }
-      })
-      .catch(function (error) {
-        setLoading(false);
-        console.log(JSON.stringify(error));
-        // if (error.response?.data) {
-        //   return setStatus({ type: "failed", message: error.response.data });
-        // } else {
-        //   return setStatus({ type: "failed", message: error.message });
-        // }
-      });
-  };
+  const [error, setError] = useState<string | null>();
 
   const handleSubmit = async () => {
     setLoading(true);
-    signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user: FirebaseUser = userCredential.user;
-        console.log(user.accessToken);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      const user: FirebaseUser = userCredential.user;
 
-        if (user.accessToken) {
-          getAuthToken(user.accessToken);
-        } else {
-          throw new Error("Invalid login credentials.");
-        }
-      })
-      .catch((error) => {
-        const errorCode = error?.code;
-        const errorMessage = error?.message;
+      if (!user.accessToken) {
+        throw new Error("Invalid login credentials.");
+      }
 
-        console.log(errorCode, errorMessage);
-        setLoading(false);
+      const {
+        data: { authToken },
+      } = await axios.post(`${getServerUrl()}/user/login`, {
+        firebaseToken: user.accessToken,
       });
+
+      if (!authToken) {
+        throw new Error("Login failed. Please try again.");
+      }
+
+      const { data: myProfile } = await axios.get(
+        `${getServerUrl()}/user/myProfile`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      const myProfileString = JSON.stringify(myProfile);
+
+      if (Platform.OS === "web") {
+        localStorage.setItem("myProfile", myProfileString);
+        localStorage.setItem("authToken", authToken);
+      } else {
+        AsyncStorage.setItem("myProfile", myProfileString);
+        AsyncStorage.setItem("authToken", authToken);
+      }
+
+      router.push("/");
+    } catch (error) {
+      setError("Login failed. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
       <View>
-        <TouchableOpacity style={styles.img}>
+        <Pressable style={styles.img}>
           <Text>Image Here</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View style={styles.headerContainer}>
@@ -110,6 +88,7 @@ function Login() {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        disabled={loading}
       />
 
       <TextInput
@@ -118,11 +97,12 @@ function Login() {
         secureTextEntry
         value={password}
         onChangeText={setPassword}
+        disabled={loading}
       />
 
-      <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
+      <Pressable style={styles.btn} onPress={handleSubmit} disabled={loading}>
         <Text style={styles.btnText}>Sign-in</Text>
-      </TouchableOpacity>
+      </Pressable>
       <Text style={styles.subHeader}>
         Don't have an account yet?
         <Link href="/user/register" style={styles.link}>
@@ -130,6 +110,19 @@ function Login() {
           Sign-up here
         </Link>
       </Text>
+      <Snackbar
+        visible={!!error}
+        onDismiss={() => setError(null)}
+        wrapperStyle={styles.feedback}
+        action={{
+          label: "Close",
+          onPress: () => {
+            setError(null);
+          },
+        }}
+      >
+        {error}
+      </Snackbar>
     </View>
   );
 }
@@ -193,6 +186,10 @@ const styles = StyleSheet.create({
   },
   link: {
     color: colors.info,
+  },
+  feedback: {
+    position: "absolute",
+    top: 0,
   },
 });
 
