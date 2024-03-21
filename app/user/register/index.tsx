@@ -12,6 +12,8 @@ import {
 import { firebaseAuth } from "../../../firebase/firebaseApp";
 import axios from "axios";
 import { Snackbar } from "react-native-paper";
+import getServerUrl from "../../../utils/getServerUrl";
+import colors from "../../../theme/colors";
 
 interface Status {
   type: "success" | "failed";
@@ -19,13 +21,13 @@ interface Status {
 }
 
 function Registration() {
-  const [firstName, setFirstName] = useState("Hector");
-  const [lastName, setLastname] = useState("Robles");
-  const [email, setEmail] = useState("hjt.robles@gmail.com");
-  const [phone, setPhone] = useState("1231231234");
-  const [username, setUsername] = useState("hrobles");
-  const [password, setPassword] = useState("password123");
-  const [confirmPassword, setConfirmPassword] = useState("password123");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<Status | null>(null);
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -65,20 +67,15 @@ function Registration() {
     }
 
     axios
-      .post(
-        Platform.OS === "web"
-          ? "http://localhost:3000/user" // TODO refactor using env
-          : "http://10.0.2.2:3000/user",
-        {
-          firstName,
-          lastName,
-          email,
-          phone,
-          username,
-          password,
-          confirmPassword,
-        }
-      )
+      .post(`${getServerUrl()}/user`, {
+        firstName,
+        lastName,
+        email,
+        phone,
+        username,
+        password,
+        confirmPassword,
+      })
       .then(function (response) {
         setStatus({
           type: "success",
@@ -163,12 +160,17 @@ function Registration() {
               <Text style={styles.btnText}>Sign-up</Text>
             </TouchableOpacity>
             <Text style={styles.subHeader}>
-              Already have an account?<Link href="/"> Sign in</Link>
+              Already have an account?
+              <Link href="/user/login" style={styles.link}>
+                {" "}
+                Sign in
+              </Link>
             </Text>
           </View>
         </View>
       </View>
       <Snackbar
+        wrapperStyle={styles.feedback}
         visible={!!status}
         onDismiss={() => setStatus(null)}
         action={
@@ -259,6 +261,13 @@ const styles = StyleSheet.create({
     color: "#00332C",
     backgroundColor: "#FAAE2B",
     fontSize: 16,
+  },
+  link: {
+    color: colors.info,
+  },
+  feedback: {
+    position: "absolute",
+    top: 0,
   },
 });
 
