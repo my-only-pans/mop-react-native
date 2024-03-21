@@ -6,6 +6,7 @@ const colors = {
   headline: "#00473E",
   paragraph: "#475D5B",
   button: "FAAE2B",
+  info: "#006572",
 };
 
 export default colors;
