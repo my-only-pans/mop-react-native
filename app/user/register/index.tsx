@@ -240,12 +240,15 @@ const styles = StyleSheet.create({
   input: {
     height: 60,
     width: "100%",
-    borderColor: "#D8DDDB",
-    backgroundColor: "#D8DDDB",
+    // borderColor: "#D8DDDB",
+    // backgroundColor: "#D8DDDB",
+    borderColor: "#E6E0E9",
+    backgroundColor: "#E6E0E9",
     borderRadius: 5,
     borderWidth: 1,
     padding: 10,
   },
+
   btn: {
     textAlign: "center",
     backgroundColor: "#FAAE2B",
