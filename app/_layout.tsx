@@ -1,6 +1,5 @@
 import { Slot } from "expo-router";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import MobileNavigationBar from "../components/commonComponents/MobileNavigationBar";
