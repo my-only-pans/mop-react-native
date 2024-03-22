@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 interface Ingredient {
     item: string;
@@ -15,45 +15,9 @@ interface Recipe {
     categories: string[];
     prepTime: number;
     cookTime: number;
-    notes: string;
+    //notes: string;
     owner: string;
 }
-
-const [GlobalEquipments, setGlobalEquipments] = useState([
-    'Knife',
-    'Cutting Board',
-    'Mixing Bowl',
-    'Measuring Cup',
-    'Measuring Spoon',
-    'Whisk',
-    'Spatula',
-    'Pot',
-    'Pan',
-    'Blender',
-    'Oven',
-    'Mixer',
-    'Strainer',
-    'Grater',
-    'Peeler'
-]);
-
-const [GlobalCategories, setGlobalCategories] = useState([
-    'Appetizers',
-    'Main Dishes',
-    'Side Dishes',
-    'Salads',
-    'Soups',
-    'Stews',
-    'Desserts',
-    'Beverages',
-    'Snacks',
-    'Breads',
-    'Breakfast',
-    'Brunch',
-    'Lunch',
-    'Dinner',
-    'Holiday Specials'
-]);
 
 const sampleRecipe: Recipe = {
     title: 'Ramen',
@@ -64,8 +28,48 @@ const sampleRecipe: Recipe = {
     categories: ['noodles', 'Japanese'],
     prepTime: 10,
     cookTime: 10,
-    notes: "this is a sample note",
+    //notes: "this is a sample note",
     owner: "userName",
 }
 
-export default sampleRecipe;
+const SampleRecipeComponent = () => {
+    const [GlobalEquipments, setGlobalEquipments] = useState([
+        'Knife',
+        'Cutting Board',
+        'Mixing Bowl',
+        'Measuring Cup',
+        'Measuring Spoon',
+        'Whisk',
+        'Spatula',
+        'Pot',
+        'Pan',
+        'Blender',
+        'Oven',
+        'Mixer',
+        'Strainer',
+        'Grater',
+        'Peeler'
+    ]);
+
+    const [GlobalCategories, setGlobalCategories] = useState([
+        'Appetizers',
+        'Main Dishes',
+        'Side Dishes',
+        'Salads',
+        'Soups',
+        'Stews',
+        'Desserts',
+        'Beverages',
+        'Snacks',
+        'Breads',
+        'Breakfast',
+        'Brunch',
+        'Lunch',
+        'Dinner',
+        'Holiday Specials'
+    ]);
+
+    return <div>{/* Your JSX code here */}</div>;
+}
+
+export default SampleRecipeComponent;

@@ -29,7 +29,7 @@ const sampleRecipe = {
     categories: ['noodles', 'Japanese', 'Quick and Easy'],
     prepTime: 10,
     cookTime: 10,
-    notes: "this is a sample note",
+    //notes: "this is a sample note",
     owner: "userName",
 }
 
@@ -43,7 +43,7 @@ function UpdateRecipe(props: RecipeInput) {
     const [categories, setCategories] = useState<string[]>([]);
     const [prepTime, setPrepTime] = useState('');
     const [cookTime, setCookTime] = useState('');
-    const [notes, setNotes] = useState('');
+   // const [notes, setNotes] = useState('');
     const [owner, setOwner] = useState(); //set to username or userID of current user
     //create error or prompt to login first before they can create a recipe
 
@@ -112,16 +112,6 @@ function UpdateRecipe(props: RecipeInput) {
                                 onChangeText={setDescription}
                                 numberOfLines={4}
                             //scrollEnabled = {false}
-                            />
-                            <TextInput
-                                label="Notes"
-                                style={styles.input}
-                                placeholder="Additional Notes"
-                                value={notes}
-                                onChangeText={setNotes}
-                                editable
-                                multiline
-                                numberOfLines={2}
                             />
                         </View>
                         <View style={[styles.column]}>

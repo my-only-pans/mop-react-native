@@ -6,6 +6,7 @@ import {
 import { TextInput } from 'react-native-paper';
 import colors from "../theme/colors";
 import Tags from 'react-native-tags';
+import { Icon } from 'react-native-elements';
 
 
 interface TagInputProps {
@@ -98,7 +99,7 @@ const TagInput: React.FC<TagInputProps> = ({
                 <TouchableOpacity onPress={addTag}
                     style={styles.addButton}>
                     <Text style={styles.buttonText}>
-                        {editIndex !== null ? 'Update' : 'Add'}
+                        {editIndex !== null ? 'Update' : <Icon name='tag-plus' type='material-community'/>}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     container: {
         //marginTop: Platform.OS === "web" ? 80 : 0,
         //alignItems: "center",
-       // padding: 20,
+        // padding: 20,
         flex: 1,
         paddingHorizontal: 0,
     },
@@ -163,8 +164,11 @@ const styles = StyleSheet.create({
     input: {
         height: 60,
         width: "80%",
-        borderColor: "#D8DDDB",
-        backgroundColor: "#D8DDDB",
+        // borderColor: "#D8DDDB",
+        // backgroundColor: "#D8DDDB",
+
+        borderColor: "#E6E0E9",
+        backgroundColor: "#E6E0E9",
         borderRadius: 5,
         borderWidth: 1,
         padding: 10,
