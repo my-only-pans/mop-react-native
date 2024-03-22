@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-    View, Text,  TouchableOpacity,
-    StyleSheet, 
+    View, Text, TouchableOpacity,
+    StyleSheet,
 } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import colors from "../theme/colors";
@@ -19,7 +19,7 @@ const TagInput: React.FC<TagInputProps> = ({
     label = 'Input:',
     tags: initialTags,
     placeholder = 'Add a tag',
-    onUpdateTags 
+    onUpdateTags
 }) => {
 
     //const [inputHeader, setInputHeader] = useState(label);
@@ -65,7 +65,7 @@ const TagInput: React.FC<TagInputProps> = ({
             <Text style={styles.header}>{label}</Text>
             <View style={styles.tagContainer}>
                 {tags.map((tag, index) => (
-                    <View 
+                    <View
                         key={index}
                         style={styles.tagWrapper}>
                         <TouchableOpacity
@@ -88,7 +88,7 @@ const TagInput: React.FC<TagInputProps> = ({
             </View>
             <View style={styles.inputContainer}>
                 <TextInput
-                    
+
                     style={styles.input}
                     placeholder={placeholder}
                     value={text}
@@ -110,7 +110,10 @@ export default TagInput;
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        //marginTop: Platform.OS === "web" ? 80 : 0,
+        //alignItems: "center",
+       // padding: 20,
+        flex: 1,
         paddingHorizontal: 0,
     },
     header: {
