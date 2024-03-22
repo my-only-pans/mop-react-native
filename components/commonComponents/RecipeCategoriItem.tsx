@@ -19,8 +19,6 @@ interface Props {
 function RecipeCategoriItem({ category }: Props) {
   const { key, image, label } = category;
 
-  console.log(image);
-
   return (
     <Link href={`/recipes/${key}`}>
       <View style={styles.container}>

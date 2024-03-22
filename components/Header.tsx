@@ -23,7 +23,9 @@ function Header(props: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo}>MyOnlyPans.</Text>
+      <Link href="/">
+        <Text style={styles.logo}>MyOnlyPans</Text>
+      </Link>
       <Link href="/user/profile">
         <Avatar.Image
           source={require("../assets/team/default-transformed.png")}
