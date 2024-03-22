@@ -11,7 +11,11 @@ function ProfileView() {
     const [servingSize, setServingSize] = useState('');
     const [editableFields, setEditableFields] = useState(false);
 
-    const EditMyPreferences = () => {
+    const handleClickEdit = () => {
+        setEditableFields(!editableFields);
+    };
+
+    const handleClickSave = () => {
         setEditableFields(!editableFields);
     };
 
@@ -70,14 +74,14 @@ function ProfileView() {
                 editable={editableFields}
             />
 
-            <TouchableOpacity style={styles.btn} onPress={EditMyPreferences}>
-                <Text style={styles.btnText}>Edit Preferences</Text>
+            <TouchableOpacity style={styles.btn} onPress={!editableFields ? handleClickEdit : () => {}}>
+                <Text style={styles.btnText}>{editableFields ? "Save" : "Edit Preferences"}</Text>
             </TouchableOpacity>
             {/* <Text>{label}</Text> */}
 
 
             <TouchableOpacity style={styles.btn} onPress={() => { router.push('/user/profile/update');}}>
-                <Text style={styles.btnText}>Edit Profile</Text>
+                <Text style={styles.btnText}>{editableFields ? "Cancel" : "Edit Profile"}</Text>
             </TouchableOpacity>
         </View>
     );
