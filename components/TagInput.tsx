@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
     View, Text,  TouchableOpacity,
-    StyleSheet,
+    StyleSheet, 
 } from 'react-native';
-import {TextInput} from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
+import colors from "../theme/colors";
 import Tags from 'react-native-tags';
 
 
@@ -87,6 +88,7 @@ const TagInput: React.FC<TagInputProps> = ({
             </View>
             <View style={styles.inputContainer}>
                 <TextInput
+                    
                     style={styles.input}
                     placeholder={placeholder}
                     value={text}
@@ -156,13 +158,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     input: {
+        height: 60,
         width: "80%",
         borderColor: "#D8DDDB",
-        //backgroundColor: "#FFFFFE",
+        backgroundColor: "#D8DDDB",
         borderRadius: 5,
         borderWidth: 1,
         padding: 10,
-        marginHorizontal: 5,
+        marginRight: 10,
     },
     addButton: {
         textAlign: "center",

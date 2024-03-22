@@ -246,7 +246,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
   },
-
   btn: {
     textAlign: "center",
     backgroundColor: "#FAAE2B",
