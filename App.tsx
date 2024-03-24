@@ -1,5 +1,7 @@
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View , TextProps} from "react-native";
+import React from 'react';
+
 
 export default function App() {
   return (
@@ -18,3 +20,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+// Extend TextProps interface to include defaultProps
+interface CustomTextProps extends TextProps {
+  defaultProps?: any;
+}
+
+// Set default font family for all Text components
+(Text as CustomTextProps).defaultProps = {
+  style: { fontFamily: 'Poppins-Regular' },
+};
