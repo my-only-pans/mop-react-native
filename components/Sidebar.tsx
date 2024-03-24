@@ -7,9 +7,8 @@ interface Props {}
 
 const routes = [
   { href: "/recipes", label: "Recipes" },
-  { href: "/fridge", label: "My Fridge" },
-  { href: "/equipment", label: "My Equipment" },
-  { href: "/user/profile/view", label: "My Profile" },
+  { href: "/user/profile/kitchen", label: "MyKitchen" },
+  { href: "/user/profile", label: "MyProfile" },
   { href: "/about", label: "About us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
