@@ -1,5 +1,6 @@
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   View,
   Text,
@@ -13,6 +14,48 @@ import {
 function Contact() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  // const [errorMessages, setErrorMessages] = useState<string[]>([]);
+
+  // const handleSend = async () => {
+  //   const newErrorMsg = [];
+  //   if(!email){
+  //     newErrorMsg.push("Email is required");
+  //   }
+  //   if(!message){
+  //     newErrorMsg.push("Message is required")
+  //   }
+
+  //   setErrorMessages(newErrorMessages);
+  //   if(newErrorMessage.length){
+  //     return
+  //   }
+  //   axios
+  //     .post(
+  //       Platform.OS === 'web'
+  //       ? "http://locahost:3000/user"
+  //       : "http://locahost:3000/user",
+  //       {
+  //         email,
+  //         message
+  //       }
+  //     )
+  //   .then(function(response){
+  //     setStatus({
+  //       type: "success",
+  //       message: "You have register successfully. Please login.",
+  //     });
+  //   })
+  //   .catch(function(error){
+  //     console.log(JSON.stringify(error));
+  //     if(error.response?.data){
+  //       return setStatus({type: "failed", message: error.response.data});
+  //     } else{
+  //       return setStatus({type: "failed", message: error.message});
+  //     }
+  //   });
+
+  // };
   return (
     <View style={styles.container}>
       <View>
@@ -46,12 +89,12 @@ function Contact() {
         </View>
         <View style={styles.column}>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { height: 100 }]}
             onChangeText={setMessage}
             value={message}
             placeholder="Message"
             multiline
- q          />
+          />
         </View>
         <View style={styles.column}>
           <TouchableOpacity style={styles.btn}>
@@ -60,36 +103,34 @@ function Contact() {
         </View>
       </View>
       <Text style={styles.smHeader}>Socialize with Us</Text>
+    <View style={styles.iconContainer}>
 
-      <View style={styles.iconContainer}>
+      
         <TouchableOpacity
-          style={styles.iconContainer}
+        
+          style={styles.icon}
           onPress={() => console.log("Icon 1 Pressed")}
         >
           {/* <Image style={styles.icon} /> */}
-          <Text>Icon1</Text>
+          <Icon name="instagram" size={30} color="#00473E" />
         </TouchableOpacity>
-      </View>
-      <View style={styles.iconContainer}>
+      
           <TouchableOpacity
-            style={styles.iconContainer}
+            style={styles.icon}
             onPress={() => console.log("Icon 2 Pressed")}
           >
             {/* <Image style={styles.icon} /> */}
-            <Text>Icon2</Text>
+            <Icon name="facebook" size={30} color="#00473E" />
           </TouchableOpacity>
-      </View>
 
-      <View style={styles.iconContainer}>
         <TouchableOpacity
-          style={styles.iconContainer}
+          style={styles.icon}
           onPress={() => console.log("Icon 3 Pressed")}
         >
           {/* <Image style={styles.icon} /> */}
-          <Text>Icon3</Text>
+          <Icon name="github" size={30} color="#00473E" />
         </TouchableOpacity>
-      </View>
-
+    </View>
     </View>
   );
 }
@@ -147,19 +188,20 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    flex: 1,
-    backgroundColor: '#D9D9D9',
-    flexDirection: "row",
-    marginTop: 20,
+    flexDirection: Platform.OS !== "web" ? "column" : "row",
+    gap: 20,
+    marginTop: 10,
     justifyContent: "center",
     alignItems: "center",
+
   },
   icon: {
-    width: 50,
-    height: 50,
+    flexShrink: 0,
+    gap: 0,
   },
 
   row: {
+    marginTop: 10,
     flexDirection: Platform.OS !== "web" ? "column" : "row",
     gap: 20,
   },
