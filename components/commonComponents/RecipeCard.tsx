@@ -8,8 +8,9 @@ import {
   Text,
   View,
 } from "react-native";
-import { fontSizes } from "../../theme/text";
 import { RecipeItemType } from "../../types/RecipeTypes";
+import moment from "moment";
+import { fontSizes } from "../../theme/text";
 
 interface Props {
   recipe: RecipeItemType;
@@ -17,7 +18,7 @@ interface Props {
 
 function RecipeCard(props: Props) {
   const { recipe } = props;
-  const { _id, imageUrl, name } = recipe;
+  const { _id, imageUrl, name, owner, createdAt, rating } = recipe;
 
   return (
     <Link href={`/recipes/${_id}`} style={{ flex: 0 }}>
@@ -26,6 +27,13 @@ function RecipeCard(props: Props) {
         <Text style={styles.name} numberOfLines={1}>
           {name}
         </Text>
+        <Text style={styles.owner}>By: {owner?.username}</Text>
+        <View style={styles.footer}>
+          <Text style={styles.rating}>
+            {"*".repeat(rating.avg)} ({rating.ratingNum})
+          </Text>
+          <Text>{moment(createdAt).fromNow()}</Text>
+        </View>
       </View>
     </Link>
   );
@@ -40,7 +48,18 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   name: {
-    // fontSize: fontSizes.md,
+    fontSize: fontSizes.md,
+    marginBottom: 8,
+  },
+  owner: {
+    marginBottom: 8,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  rating: {
+    fontSize: fontSizes.sm,
   },
 });
 

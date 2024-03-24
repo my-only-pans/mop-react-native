@@ -5,13 +5,16 @@ import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../theme/colors";
 import { Searchbar } from "react-native-paper";
 import { textStyles } from "../../../theme/text";
-import { RecipeItemType } from "../../../types/RecipeTypes";
+import {
+  RecipeItemType,
+  SimpleRecipeItemType,
+} from "../../../types/RecipeTypes";
 import RecipeItem from "../../commonComponents/RecipeItem";
 import { RECIPE_CATEGORIES } from "../../../constants";
 import RecipeCategoriItem from "../../commonComponents/RecipeCategoriItem";
 
 // TODO Replace with actula data
-const SAMPLE_FEATURED_RECIPES: RecipeItemType[] = [
+const SAMPLE_FEATURED_RECIPES: SimpleRecipeItemType[] = [
   {
     _id: "1",
     name: "Fried Chicken",

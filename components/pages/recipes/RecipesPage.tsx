@@ -7,7 +7,6 @@ import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
 import { RecipeItemType } from "../../../types/RecipeTypes";
-import RecipeItem from "../../commonComponents/RecipeItem";
 import RecipeCard from "../../commonComponents/RecipeCard";
 
 // TODO Replace with actula data
@@ -161,8 +160,8 @@ function RecipesPage(props: Props) {
         />
       </View>
       <View>
-        <Text style={textStyles.h1}>200 SEARCH RESULTS</Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 24 }}>
+        <Text style={[textStyles.h1, styles.heading]}>200 SEARCH RESULTS</Text>
+        <View style={styles.list}>
           {SAMPLE_FEATURED_RECIPES.map((recipe) => (
             <RecipeCard key={recipe._id} recipe={recipe} />
           ))}
@@ -190,8 +189,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   list: {
-    flex: 1,
-    backgroundColor: "green",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 48,
   },
 });
 

@@ -2,13 +2,18 @@ export interface RecipeItemType {
   _id: string;
   name: string;
   imageUrl?: string;
-  owner?: {
+  owner: {
     _id: string;
     username: string;
   };
-  rating?: {
+  rating: {
     avg: number;
     ratingNum: number;
   };
-  createdAt?: string;
+  createdAt: string;
 }
+
+export type SimpleRecipeItemType = Pick<
+  RecipeItemType,
+  "_id" | "name" | "imageUrl"
+>;

@@ -1,11 +1,11 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { RecipeItemType } from "../../types/RecipeTypes";
+import { RecipeItemType, SimpleRecipeItemType } from "../../types/RecipeTypes";
 import { Link } from "expo-router";
 import { fontSizes } from "../../theme/text";
 
 interface Props {
-  recipe: RecipeItemType;
+  recipe: SimpleRecipeItemType;
 }
 
 function RecipeItem({ recipe }: Props) {
