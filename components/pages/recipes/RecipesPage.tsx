@@ -191,7 +191,8 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 48,
+    columnGap: 16,
+    rowGap: 48,
   },
 });
 
