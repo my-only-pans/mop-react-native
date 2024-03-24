@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import Container from "../../../../components/commonComponents/Container";
+import Container from "../../../components/commonComponents/Container";
 
 function ProfileView() {
   const [dietaryPreference, setDietaryPreference] = useState("");
@@ -17,7 +17,16 @@ function ProfileView() {
   const [servingSize, setServingSize] = useState("");
   const [editableFields, setEditableFields] = useState(false);
 
-  const EditMyPreferences = () => {
+  const handleClickEdit = () => {
+    setEditableFields(!editableFields);
+  };
+
+  const handleClickSave = () => {
+    setEditableFields(!editableFields);
+    alert("Changes saved.");
+  };
+
+  const handleClickCancel = () => {
     setEditableFields(!editableFields);
   };
 
@@ -27,7 +36,7 @@ function ProfileView() {
 
       <View style={styles.profilePicture}>
         <Image
-          source={require("../../../../assets/sample.png")}
+          source={require("../../../assets/sample.png")}
           style={styles.image}
         />
       </View>
@@ -77,18 +86,81 @@ function ProfileView() {
         editable={editableFields}
       />
 
-      <TouchableOpacity style={styles.btn} onPress={EditMyPreferences}>
-        <Text style={styles.btnText}>Edit Preferences</Text>
+      <View style={styles.profilePicture}>
+        <Image
+          source={require("../../../assets/sample.png")}
+          style={styles.image}
+        />
+      </View>
+      <View>
+        <Text style={styles.userFullName}>Leviel Kulet</Text>
+        <Text style={styles.userName}>@levielkulet</Text>
+        <Text style={styles.bio}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida,
+          mauris ac sodales semper, neque velit mollis velit, eget cursus lectus
+          quam sit amet lacus.
+        </Text>
+      </View>
+
+      <View>
+        <Text style={styles.header}>MyPreferences</Text>
+      </View>
+      <Text style={styles.label}>Dietary Preference:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder=""
+        value={dietaryPreference}
+        onChangeText={setDietaryPreference}
+        editable={editableFields}
+      />
+      <Text style={styles.label}>Cuisine:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder=""
+        value={cuisine}
+        onChangeText={setCuisine}
+        editable={editableFields}
+      />
+      <Text style={styles.label}>Prep & Cook Time:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="In minutes"
+        value={prepCook}
+        onChangeText={setPrepCook}
+        editable={editableFields}
+      />
+      <Text style={styles.label}>Serves:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder=""
+        value={servingSize}
+        onChangeText={setServingSize}
+        editable={editableFields}
+      />
+
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={!editableFields ? handleClickEdit : handleClickSave}
+      >
+        <Text style={styles.btnText}>
+          {editableFields ? "Save" : "Edit Preferences"}
+        </Text>
       </TouchableOpacity>
       {/* <Text>{label}</Text> */}
 
       <TouchableOpacity
         style={styles.btn}
-        onPress={() => {
-          router.push("/user/profile/update");
-        }}
+        onPress={
+          !editableFields
+            ? () => {
+                router.push("/user/profile/update");
+              }
+            : handleClickCancel
+        }
       >
-        <Text style={styles.btnText}>Edit Profile</Text>
+        <Text style={styles.btnText}>
+          {editableFields ? "Cancel" : "Edit Profile"}
+        </Text>
       </TouchableOpacity>
     </Container>
   );
@@ -99,7 +171,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: 600,
+    padding: 20,
+    maxWidth: 900,
     marginHorizontal: "auto",
   },
   profilePicture: {
@@ -159,18 +232,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
   },
-  image: {
-    alignItems: "center",
-    // marginTop: 10,
-    width: 120,
-    height: 120,
-  },
   btn: {
     textAlign: "center",
     backgroundColor: "#FAAE2B",
     width: "100%",
     marginTop: 20,
-
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -180,6 +246,12 @@ const styles = StyleSheet.create({
     color: "#00332C",
     backgroundColor: "#FAAE2B",
     fontSize: 16,
+  },
+  image: {
+    alignItems: "center",
+    // marginTop: 10,
+    width: 120,
+    height: 120,
   },
 });
 
