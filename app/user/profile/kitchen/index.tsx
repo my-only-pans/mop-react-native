@@ -6,11 +6,17 @@ import TagInputUser from "../../../../components/TagInputUser";
 
 
 function ProfileView() {
+    const [myEquipment, setMyEquipment] = useState<string[]>([]);
     const [myIngredients, setMyIngredients] = useState<string[]>([]);
 
     const handleAddMyIngredients = (newMyIngredients: string[]) => {
         // Add new equipment to the current state 
         setMyIngredients([...myIngredients, ...newMyIngredients]);
+    };
+
+    const handleAddMyEquipment = (newMyEquipment: string[]) => {
+        // Add new equipment to the current state 
+        setMyEquipment([...myEquipment, ...newMyEquipment]);
 
     };
 
@@ -20,9 +26,24 @@ function ProfileView() {
             <View style={[styles.content]}>
                 <View style={styles.headerContainer}>
                     <View>
-                        <Text style={styles.header}>MyPantry</Text>
+                        <Text style={styles.header}>MyKitchen</Text>
                     </View>
                 </View>
+                <View>
+                    <TagInputUser
+                        tags={myEquipment}
+                        label='Enter your available equipment:'
+                        placeholder=''
+                        onUpdateTags={handleAddMyEquipment}
+                    />
+                </View>
+            </View>
+            <View style={[styles.content]}>
+                {/* <View style={styles.headerContainer}>
+                    <View>
+                        <Text style={styles.header}>MyPantry</Text>
+                    </View>
+                </View> */}
                 <View>
                     <TagInputUser
                         tags={myIngredients}
@@ -49,6 +70,7 @@ const styles = StyleSheet.create({
     content: {
         maxWidth: 900,
         width: "100%",
+        marginBottom: 25,
     },
     profilePicture: {
         backgroundColor: 'red',

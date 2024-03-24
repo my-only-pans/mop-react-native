@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
@@ -80,7 +80,7 @@ function UpdateProfile() {
             <TouchableOpacity style={styles.btn}>
                 <Text style={styles.btnText}>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => { router.push('/user/profile');}}>
                 <Text style={styles.btnText}>Cancel</Text>
             </TouchableOpacity>
         </View >
@@ -96,6 +96,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         padding: 20,
+        maxWidth: 900,
+        marginHorizontal: 'auto',
     },
     profilePicture: {
         backgroundColor: 'red',

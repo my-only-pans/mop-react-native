@@ -1,6 +1,6 @@
 import { Link, router } from "expo-router";
 import React, { useState } from 'react';
-import UpdateProfile from "../update";
+import UpdateProfile from "./update";
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 
@@ -17,6 +17,11 @@ function ProfileView() {
 
     const handleClickSave = () => {
         setEditableFields(!editableFields);
+        alert("Changes saved.");
+    };
+
+    const handleClickCancel = () => {
+        setEditableFields(!editableFields);
     };
 
     return (
@@ -27,7 +32,7 @@ function ProfileView() {
 
             <View style={styles.profilePicture}>
                 <Image
-                    source={require('../../../../assets/sample.png')}
+                    source={require('../../../assets/sample.png')}
                     style={styles.image}
                 />
             </View>
@@ -44,7 +49,7 @@ function ProfileView() {
             <Text style={styles.label}>Dietary Preference:</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Vegan"
+                placeholder=""
                 value={dietaryPreference}
                 onChangeText={setDietaryPreference}
                 editable={editableFields}
@@ -52,7 +57,7 @@ function ProfileView() {
             <Text style={styles.label}>Cuisine:</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Filipino"
+                placeholder=""
                 value={cuisine}
                 onChangeText={setCuisine}
                 editable={editableFields}
@@ -60,7 +65,7 @@ function ProfileView() {
             <Text style={styles.label}>Prep & Cook Time:</Text>
             <TextInput
                 style={styles.input}
-                placeholder="1 hour"
+                placeholder="In minutes"
                 value={prepCook}
                 onChangeText={setPrepCook}
                 editable={editableFields}
@@ -68,19 +73,19 @@ function ProfileView() {
             <Text style={styles.label}>Serves:</Text>
             <TextInput
                 style={styles.input}
-                placeholder="2"
+                placeholder=""
                 value={servingSize}
                 onChangeText={setServingSize}
                 editable={editableFields}
             />
 
-            <TouchableOpacity style={styles.btn} onPress={!editableFields ? handleClickEdit : () => {}}>
+            <TouchableOpacity style={styles.btn} onPress={!editableFields ? handleClickEdit : handleClickSave}>
                 <Text style={styles.btnText}>{editableFields ? "Save" : "Edit Preferences"}</Text>
             </TouchableOpacity>
             {/* <Text>{label}</Text> */}
 
 
-            <TouchableOpacity style={styles.btn} onPress={() => { router.push('/user/profile/update');}}>
+            <TouchableOpacity style={styles.btn} onPress={!editableFields ? () => { router.push('/user/profile/update');} : handleClickCancel}>
                 <Text style={styles.btnText}>{editableFields ? "Cancel" : "Edit Profile"}</Text>
             </TouchableOpacity>
         </View>
@@ -96,6 +101,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         padding: 20,
+        maxWidth: 900,
+        marginHorizontal: 'auto',
     },
     profilePicture: {
         backgroundColor: 'red',
