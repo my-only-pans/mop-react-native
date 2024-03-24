@@ -27,12 +27,12 @@ const styles = StyleSheet.create({
   container: {
     borderRightWidth: 1,
     borderRightColor: Platform.OS === "web" ? colors.primary : "transparent",
-    paddingVertical: 32,
-    paddingHorizontal: 16,
-    width: 200,
+    padding: 32,
+    width: 300,
+    alignItems: "flex-start",
   },
   link: {
-    marginBottom: 12,
+    marginBottom: 32,
   },
 });
 

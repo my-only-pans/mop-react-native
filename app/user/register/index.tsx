@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     flex: 1,
+    width: "100%",
   },
   content: {
     maxWidth: 900,
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: Platform.OS !== "web" ? "column" : "row",
     gap: 20,
+    flex: 1,
   },
   column: {
     flexGrow: 1,
