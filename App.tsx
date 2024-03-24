@@ -2,6 +2,7 @@ import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { StyleSheet, Text, View , TextProps} from "react-native";
 import React from 'react';
 
+
 export default function App() {
   return (
     <View style={styles.container}>

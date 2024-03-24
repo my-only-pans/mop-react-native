@@ -1,39 +1,41 @@
 import { Link } from "expo-router";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Platform, Button } from "react-native";
-import { TextInput } from "react-native-paper";
+import colors from "../../../theme/colors";
 import TagInput from '../../../components/TagInput';
-
-interface RecipeInput {
+import { TextInput } from "react-native-paper";
+import { Icon } from "react-native-elements";
+interface Recipe {
     title: string;
     description: string;
     serving: number;
     equipments: string[];
-    ingredients: { item: string, qty: number, unit: string };
+    ingredients: { item: string; qty: number; unit: string }[];
     categories: string[];
     prepTime: number;
     cookTime: number;
-    notes: string;
     owner: string;
-} //still mising instructions 
+}//still mising instructions 
 
 //HELP :(())
 
-const sampleRecipe = {
-    title: 'Ramen',
-    description: "This is a ramen",
+const sampleRecipe: Recipe = {
+    title: 'Shoyu Ramen',
+    description: "This is the ramen egg that we all know and enjoy. This can also be a snack.",
     serving: 2,
-    equipments: ['pan', 'oven','knife', 'strainer'],
-    ingredients: { item: 'chicken', qty: 2, unit: 'pcs' },
-    categories: ['noodles', 'Japanese', 'Quick and Easy'],
-    prepTime: 10,
-    cookTime: 10,
-    notes: "this is a sample note",
-    owner: "userName",
+    equipments: ['small pot', 'measuring spoon', 'knife', 'cutting board'],
+    ingredients: [{ item: 'large egg', qty: 4, unit: 'pcs' },
+    { item: 'soy sauce', qty: 1, unit: 'tablespoon' },
+    { item: 'flour', qty: 0.25, unit: 'cup' },
+    ],
+    categories: ['Snack', 'Japanese', 'Quick and Easy', 'Breakfast', 'Side Dish'],
+    prepTime: 2,
+    cookTime: 6,
+    owner: "levielKulet24",
 }
 
-function CreateRecipe(props: RecipeInput) {
+function CreateRecipe(props: Recipe) {
     const { } = props;
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -43,7 +45,6 @@ function CreateRecipe(props: RecipeInput) {
     const [categories, setCategories] = useState<string[]>([]);
     const [prepTime, setPrepTime] = useState('');
     const [cookTime, setCookTime] = useState('');
-    const [notes, setNotes] = useState('');
     const [owner, setOwner] = useState(); //set to username or userID of current user
     //create error or prompt to login first before they can create a recipe
 
@@ -63,24 +64,18 @@ function CreateRecipe(props: RecipeInput) {
         }
     };
 
-    // useEffect(() => {
-    //     // Fetch saved equipments from API or any other source and set them in savedEquipments state
-    //     // For now, I'll just set sampleEquipments as an example
-    //     setSavedEquipments(sampleRecipe.equipments);
-    // }, []);
-
     const handleAddEquipment = (newEquipment: string[]) => {
         // Add new equipment to the current state and global state
         setEquipments([...equipments, ...newEquipment]);
         //setGlobalEquipments([...GlobalEquipments, ...newEquipment]);
     };
-    
+
     const handleAddCategory = (newCategories: string[]) => {
         // Add new categories to the current state and global state
         setCategories([...categories, ...newCategories]);
         //setGlobalCategories([...GlobalCategories, ...newCategories]);
     };
-    
+
 
     return (
         <View style={styles.container}>
@@ -96,139 +91,141 @@ function CreateRecipe(props: RecipeInput) {
                 </View>
 
 
-                <View style={styles.row}>
-                    {/* Step 1 */}
-                    {formStep === 1 && (
-                        <View style={[styles.column]}>
-                            <TextInput
-                                // style={styles.input}
-                                multiline
-                                label="Title"
-                                placeholder="Recipe Title"
-                                value={title}
-                                onChangeText={setTitle}
-                                numberOfLines={2}
-                            //dense      
-                            />
-                            <TextInput
-                                label='Description'
-                                placeholder="Recipe Description"
-                                value={description}
-                                onChangeText={setDescription}
-                                editable
-                                multiline
-                                numberOfLines={2}
-                            //scrollEnabled = {false}
-                            />
-                            <TextInput
-                                label="Prep Time"
-                                placeholder="Prep Time in minutes"
-                                value={prepTime}
-                                onChangeText={setPrepTime}
-                                keyboardType="numeric"
+                {/* Step 1 */}
+                {formStep === 1 && (
+                    <View style={styles.column}>
+                        <TextInput
+                            style={styles.input}
+                            label="Title"
+                            placeholder="Recipe Title"
+                            value={title}
+                            onChangeText={setTitle}
+                            numberOfLines={2}
+                        />
 
-                            />
-                            <TextInput
-                                label="Cook Time"
-                                // style={styles.input}
-                                placeholder="Cook Time in minutes"
-                                value={cookTime}
-                                onChangeText={setCookTime}
-                                keyboardType="numeric"
-                            />
-                            <TextInput
-                                label="Serving"
-                                //style={styles.input}
-                                placeholder="Serves how many person"
-                                value={serving}
-                                onChangeText={setServing}
-                                keyboardType="numeric"
-                            />
-                            <TextInput
-                                label="Ingredients"
-                                //style={styles.input}
-                                placeholder="Ingredients"
-                                value=''
-                                editable
-                                multiline
-                                numberOfLines={4}
-                            />
-                        </View>
-                    )}
-                    {/* Step 2 */}
-                    {formStep === 2 && (
+                        <TextInput
+                            label='Description'
+                            style={styles.input}
+                            placeholder="Recipe Description"
+                            value={description}
+                            onChangeText={setDescription}
+                            numberOfLines={4}
+                        //scrollEnabled = {false}
+                        />
 
-                        < View style={[styles.column]}>
-                            <TagInput
-                                tags={equipments}
-                                label='Equipments:'
-                                placeholder="Add an equipment needed"
-                                onUpdateTags={handleAddEquipment}
-                            />
 
-                            <TagInput
-                                tags={categories}
-                                label='Categories:'
-                                placeholder="Add category tag"
-                                onUpdateTags={handleAddCategory}
 
-                            />
+                        <View style={[styles.row]}>
 
-                            <TextInput
-                                label="Notes"
-                                //style={styles.input}
-                                placeholder="Additional Notes"
-                                value={notes}
-                                onChangeText={setNotes}
-                                editable
-                                multiline
-                                numberOfLines={2}
-                            />
+                            <View style={styles.column}>
+                                <TextInput
+                                    label="Prep Time"
+                                    style={styles.input}
+                                    placeholder="Prep Time in minutes"
+                                    value={prepTime}
+                                    onChangeText={setPrepTime}
+                                    keyboardType="numeric"
 
-                        </View>
-                    )}
-                    {/* Step 3 */}
-                    {formStep === 3 && (
-                        <View style={[styles.column]}>
-                            <TextInput
-                                label="Instructions"
-                                //style={styles.input}
-                                placeholder="Instructions"
-                                value=''
-                                editable
-                                multiline
-                                numberOfLines={2}
-                            />
-
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.btn}>
-                                    <Text style={styles.btnText}>Preview Recipe</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.btn}>
-                                    <Text style={styles.btnText}>Save Recipe</Text>
-                                </TouchableOpacity>
-                                <Text style={styles.subHeader}>or<Link href="/"> Cancel</Link></Text>
+                                />
                             </View>
-                            <View style={styles.divider}></View>
-                        </View>
-                        
-                    )}
 
-                </View>
-                <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.btnStep}
-                            onPress={onPrev}>
-                            <Text style={styles.btnText}>Previous Step</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnStep}
-                            onPress={onNext}>
-                            <Text style={styles.btnText}>Next Step</Text>
-                        </TouchableOpacity>
+                            <View style={styles.column}>
+                                <TextInput
+                                    label="Cook Time"
+                                    style={styles.input}
+                                    placeholder="Cook Time in minutes"
+                                    value={cookTime}
+                                    onChangeText={setCookTime}
+                                    keyboardType="numeric"
+                                />
+                            </View>
+
+                            <View style={styles.column}>
+                                <TextInput
+                                    label="Serving"
+                                    style={styles.input}
+                                    placeholder="Serves how many person"
+                                    value={serving}
+                                    onChangeText={setServing}
+                                    keyboardType="numeric"
+                                />
+                            </View>
+                        </View>
+
                     </View>
 
+                )}
+                {/* Step 2 */}
+                {formStep === 2 && (
+
+                    < View style={[styles.column]}>
+                        <TagInput
+                            tags={equipments}
+                            label='Equipments:'
+                            placeholder="Add an equipment needed"
+                            onUpdateTags={handleAddEquipment}
+                        />
+
+                        <TagInput
+                            tags={categories}
+                            label='Categories:'
+                            placeholder="Add category tag"
+                            onUpdateTags={handleAddCategory}
+
+                        />
+                    </View>
+                )}
+                {/* Step 3 */}
+                {formStep === 3 && (
+                    <View style={[styles.column]}>
+                        <TextInput
+                            label="Ingredients"
+                            style={styles.input}
+                            placeholder="Ingredients"
+                            value=''
+                            editable
+                            multiline
+                            numberOfLines={4}
+                        />
+                        <TextInput
+                            label="Instructions"
+                            style={styles.input}
+                            placeholder="Instructions"
+                            value=''
+                            editable
+                            multiline
+                            numberOfLines={2}
+                        />
+
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity style={styles.btn}>
+                                <Text style={styles.btnText}>Preview Recipe</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.btn}>
+                                <Text style={styles.btnText}>Save Recipe</Text>
+                            </TouchableOpacity>
+                            <Text style={styles.subHeader}>or<Link href="/"> Cancel</Link></Text>
+                        </View>
+                        <View style={styles.divider}></View>
+                    </View>
+
+                )}
+
+            </View>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.btnStep}
+                    onPress={onPrev}>
+                    <Text style={styles.btnText}>
+                        <Icon name='arrow-left-circle' type="material-community"/> Prev</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnStep}
+                    onPress={onNext}>
+                    <Text style={styles.btnText}> Next <Icon name='arrow-right-circle' type="material-community"/></Text>
+                </TouchableOpacity>
             </View>
 
-        </View >
+        </View>
+
     );
 }
 
@@ -237,9 +234,13 @@ export default CreateRecipe;
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         marginTop: Platform.OS === "web" ? 80 : 0,
         alignItems: "center",
         padding: 20,
+        width: "100%",
+        maxWidth: 900,
+        marginHorizontal: "auto",
     },
     content: {
         maxWidth: 900,
@@ -278,11 +279,14 @@ const styles = StyleSheet.create({
     input: {
         height: 60,
         width: "100%",
-        borderColor: "#D8DDDB",
-        backgroundColor: "#D8DDDB",
+        //borderColor: "#D8DDDB",
+        //backgroundColor: "#D8DDDB",
+
+        borderColor: "#E6E0E9",
+        backgroundColor: "#E6E0E9",
         borderRadius: 5,
         borderWidth: 1,
-        padding: 10,
+        //padding: 10,
     },
     btn: {
         flex: 1,
@@ -342,5 +346,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         marginVertical: 10,
+    },
+    inputLabel: {
+        fontSize: 16,
+        //marginBottom: 2,
+        textAlign: "left",
     },
 });

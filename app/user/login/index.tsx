@@ -8,6 +8,7 @@ import axios from "axios";
 import getServerUrl from "../../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar, TextInput } from "react-native-paper";
+import Container from "../../../components/commonComponents/Container";
 
 interface FirebaseUser extends User {
   accessToken?: string; // Extend the interface to include accessToken
@@ -70,7 +71,7 @@ function Login() {
   };
 
   return (
-    <View style={styles.container}>
+    <Container centerVertically style={styles.container}>
       <View>
         <Pressable style={styles.img}>
           <Text>Image Here</Text>
@@ -123,7 +124,7 @@ function Login() {
       >
         {error}
       </Snackbar>
-    </View>
+    </Container>
   );
 }
 

@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     flex: 1,
+    width: "100%",
   },
   content: {
     maxWidth: 900,
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: Platform.OS !== "web" ? "column" : "row",
     gap: 20,
+    flex: 1,
   },
   column: {
     flexGrow: 1,
@@ -240,8 +242,10 @@ const styles = StyleSheet.create({
   input: {
     height: 60,
     width: "100%",
-    borderColor: "#D8DDDB",
-    backgroundColor: "#D8DDDB",
+    // borderColor: "#D8DDDB",
+    // backgroundColor: "#D8DDDB",
+    borderColor: "#E6E0E9",
+    backgroundColor: "#E6E0E9",
     borderRadius: 5,
     borderWidth: 1,
     padding: 10,

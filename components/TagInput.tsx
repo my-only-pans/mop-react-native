@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import {
-    View, Text,  TouchableOpacity,
+    View, Text, TouchableOpacity,
     StyleSheet,
 } from 'react-native';
-import {TextInput} from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
+import colors from "../theme/colors";
 import Tags from 'react-native-tags';
+import { Icon } from 'react-native-elements';
 
 
 interface TagInputProps {
@@ -18,7 +20,7 @@ const TagInput: React.FC<TagInputProps> = ({
     label = 'Input:',
     tags: initialTags,
     placeholder = 'Add a tag',
-    onUpdateTags 
+    onUpdateTags
 }) => {
 
     //const [inputHeader, setInputHeader] = useState(label);
@@ -64,7 +66,7 @@ const TagInput: React.FC<TagInputProps> = ({
             <Text style={styles.header}>{label}</Text>
             <View style={styles.tagContainer}>
                 {tags.map((tag, index) => (
-                    <View 
+                    <View
                         key={index}
                         style={styles.tagWrapper}>
                         <TouchableOpacity
@@ -87,6 +89,7 @@ const TagInput: React.FC<TagInputProps> = ({
             </View>
             <View style={styles.inputContainer}>
                 <TextInput
+
                     style={styles.input}
                     placeholder={placeholder}
                     value={text}
@@ -96,7 +99,7 @@ const TagInput: React.FC<TagInputProps> = ({
                 <TouchableOpacity onPress={addTag}
                     style={styles.addButton}>
                     <Text style={styles.buttonText}>
-                        {editIndex !== null ? 'Update' : 'Add'}
+                        {editIndex !== null ? 'Update' : <Icon name='tag-plus' type='material-community'/>}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -108,7 +111,10 @@ export default TagInput;
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        //marginTop: Platform.OS === "web" ? 80 : 0,
+        //alignItems: "center",
+        // padding: 20,
+        flex: 1,
         paddingHorizontal: 0,
     },
     header: {
@@ -156,13 +162,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     input: {
+        height: 60,
         width: "80%",
-        borderColor: "#D8DDDB",
-        //backgroundColor: "#FFFFFE",
+        // borderColor: "#D8DDDB",
+        // backgroundColor: "#D8DDDB",
+
+        borderColor: "#E6E0E9",
+        backgroundColor: "#E6E0E9",
         borderRadius: 5,
         borderWidth: 1,
         padding: 10,
-        marginHorizontal: 5,
+        marginRight: 10,
     },
     addButton: {
         textAlign: "center",
