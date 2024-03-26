@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import Container from "../../../commonComponents/Container";
-import { Button, TextInput } from "react-native-paper";
+import { Button, HelperText, Snackbar, TextInput } from "react-native-paper";
 import Row from "../../../commonComponents/Row";
-import { Input } from "react-native-elements";
+import { Input, Icon } from "react-native-elements";
 import NumberInput from "../../../commonComponents/form/NumberInput";
 import colors from "../../../../theme/colors";
 import StyledButton from "../../../commonComponents/StyledButton";
@@ -11,6 +11,8 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 import getServerUrl from "../../../../utils/getServerUrl";
 import generateApiHeader from "../../../../utils/generateApiHeader";
+import getErrorMessage from "../../../../utils/getErrorMessage";
+import Tag from "../../../commonComponents/Tag";
 
 interface Props {
   recipeId?: string;
@@ -25,6 +27,9 @@ function NewRecipePage(props: Props) {
   const [serving, setServing] = useState<string>("");
   const [categories, setCategories] = useState<string[]>([]);
   const [categoryValue, setCategoryValue] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState<string | null>();
 
   const router = useRouter();
 
@@ -37,7 +42,9 @@ function NewRecipePage(props: Props) {
     setCategoryValue("");
   };
 
-  const handleClickNext = async () => {
+  const saveNewRecipeDraft = async () => {
+    setLoading(true);
+
     const body = {
       title,
       description,
@@ -49,96 +56,172 @@ function NewRecipePage(props: Props) {
 
     const headers = await generateApiHeader();
 
-    const res = await axios.post(getServerUrl() + "/recipe/draft", body, {
-      headers,
-    });
+    axios
+      .post(getServerUrl() + "/recipe/draft", body, {
+        headers,
+      })
+      .then((res) => {
+        if (res.data) {
+          setLoading(false);
+          router.push(`/recipe/draft/update?draftId=${res.data._id}`);
+        }
+      })
+      .catch((error) => {
+        setError(getErrorMessage(error).message);
+        return setLoading(false);
+      });
+  };
 
-    console.log(res);
+  const updateRecipeDraft = async () => {
+    const body = {
+      recipeId,
+      title,
+      description,
+      prepTime,
+      cookTime,
+      serving,
+      categories,
+    };
+
+    console.log(body);
+  };
+
+  const handleClickNext = async () => {
+    if (!recipeId) {
+      saveNewRecipeDraft();
+    } else {
+      updateRecipeDraft();
+    }
+  };
+
+  const handleRemoveCategory = async (category: string) => {
+    setCategories(categories.filter((c) => c !== category));
   };
 
   return (
     <Container style={{ flex: 1, justifyContent: "space-between" }}>
-      <View style={{ flexGrow: 1, marginBottom: 48 }}>
+      <View style={styles.main}>
         <Text style={styles.header}>Create a New Recipe</Text>
         <Text style={styles.subHeader}>
           Enter the following information to upload your own recipe.
         </Text>
         <View style={{ rowGap: 20 }}>
-          <TextInput
-            label="Title"
-            placeholder="Recipe Title"
-            value={title}
-            onChangeText={setTitle}
-            numberOfLines={2}
-          />
+          <View>
+            <HelperText type="error" visible={!title}>
+              * Required
+            </HelperText>
+            <TextInput
+              label="Title"
+              placeholder="Recipe Title"
+              value={title}
+              onChangeText={setTitle}
+              numberOfLines={2}
+            />
+          </View>
 
-          <TextInput
-            label="Description"
-            placeholder="Recipe Description"
-            value={description}
-            onChangeText={setDescription}
-            numberOfLines={4}
-            multiline
-          />
+          <View>
+            <HelperText type="error" visible={!description}>
+              * Required
+            </HelperText>
+            <TextInput
+              label="Description"
+              placeholder="Recipe Description"
+              value={description}
+              onChangeText={setDescription}
+              numberOfLines={4}
+              multiline
+            />
+          </View>
 
           <Row
             onlyWeb
             style={{ columnGap: 20, rowGap: Platform.OS !== "web" ? 20 : 0 }}
           >
-            <TextInput
-              style={styles.columnInput}
-              keyboardType="numeric"
-              label="Prep Time"
-              value={prepTime}
-              onChangeText={setPrepTime}
-              placeholder={"Enter prep time"}
-            />
+            <View style={styles.column}>
+              <HelperText type="error" visible={!prepTime}>
+                * Required
+              </HelperText>
+              <TextInput
+                style={styles.column}
+                keyboardType="numeric"
+                label="Prep Time"
+                value={prepTime}
+                onChangeText={setPrepTime}
+                placeholder={"Enter prep time"}
+              />
+            </View>
 
-            <TextInput
-              style={styles.columnInput}
-              keyboardType="numeric"
-              label="Cook Time"
-              value={cookTime}
-              onChangeText={setCookTime}
-              placeholder={"Enter cook time"}
-            />
+            <View style={styles.column}>
+              <HelperText type="error" visible={!cookTime}>
+                * Required
+              </HelperText>
+              <TextInput
+                style={styles.column}
+                keyboardType="numeric"
+                label="Cook Time"
+                value={cookTime}
+                onChangeText={setCookTime}
+                placeholder={"Enter cook time"}
+              />
+            </View>
 
-            <TextInput
-              style={styles.columnInput}
-              keyboardType="numeric"
-              label="Serving"
-              value={serving}
-              onChangeText={setServing}
-              placeholder={"Enter number of servings"}
-            />
+            <View style={styles.column}>
+              <HelperText type="error" visible={!serving}>
+                * Required
+              </HelperText>
+              <TextInput
+                style={styles.column}
+                keyboardType="numeric"
+                label="Serving"
+                value={serving}
+                onChangeText={setServing}
+                placeholder={"Enter number of servings"}
+              />
+            </View>
           </Row>
           <Row
             onlyWeb
             style={{ columnGap: 20, rowGap: Platform.OS !== "web" ? 20 : 0 }}
           >
-            <View
-              style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
-            >
-              <TextInput
-                style={{ flex: 1 }}
-                label="Add Categories"
-                placeholder="Enter categories. You can add multiple categories by separating them with comma or new line"
-                value={categoryValue}
-                onChangeText={setCategoryValue}
-                numberOfLines={3}
-                multiline
-              />
-              <Button icon="plus" onPress={handleAddCategories}>
-                Add
-              </Button>
+            <View style={styles.column}>
+              <HelperText type="info" visible={!serving}>
+                Optional
+              </HelperText>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  columnGap: 10,
+                }}
+              >
+                <TextInput
+                  style={{ flex: 1 }}
+                  label="Add Categories"
+                  placeholder="Enter categories. You can add multiple categories by separating them with comma or new line"
+                  value={categoryValue}
+                  onChangeText={setCategoryValue}
+                  numberOfLines={4}
+                  multiline
+                />
+                <Button icon="plus" onPress={handleAddCategories}>
+                  Add
+                </Button>
+              </View>
             </View>
             <View style={{ flex: 1 }}>
-              <Text>Tags:</Text>
+              <Text>Categories:</Text>
               <View style={styles.categories}>
                 {categories.map((category) => (
-                  <View key={category}>
-                    <Text>{category}</Text>
-                  </View>
+                  <Tag
+                    key={category}
+                    icon={
+                      <Icon name="close" type="material-community" size={16} />
+                    }
+                    iconOnpress={() => handleRemoveCategory(category)}
+                  >
+                    {category}
+                  </Tag>
                 ))}
               </View>
             </View>
@@ -146,24 +229,40 @@ function NewRecipePage(props: Props) {
         </View>
       </View>
 
-      <Row
-        style={{
-          justifyContent: "flex-end",
-          columnGap: 20,
-        }}
-      >
+      <Row style={styles.footer}>
         <StyledButton buttonColor="#bbb" onPress={() => router.push("/")}>
           Cancel
         </StyledButton>
-        <StyledButton buttonColor={colors.highlight} onPress={handleClickNext}>
+        <StyledButton
+          buttonColor={colors.highlight}
+          onPress={handleClickNext}
+          disabled={loading}
+        >
           Next
         </StyledButton>
       </Row>
+      <Snackbar
+        visible={!!error}
+        onDismiss={() => setError(null)}
+        wrapperStyle={styles.feedback}
+        action={{
+          label: "Close",
+          onPress: () => {
+            setError(null);
+          },
+        }}
+      >
+        {error}
+      </Snackbar>
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
+  main: {
+    flexGrow: 1,
+    marginBottom: 48,
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
@@ -176,12 +275,25 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "left",
   },
-  columnInput: {
+  column: {
     flex: 1,
+  },
+  footer: {
+    paddingTop: 24,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    justifyContent: "flex-end",
+    columnGap: 20,
   },
   categories: {
     flexDirection: "row",
-    gap: 10,
+    flexWrap: "wrap",
+  },
+  feedback: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
   },
 });
 

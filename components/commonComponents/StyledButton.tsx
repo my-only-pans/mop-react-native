@@ -17,15 +17,29 @@ interface Props {
   textColor?: string;
   children: string;
   onPress?: (e: GestureResponderEvent) => any;
+  disabled?: boolean;
 }
 
 function StyledButton(props: Props) {
-  const { style, textStyle, children, onPress, buttonColor, textColor } = props;
+  const {
+    style,
+    textStyle,
+    children,
+    onPress,
+    buttonColor,
+    textColor,
+    disabled,
+  } = props;
 
   return (
     <Pressable
-      style={[styles.container, style, { backgroundColor: buttonColor }]}
+      style={[
+        styles.container,
+        style,
+        { backgroundColor: disabled ? "#ccc" : buttonColor },
+      ]}
       onPress={onPress}
+      disabled={disabled}
     >
       <Text style={[styles.text, textStyle, { color: textColor }]}>
         {children}
