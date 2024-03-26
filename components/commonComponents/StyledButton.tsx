@@ -31,16 +31,18 @@ function StyledButton(props: Props) {
     disabled,
   } = props;
 
+  const btnStyles = [styles.container, style];
+
+  if (buttonColor) {
+    btnStyles.push({ backgroundColor: buttonColor });
+  }
+
+  if (disabled) {
+    btnStyles.push({ backgroundColor: "#ccc" });
+  }
+
   return (
-    <Pressable
-      style={[
-        styles.container,
-        style,
-        { backgroundColor: disabled ? "#fff" : buttonColor },
-      ]}
-      onPress={onPress}
-      disabled={disabled}
-    >
+    <Pressable style={btnStyles} onPress={onPress} disabled={disabled}>
       <Text style={[styles.text, textStyle, { color: textColor }]}>
         {children}
       </Text>
@@ -57,6 +59,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#000",
+    textAlign: "center",
   },
 });
 

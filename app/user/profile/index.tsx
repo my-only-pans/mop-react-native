@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   View,
@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Container from "../../../components/commonComponents/Container";
+import StyledButton from "../../../components/commonComponents/StyledButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function ProfileView() {
   const [dietaryPreference, setDietaryPreference] = useState("");
@@ -16,6 +18,8 @@ function ProfileView() {
   const [prepCook, setPrepCook] = useState("");
   const [servingSize, setServingSize] = useState("");
   const [editableFields, setEditableFields] = useState(false);
+
+  const router = useRouter();
 
   const handleClickEdit = () => {
     setEditableFields(!editableFields);
@@ -28,6 +32,13 @@ function ProfileView() {
 
   const handleClickCancel = () => {
     setEditableFields(!editableFields);
+  };
+
+  const handleLogout = () => {
+    AsyncStorage.removeItem("myProfile");
+    AsyncStorage.removeItem("authToken");
+
+    router.push("/");
   };
 
   return (
@@ -138,30 +149,34 @@ function ProfileView() {
         editable={editableFields}
       />
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={!editableFields ? handleClickEdit : handleClickSave}
-      >
-        <Text style={styles.btnText}>
+      <View style={{ gap: 10, width: "100%" }}>
+        <StyledButton
+          style={styles.btn}
+          onPress={!editableFields ? handleClickEdit : handleClickSave}
+        >
           {editableFields ? "Save" : "Edit Preferences"}
-        </Text>
-      </TouchableOpacity>
-      {/* <Text>{label}</Text> */}
+        </StyledButton>
 
-      <TouchableOpacity
-        style={styles.btn}
-        onPress={
-          !editableFields
-            ? () => {
-                router.push("/user/profile/update");
-              }
-            : handleClickCancel
-        }
-      >
-        <Text style={styles.btnText}>
+        <StyledButton
+          style={styles.btn}
+          onPress={
+            !editableFields
+              ? () => {
+                  router.push("/user/profile/update");
+                }
+              : handleClickCancel
+          }
+        >
           {editableFields ? "Cancel" : "Edit Profile"}
-        </Text>
-      </TouchableOpacity>
+        </StyledButton>
+        <StyledButton
+          buttonColor="#ccc"
+          style={{ width: "100%" }}
+          onPress={handleLogout}
+        >
+          Logout
+        </StyledButton>
+      </View>
     </Container>
   );
 }
@@ -236,7 +251,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     backgroundColor: "#FAAE2B",
     width: "100%",
-    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
