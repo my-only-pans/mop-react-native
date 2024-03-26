@@ -1,7 +1,13 @@
 import { Slot } from "expo-router";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import MobileNavigationBar from "../components/commonComponents/MobileNavigationBar";
 
 export default function HomeLayout() {
@@ -10,11 +16,11 @@ export default function HomeLayout() {
       <Header />
       <View style={styles.container}>
         {Platform.OS === "web" ? <Sidebar /> : null}
-        <View style={styles.content}>
+        <KeyboardAvoidingView style={styles.content}>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
             <Slot />
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       </View>
       {Platform.OS !== "web" ? <MobileNavigationBar /> : null}
     </View>
