@@ -7,6 +7,7 @@ import getServerUrl from "../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../theme/colors";
 import { textStyles } from "../../theme/text";
+import getErrorMessage from "../../utils/getErrorMessage";
 
 function Test() {
   const [route, setRoute] = useState<string>("");
@@ -33,8 +34,7 @@ function Test() {
       // Log the response data
       console.log(res.data);
     } catch (error) {
-      // Handle errors
-      console.log("ERROR", error);
+      console.log(getErrorMessage(error));
     }
   };
 
@@ -51,7 +51,7 @@ function Test() {
 
       console.log(res.data);
     } catch (error) {
-      console.log(error);
+      console.log(getErrorMessage(error));
     }
   };
 
