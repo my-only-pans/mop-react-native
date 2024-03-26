@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { firebaseAuth } from "../../../firebase/firebaseApp";
 import axios from "axios";
-import { Snackbar } from "react-native-paper";
+import { Checkbox, Snackbar } from "react-native-paper";
 import getServerUrl from "../../../utils/getServerUrl";
 import colors from "../../../theme/colors";
 
@@ -28,6 +28,7 @@ function Registration() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
   const [status, setStatus] = useState<Status | null>(null);
 
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
@@ -58,6 +59,9 @@ function Registration() {
     }
     if (password !== confirmPassword) {
       newErrorMessages.push("Password should match");
+    }
+    if (!isChecked) {
+      newErrorMessages.push("Please agree to the Terms and Conditions and Privacy Policy to sign-up");
     }
 
     setErrorMessages(newErrorMessages);
@@ -156,6 +160,29 @@ function Registration() {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
+            <View  style={styles.termsContainer}>
+              <Checkbox
+                status={isChecked ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setIsChecked(!isChecked);
+                }}
+              /> 
+
+              <Text >
+                I agree with My Only Pans 
+                <Link href="/privacy/terms" style={styles.link}>
+                  {" "}
+                    Tersms and Conditions 
+                </Link>
+
+                <Text> and</Text>
+
+                <Link href="/privacy" style={styles.link}>
+                  {" "}
+                    Privacy Policy
+                </Link>
+              </Text>
+            </View>
             <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
               <Text style={styles.btnText}>Sign-up</Text>
             </TouchableOpacity>
@@ -217,7 +244,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   errorContainer: {
-    height: 150,
+    height: 170,
     padding: 20,
   },
   errorMessage: {
@@ -272,6 +299,10 @@ const styles = StyleSheet.create({
   feedback: {
     position: "absolute",
     top: 0,
+  },
+  termsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
