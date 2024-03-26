@@ -36,7 +36,7 @@ function StyledButton(props: Props) {
       style={[
         styles.container,
         style,
-        { backgroundColor: disabled ? "#ccc" : buttonColor },
+        { backgroundColor: disabled ? "#fff" : buttonColor },
       ]}
       onPress={onPress}
       disabled={disabled}

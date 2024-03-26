@@ -22,16 +22,18 @@ interface Props {
 }
 
 function RecipeDetailsForm({ draft, onClickNext }: Props) {
-  const [title, setTitle] = useState(draft?.title);
-  const [description, setDescription] = useState(draft?.description);
+  const [title, setTitle] = useState<string>(draft?.title || "");
+  const [description, setDescription] = useState<string>(
+    draft?.description || ""
+  );
   const [prepTime, setPrepTime] = useState<string>(
-    draft?.prepTime.toString() || "0"
+    draft?.prepTime.toString() || ""
   );
   const [cookTime, setCookTime] = useState<string>(
-    draft?.cookTime.toString() || "0"
+    draft?.cookTime.toString() || ""
   );
   const [serving, setServing] = useState<string>(
-    draft?.serving.toString() || "0"
+    draft?.serving.toString() || ""
   );
   const [categories, setCategories] = useState<string[]>(
     draft?.categories || []
@@ -69,12 +71,14 @@ function RecipeDetailsForm({ draft, onClickNext }: Props) {
         headers: { Authorization: await getAuthToken() },
       })
       .then((res) => {
+        console.log(res);
         if (res.data) {
           setLoading(false);
           router.push(`/recipes/draft/${res.data._id}?section=requirements`);
         }
       })
       .catch((error) => {
+        console.log(error);
         setError(getErrorMessage(error).message);
         return setLoading(false);
       });
@@ -246,7 +250,7 @@ function RecipeDetailsForm({ draft, onClickNext }: Props) {
           onPress={handleClickNext}
           disabled={loading}
         >
-          Next: Requirements
+          Next
         </StyledButton>
       </Row>
       <Snackbar

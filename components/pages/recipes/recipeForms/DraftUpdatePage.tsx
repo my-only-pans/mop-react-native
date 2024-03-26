@@ -10,6 +10,9 @@ import RecipeDetailsForm from "./RecipeDetailsForm";
 import { RecipeType } from "../../../../types/RecipeTypes";
 import RecipeRequirementsForm from "./RecipeRequirementsForm";
 import RecipeInstructionsForm from "./RecipeInstructionsForm";
+import Row from "../../../commonComponents/Row";
+import StyledButton from "../../../commonComponents/StyledButton";
+import colors from "../../../../theme/colors";
 
 interface Props {}
 
@@ -85,7 +88,24 @@ function DraftUpdatePage(props: Props) {
     }
   }
 
-  return <Container>{content}</Container>;
+  return (
+    <Container>
+      {content && (
+        <>
+          <Row style={{ justifyContent: "space-between" }}>
+            <Text style={textStyles.header}>{draft?.title}</Text>
+            <Row gap={10}>
+              <StyledButton>Save</StyledButton>
+              <StyledButton buttonColor={colors.paragraph} textColor="#fff">
+                Publish
+              </StyledButton>
+            </Row>
+          </Row>
+          {content}
+        </>
+      )}
+    </Container>
+  );
 }
 
 export default DraftUpdatePage;

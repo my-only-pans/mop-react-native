@@ -9,7 +9,7 @@ function New(props: Props) {
 
   return (
     <Container style={{ flex: 1, justifyContent: "space-between" }}>
-      <RecipeDetailsForm />;
+      <RecipeDetailsForm />
     </Container>
   );
 }
