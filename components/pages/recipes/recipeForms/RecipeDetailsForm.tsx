@@ -10,22 +10,32 @@ import StyledButton from "../../../commonComponents/StyledButton";
 import { useRouter } from "expo-router";
 import axios from "axios";
 import getServerUrl from "../../../../utils/getServerUrl";
-import generateApiHeader from "../../../../utils/generateApiHeader";
 import getErrorMessage from "../../../../utils/getErrorMessage";
 import Tag from "../../../commonComponents/Tag";
+import { RecipeType } from "../../../../types/RecipeTypes";
+import getAuthToken from "../../../../utils/getAuthToken";
 
 interface Props {
-  recipeId?: string;
+  draft?: RecipeType;
+  setDraft?: React.Dispatch<React.SetStateAction<RecipeType | undefined>>;
+  onClickNext?: (section: string) => void;
 }
 
-function NewRecipePage(props: Props) {
-  const { recipeId } = props;
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [prepTime, setPrepTime] = useState<string>("");
-  const [cookTime, setCookTime] = useState<string>("");
-  const [serving, setServing] = useState<string>("");
-  const [categories, setCategories] = useState<string[]>([]);
+function RecipeDetailsForm({ draft, onClickNext }: Props) {
+  const [title, setTitle] = useState(draft?.title);
+  const [description, setDescription] = useState(draft?.description);
+  const [prepTime, setPrepTime] = useState<string>(
+    draft?.prepTime.toString() || "0"
+  );
+  const [cookTime, setCookTime] = useState<string>(
+    draft?.cookTime.toString() || "0"
+  );
+  const [serving, setServing] = useState<string>(
+    draft?.serving.toString() || "0"
+  );
+  const [categories, setCategories] = useState<string[]>(
+    draft?.categories || []
+  );
   const [categoryValue, setCategoryValue] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -54,16 +64,14 @@ function NewRecipePage(props: Props) {
       categories,
     };
 
-    const headers = await generateApiHeader();
-
     axios
       .post(getServerUrl() + "/recipe/draft", body, {
-        headers,
+        headers: { Authorization: await getAuthToken() },
       })
       .then((res) => {
         if (res.data) {
           setLoading(false);
-          router.push(`/recipe/draft/update?draftId=${res.data._id}`);
+          router.push(`/recipes/draft/${res.data._id}?section=requirements`);
         }
       })
       .catch((error) => {
@@ -74,7 +82,7 @@ function NewRecipePage(props: Props) {
 
   const updateRecipeDraft = async () => {
     const body = {
-      recipeId,
+      recipeId: draft?._id,
       title,
       description,
       prepTime,
@@ -87,10 +95,10 @@ function NewRecipePage(props: Props) {
   };
 
   const handleClickNext = async () => {
-    if (!recipeId) {
+    if (!draft) {
       saveNewRecipeDraft();
     } else {
-      updateRecipeDraft();
+      onClickNext && onClickNext("requirements");
     }
   };
 
@@ -99,7 +107,7 @@ function NewRecipePage(props: Props) {
   };
 
   return (
-    <Container style={{ flex: 1, justifyContent: "space-between" }}>
+    <View>
       <View style={styles.main}>
         <Text style={styles.header}>Create a New Recipe</Text>
         <Text style={styles.subHeader}>
@@ -238,7 +246,7 @@ function NewRecipePage(props: Props) {
           onPress={handleClickNext}
           disabled={loading}
         >
-          Next
+          Next: Requirements
         </StyledButton>
       </Row>
       <Snackbar
@@ -254,7 +262,7 @@ function NewRecipePage(props: Props) {
       >
         {error}
       </Snackbar>
-    </Container>
+    </View>
   );
 }
 
@@ -282,7 +290,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     columnGap: 20,
   },
   categories: {
@@ -297,4 +305,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewRecipePage;
+export default RecipeDetailsForm;

@@ -30,4 +30,16 @@ export const textStyles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: "bold",
   },
+  header: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 2,
+    textAlign: "left",
+  },
+  subHeader: {
+    fontSize: 15,
+    marginBottom: 48,
+    marginTop: 10,
+    textAlign: "left",
+  },
 });
