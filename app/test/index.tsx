@@ -1,19 +1,17 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import getServerUrl from "../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import colors from "../../theme/colors";
+import { textStyles } from "../../theme/text";
 
-interface Props {}
-
-function Test(props: Props) {
+function Test() {
   const [route, setRoute] = useState<string>("");
   const [method, setMethod] = useState("get");
   const [payload, setPayload] = useState<string>("");
-  const [sendAuth, setSendAuth] = useState(true);
-  const {} = props;
 
   const handlePost = async () => {
     try {
@@ -28,9 +26,7 @@ function Test(props: Props) {
       // Make the POST request
       const res = await axios.post(
         getServerUrl() + route,
-        {
-          body: payload && JSON.parse(payload),
-        },
+        payload && JSON.parse(payload),
         { headers }
       );
 
@@ -75,7 +71,8 @@ function Test(props: Props) {
   };
 
   return (
-    <View>
+    <View style={{ padding: 32, gap: 32 }}>
+      <Text style={textStyles.h1}>Test API Routes</Text>
       <TextInput placeholder="route" value={route} onChangeText={setRoute} />
       <RNPickerSelect
         value={method}
@@ -88,11 +85,19 @@ function Test(props: Props) {
         ]}
       />
       <TextInput
+        multiline
         placeholder="payload"
         value={payload}
         onChangeText={(value) => setPayload(value)}
+        numberOfLines={20}
       />
-      <Button onPress={handleSend}>Send</Button>
+      <Button
+        style={{ backgroundColor: colors.highlight }}
+        // labelStyle={{ color: "#fff" }}
+        onPress={handleSend}
+      >
+        Send
+      </Button>
     </View>
   );
 }
