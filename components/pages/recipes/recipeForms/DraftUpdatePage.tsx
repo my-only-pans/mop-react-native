@@ -92,7 +92,10 @@ function DraftUpdatePage(props: Props) {
     <Container>
       {content && (
         <>
-          <Row style={{ justifyContent: "space-between" }}>
+          <Row
+            style={{ justifyContent: "space-between", marginBottom: 48 }}
+            onlyWeb
+          >
             <Text style={textStyles.header}>{draft?.title}</Text>
             <Row gap={10}>
               <StyledButton>Save</StyledButton>

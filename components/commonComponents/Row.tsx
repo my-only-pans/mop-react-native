@@ -22,9 +22,9 @@ function Row({ children, style, onlyWeb, gap, columnGap, rowGap }: Props) {
       style={[
         {
           flexDirection: direction,
-          gap: gap || 0,
-          columnGap: columnGap || 0,
-          rowGap: rowGap || 0,
+          gap: gap,
+          columnGap: columnGap,
+          rowGap: rowGap,
         },
         style,
       ]}

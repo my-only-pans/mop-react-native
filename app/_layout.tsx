@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import MobileNavigationBar from "../components/commonComponents/MobileNavigationBar";
+import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 
 export default function HomeLayout() {
   return (
@@ -23,6 +24,7 @@ export default function HomeLayout() {
         </KeyboardAvoidingView>
       </View>
       {Platform.OS !== "web" ? <MobileNavigationBar /> : null}
+      <ExpoStatusBar hidden />
     </View>
   );
 }

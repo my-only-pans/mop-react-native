@@ -82,9 +82,9 @@ function RecipeRequirementsForm(props: Props) {
 
   return (
     <View>
-      <Row>
+      {/* <Row>
         <Text style={[textStyles.subHeader]}>Recipe Requirements</Text>
-      </Row>
+      </Row> */}
       <View>
         <Row onlyWeb style={{ gap: 20 }}>
           <View style={styles.column}>
@@ -98,6 +98,7 @@ function RecipeRequirementsForm(props: Props) {
                   onChangeText={setEquipmentValue}
                   label="Equipment Name"
                   placeholder="Frying Pan, Stove, Oven"
+                  onEndEditing={handleAddEquipment}
                 />
               </View>
               <Button
