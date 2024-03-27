@@ -7,16 +7,18 @@ import Row from "../../../commonComponents/Row";
 import Tag from "../../../commonComponents/Tag";
 import { Icon } from "react-native-elements";
 import RecipeIngredientList from "./RecipeIngredientList";
+import StyledButton from "../../../commonComponents/StyledButton";
+import colors from "../../../../theme/colors";
 
 interface Props {
   draft: RecipeType;
   setDraft: React.Dispatch<React.SetStateAction<RecipeType | undefined>>;
-  onClickNext: (section: string) => void;
-  onClickBack: (section: string) => void;
+  onClickNext: () => void;
+  onClickBack: () => void;
 }
 
 function RecipeRequirementsForm(props: Props) {
-  const { draft, setDraft } = props;
+  const { draft, setDraft, onClickNext, onClickBack } = props;
   const { equipment, ingredients } = draft;
   const [equipmentValue, setEquipmentValue] = useState<string>("");
   const [ingredientName, setIngredientName] = useState<string>("");
@@ -81,11 +83,11 @@ function RecipeRequirementsForm(props: Props) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       {/* <Row>
         <Text style={[textStyles.subHeader]}>Recipe Requirements</Text>
       </Row> */}
-      <View>
+      <View style={styles.main}>
         <Row onlyWeb style={{ gap: 20 }}>
           <View style={styles.column}>
             <Text style={(textStyles.h5, styles.sectionHeading)}>
@@ -178,11 +180,26 @@ function RecipeRequirementsForm(props: Props) {
           </View>
         </Row>
       </View>
+      <Row style={styles.footer}>
+        <StyledButton buttonColor="#bbb" onPress={onClickBack}>
+          Cancel
+        </StyledButton>
+        <StyledButton onPress={onClickNext}>Next</StyledButton>
+        {/* <StyledButton buttonColor={colors.highlight} onPress={onClickNext}>
+          Next
+        </StyledButton> */}
+      </Row>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  main: {
+    flexGrow: 1,
+  },
   column: {
     flex: 1,
   },
@@ -207,6 +224,9 @@ const styles = StyleSheet.create({
   },
   ingredientInput: {
     flex: 1,
+  },
+  footer: {
+    justifyContent: "space-between",
   },
 });
 

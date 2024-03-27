@@ -38,9 +38,6 @@ function DraftUpdatePage(props: Props) {
 
   let content: ReactNode = null;
 
-  console.log(draft);
-  console.log("ACTIVE SECTION", section);
-
   if (draft) {
     switch (section) {
       case "details":
@@ -60,7 +57,7 @@ function DraftUpdatePage(props: Props) {
             draft={draft}
             setDraft={setDraft}
             onClickNext={() => {
-              router.setParams({ section: "requirements" });
+              router.setParams({ section: "instructions" });
             }}
             onClickBack={() => {
               router.setParams({ section: "details" });
@@ -69,18 +66,7 @@ function DraftUpdatePage(props: Props) {
         );
         break;
       case "instructions":
-        content = (
-          <RecipeRequirementsForm
-            draft={draft}
-            setDraft={setDraft}
-            onClickNext={() => {
-              router.setParams({ section: "preview" });
-            }}
-            onClickBack={() => {
-              router.setParams({ section: "requirements" });
-            }}
-          />
-        );
+        content = <Text>INSTRUCTIONS</Text>;
         break;
 
       default:
