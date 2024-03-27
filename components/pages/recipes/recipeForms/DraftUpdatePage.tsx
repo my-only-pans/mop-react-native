@@ -66,7 +66,7 @@ function DraftUpdatePage(props: Props) {
         );
         break;
       case "instructions":
-        content = <Text>INSTRUCTIONS</Text>;
+        content = <RecipeInstructionsForm />;
         break;
 
       default:
