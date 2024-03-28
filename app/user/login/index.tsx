@@ -90,6 +90,8 @@ function Login() {
         value={email}
         onChangeText={setEmail}
         disabled={loading}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
 
       <TextInput

@@ -14,7 +14,7 @@ const links = [
     icon: "local-dining",
   },
   {
-    href: "/recipes/create",
+    href: "/recipes/new",
     icon: "library-add",
   },
   {
