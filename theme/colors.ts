@@ -9,6 +9,7 @@ const colors = {
   info: "#006572",
   background: "#F2F7F5",
   danger: "#FA5246",
+  grey: "#ccc",
 };
 
 export default colors;

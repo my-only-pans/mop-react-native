@@ -11,7 +11,7 @@ import { Icon } from "react-native-elements";
 interface Props {
   value: RecipeInstructions | null;
   readonly?: boolean;
-  onChange?: Dispatch<SetStateAction<RecipeInstructions>>;
+  onChange?: (instructions: RecipeInstructions) => void;
 }
 
 function Editor(props: Props) {

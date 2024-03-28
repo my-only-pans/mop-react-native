@@ -241,18 +241,20 @@ function RecipeDetailsForm({ draft, onClickNext }: Props) {
         </View>
       </View>
 
-      <Row style={styles.footer}>
-        <StyledButton buttonColor="#bbb" onPress={() => router.push("/")}>
-          Cancel
-        </StyledButton>
-        <StyledButton
-          buttonColor={colors.highlight}
-          onPress={handleClickNext}
-          disabled={loading}
-        >
-          Next
-        </StyledButton>
-      </Row>
+      {!draft && (
+        <Row style={styles.footer}>
+          <StyledButton buttonColor="#bbb" onPress={() => router.push("/")}>
+            Cancel
+          </StyledButton>
+          <StyledButton
+            buttonColor={colors.highlight}
+            onPress={handleClickNext}
+            disabled={loading}
+          >
+            Next
+          </StyledButton>
+        </Row>
+      )}
       <Snackbar
         visible={!!error}
         onDismiss={() => setError(null)}

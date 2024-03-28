@@ -13,12 +13,10 @@ import colors from "../../../../theme/colors";
 interface Props {
   draft: RecipeType;
   setDraft: React.Dispatch<React.SetStateAction<RecipeType | undefined>>;
-  onClickNext: () => void;
-  onClickBack: () => void;
 }
 
 function RecipeRequirementsForm(props: Props) {
-  const { draft, setDraft, onClickNext, onClickBack } = props;
+  const { draft, setDraft } = props;
   const { equipment, ingredients } = draft;
   const [equipmentValue, setEquipmentValue] = useState<string>("");
   const [ingredientName, setIngredientName] = useState<string>("");
@@ -88,60 +86,51 @@ function RecipeRequirementsForm(props: Props) {
         <Text style={[textStyles.subHeader]}>Recipe Requirements</Text>
       </Row> */}
       <View style={styles.main}>
-        <Row onlyWeb style={{ gap: 20 }}>
-          <View style={styles.column}>
-            <Text style={(textStyles.h5, styles.sectionHeading)}>
-              Equipment
-            </Text>
-            <Row style={[styles.equipmentForm]}>
-              <View style={styles.equipmentInput}>
-                <TextInput
-                  value={equipmentValue}
-                  onChangeText={setEquipmentValue}
-                  label="Equipment Name"
-                  placeholder="Frying Pan, Stove, Oven"
-                  onEndEditing={handleAddEquipment}
-                />
-              </View>
-              <Button
-                icon="plus"
-                onPress={handleAddEquipment}
-                disabled={!equipmentValue}
-              >
-                Add
-              </Button>
-            </Row>
-            <HelperText type="error" visible={!equipmentValue}>
-              * Equipment name is required
-            </HelperText>
-            <View style={[styles.equipment]}>
-              {equipment.map((e) => (
-                <Tag
-                  key={e}
-                  icon={
-                    <Icon name="close" type="material-community" size={16} />
-                  }
-                  iconOnpress={() => handleRemoveEquipment(e)}
-                >
-                  {e}
-                </Tag>
-              ))}
+        <View style={[styles.column, { marginBottom: 48 }]}>
+          <Text style={(textStyles.h5, styles.sectionHeading)}>Equipment</Text>
+          <Row style={[styles.equipmentForm]}>
+            <View style={styles.equipmentInput}>
+              <TextInput
+                value={equipmentValue}
+                onChangeText={setEquipmentValue}
+                label="Equipment Name"
+                placeholder="Frying Pan, Stove, Oven"
+                onEndEditing={handleAddEquipment}
+              />
             </View>
+            <Button
+              icon="plus"
+              onPress={handleAddEquipment}
+              disabled={!equipmentValue}
+            >
+              Add
+            </Button>
+          </Row>
+          <View style={[styles.equipment]}>
+            {equipment.map((e) => (
+              <Tag
+                key={e}
+                icon={<Icon name="close" type="material-community" size={16} />}
+                iconOnpress={() => handleRemoveEquipment(e)}
+              >
+                {e}
+              </Tag>
+            ))}
           </View>
-          <View style={[styles.column]}>
-            <Text style={(textStyles.h5, styles.sectionHeading)}>
-              Ingredients
-            </Text>
-            <Row style={styles.ingredientForm}>
-              <View>
-                <TextInput
-                  style={styles.ingredientInput}
-                  value={ingredientName}
-                  onChangeText={setIngredientName}
-                  label="Ingredient"
-                  placeholder="apple"
-                />
-              </View>
+        </View>
+        <View style={[styles.column]}>
+          <Text style={(textStyles.h5, styles.sectionHeading)}>
+            Ingredients
+          </Text>
+          <View style={styles.ingredientForm}>
+            <Row onlyWeb gap={10}>
+              <TextInput
+                style={styles.ingredientInput}
+                value={ingredientName}
+                onChangeText={setIngredientName}
+                label="Ingredient"
+                placeholder="apple"
+              />
               <TextInput
                 style={[styles.ingredientInput]}
                 value={ingredientAmount}
@@ -173,22 +162,13 @@ function RecipeRequirementsForm(props: Props) {
                 ? "Ingredient fields are required"
                 : "* Ingredient already exists"}
             </HelperText>
-            <RecipeIngredientList
-              ingredients={ingredients}
-              onDelete={handleDeleteIngredient}
-            />
           </View>
-        </Row>
+          <RecipeIngredientList
+            ingredients={ingredients}
+            onDelete={handleDeleteIngredient}
+          />
+        </View>
       </View>
-      <Row style={styles.footer}>
-        <StyledButton buttonColor="#bbb" onPress={onClickBack}>
-          Cancel
-        </StyledButton>
-        <StyledButton onPress={onClickNext}>Next</StyledButton>
-        {/* <StyledButton buttonColor={colors.highlight} onPress={onClickNext}>
-          Next
-        </StyledButton> */}
-      </Row>
     </View>
   );
 }
@@ -198,7 +178,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   main: {
-    flexGrow: 1,
+    // flexGrow: 1,
   },
   column: {
     flex: 1,
@@ -214,16 +194,17 @@ const styles = StyleSheet.create({
   equipmentForm: {
     alignItems: "center",
     columnGap: 10,
+    marginBottom: 24,
   },
   equipmentInput: {
     flexGrow: 1,
   },
   ingredientForm: {
-    gap: 10,
-    alignItems: "center",
+    marginBottom: 12,
   },
   ingredientInput: {
     flex: 1,
+    width: "100%",
   },
   footer: {
     justifyContent: "space-between",

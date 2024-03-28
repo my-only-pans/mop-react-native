@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import {
   RecipeInstructions,
+  RecipeType,
   TextBlockType,
 } from "../../../../types/RecipeTypes";
 import Editor from "../../../commonComponents/editor/Editor";
 
 interface Props {
-  instructions: RecipeInstructions;
+  draft: RecipeType;
+  setDraft: React.Dispatch<React.SetStateAction<RecipeType | undefined>>;
 }
 
 const sample: RecipeInstructions = [
@@ -22,14 +24,18 @@ const sample: RecipeInstructions = [
 ];
 
 function RecipeInstructionsForm(props: Props) {
-  const { instructions } = props;
-  const [value, setValue] = useState<RecipeInstructions>(
-    instructions ?? [{ type: TextBlockType.p, text: "" }]
-  );
+  const { draft, setDraft } = props;
+
+  const handleUpdateInstructions = (instructions: RecipeInstructions) => {
+    setDraft({
+      ...draft,
+      instructions,
+    });
+  };
 
   return (
     <View style={styles.container}>
-      <Editor value={value} onChange={setValue} />
+      <Editor value={draft.instructions} onChange={handleUpdateInstructions} />
     </View>
   );
 }
