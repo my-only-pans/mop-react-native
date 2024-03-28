@@ -30,6 +30,9 @@ export const textStyles = StyleSheet.create({
     fontSize: fontSizes.base,
     fontWeight: "bold",
   },
+  p: {
+    fontSize: fontSizes.base,
+  },
   header: {
     fontSize: 20,
     fontWeight: "bold",
