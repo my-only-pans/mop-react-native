@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { TextBlock, TextBlockType } from "../../../types/RecipeTypes";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  NativeSyntheticEvent,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputContentSizeChangeEventData,
+  View,
+} from "react-native";
 import { textStyles } from "../../../theme/text";
 import { Icon } from "react-native-elements";
 import { Tooltip } from "@rneui/themed";
@@ -70,17 +77,27 @@ function EditorBlock(props: Props) {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    //  log the height of content of inputRef
+  }, [text]);
+
+  const handleHeightChange = (
+    e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
+  ) => {
+    setHeight(e.nativeEvent.contentSize.height);
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
         ref={inputRef}
-        style={[getStyle(), { height: height }]}
+        style={[getStyle(), { height: height, maxHeight: height }]}
         value={text}
         onChangeText={onChangeText}
         placeholder="Enter text"
         placeholderTextColor="#aaa"
         multiline
-        onContentSizeChange={(e) => setHeight(e.nativeEvent.contentSize.height)}
+        onContentSizeChange={handleHeightChange}
       />
       {!readonly && (
         <View style={styles.options}>
@@ -114,7 +131,7 @@ function EditorBlock(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
+    // marginBottom: 12,
   },
   tooltipContainer: {
     height: "auto",
