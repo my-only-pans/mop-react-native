@@ -22,7 +22,6 @@ function RecipeIngredientList({ ingredients, onDelete }: Props) {
               {amount} {unit} {_id}
             </Text>
             <Pressable onPress={() => onDelete(_id)}>
-              {" "}
               <Icon name="close" type="material-community" size={16} />
             </Pressable>
           </View>

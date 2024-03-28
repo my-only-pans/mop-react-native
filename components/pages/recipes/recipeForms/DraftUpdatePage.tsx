@@ -7,7 +7,7 @@ import axios from "axios";
 import getServerUrl from "../../../../utils/getServerUrl";
 import getAuthToken from "../../../../utils/getAuthToken";
 import RecipeDetailsForm from "./RecipeDetailsForm";
-import { RecipeInstructions, RecipeType } from "../../../../types/RecipeTypes";
+import { RecipeType } from "../../../../types/RecipeTypes";
 import RecipeRequirementsForm from "./RecipeRequirementsForm";
 import RecipeInstructionsForm from "./RecipeInstructionsForm";
 import Row from "../../../commonComponents/Row";
@@ -15,6 +15,8 @@ import StyledButton from "../../../commonComponents/StyledButton";
 import colors from "../../../../theme/colors";
 import RecipeDraftPreview from "./RecipeDraftPreview";
 import { Icon } from "react-native-elements";
+import getErrorMessage from "../../../../utils/getErrorMessage";
+import { Snackbar } from "react-native-paper";
 
 interface Props {}
 
@@ -24,6 +26,7 @@ function DraftUpdatePage(props: Props) {
   const {} = props;
   const { draftId, section } = useLocalSearchParams();
   const router = useRouter();
+  const [serverMessage, setServerMessage] = useState<string | null>();
 
   const [draft, setDraft] = useState<RecipeType>();
 
@@ -56,6 +59,33 @@ function DraftUpdatePage(props: Props) {
     }
 
     router.setParams({ section: sections[index] });
+  };
+
+  const handleSave = async () => {
+    axios
+      .put(getServerUrl() + "/recipe/draft", draft, {
+        headers: { Authorization: await getAuthToken() },
+      })
+      .then((res) => {
+        // TODO display success
+        setServerMessage("Recipe successfuly saved");
+      })
+      .catch((error) => console.log(getErrorMessage(error)));
+  };
+
+  const handlePublish = async () => {
+    handleSave()
+      .then(async () => {
+        axios
+          .post(getServerUrl() + "/recipe/", draft, {
+            headers: { Authorization: await getAuthToken() },
+          })
+          .then((res) => {
+            router.push(`/recipes/${res.data._id}`);
+          })
+          .catch((error) => console.log(getErrorMessage(error)));
+      })
+      .catch((error) => console.log(getErrorMessage(error)));
   };
 
   if (draft) {
@@ -119,12 +149,15 @@ function DraftUpdatePage(props: Props) {
               rowGap={10}
               style={{ flexWrap: "wrap", flex: 1, justifyContent: "center" }}
             >
-              <StyledButton style={styles.footerAction}>Save</StyledButton>
+              <StyledButton style={styles.footerAction} onPress={handleSave}>
+                Save
+              </StyledButton>
               <StyledButton
                 style={styles.footerAction}
                 buttonColor={colors.paragraph}
                 textColor="#fff"
                 disabled={isPublishDisabled}
+                onPress={handlePublish}
               >
                 Publish
               </StyledButton>
@@ -148,6 +181,18 @@ function DraftUpdatePage(props: Props) {
           </Row>
         </>
       )}
+      <Snackbar
+        visible={!!serverMessage}
+        onDismiss={() => setServerMessage(null)}
+        action={{
+          label: "Close",
+          onPress: () => {
+            setServerMessage(null);
+          },
+        }}
+      >
+        {serverMessage}
+      </Snackbar>
     </Container>
   );
 }
@@ -164,7 +209,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   footerAction: {
-    // flexGrow: 1,
     flexShrink: 0,
   },
   footerArrows: {
