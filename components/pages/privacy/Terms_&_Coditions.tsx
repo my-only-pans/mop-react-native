@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   paragraph:{
-    fontSize: 20,
+    fontSize: 16,
     color: colors.paragraph,
     marginBottom: 20,
   },
