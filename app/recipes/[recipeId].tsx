@@ -10,10 +10,9 @@ import {
   Image,
 } from "react-native";
 import { Button } from "react-native-paper";
-//import sampleRecipe from "../app/test/SampleRecipe";
 import { Icon } from "react-native-elements";
 import colors from "../../theme/colors";
-//import from '../../../assets/recipe';
+import textStyles from "../../theme/text";
 
 interface Props {}
 
@@ -102,7 +101,7 @@ function ViewRecipe(props: Props) {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.headerContainer}>
-          <Text style={styles.header}>{typedSampleRecipe.title}</Text>
+          <Text style={[styles.header, textStyles.h1]}>{typedSampleRecipe.title}</Text>
           <View style={[styles.row]}>
             <Icon name="star" color={colors.highlight} type="material" />
             <Icon name="star" color={colors.highlight} type="material" />
@@ -112,13 +111,13 @@ function ViewRecipe(props: Props) {
           </View>
 
           <View style={[styles.row, { marginVertical: 6 }]}>
-            <Text style={styles.submittedBy}>Submitted by: </Text>
-            <Link href={"./"} style={styles.userName}>
+            <Text style={[styles.submittedBy, textStyles.h5]}>Submitted by: </Text>
+            <Link href={"./"} style={[styles.userName, textStyles.h6]}>
               {typedSampleRecipe.owner}
             </Link>
           </View>
 
-          <Text style={[styles.description]}>
+          <Text style={[styles.description, textStyles.body]}>
             {typedSampleRecipe.description}
           </Text>
         </View>
@@ -153,23 +152,23 @@ function ViewRecipe(props: Props) {
         <View style={[styles.row, styles.timeContainer]}>
           <View style={styles.column}>
             <View style={[styles.row]}>
-              <Text style={styles.label}>Prep Time: </Text>
-              <Text style={styles.text}>
+              <Text style={[styles.label, textStyles.h4]}>Prep Time: </Text>
+              <Text style={[textStyles.body]}>
                 {typedSampleRecipe.prepTime} minutes
               </Text>
             </View>
 
             <View style={[styles.row]}>
-              <Text style={styles.label}>Cook Time: </Text>
-              <Text style={styles.text}>
+              <Text style={[styles.label, textStyles.h4]}>Cook Time: </Text>
+              <Text style={[textStyles.body]}>
                 {typedSampleRecipe.cookTime} minutes
               </Text>
             </View>
           </View>
           <View style={[styles.column]}>
             <View style={[styles.row]}>
-              <Text style={styles.label}>Serving: </Text>
-              <Text style={styles.text}>{thisServing}</Text>
+              <Text style={[styles.label, textStyles.h4]}>Serving: </Text>
+              <Text style={[ textStyles.body]}>{thisServing}</Text>
 
               <TouchableOpacity onPress={decreaseServing}>
                 <Icon
@@ -191,7 +190,7 @@ function ViewRecipe(props: Props) {
         <View style={[styles.column]}>
           <View style={[styles.column, { justifyContent: "space-between" }]}>
             <View>
-              <Text style={styles.label}>Categories:</Text>
+              <Text style={[styles.label, textStyles.h4]}>Categories:</Text>
               <View style={styles.tagContainer}>
                 {Array.isArray(typedSampleRecipe.categories) &&
                   typedSampleRecipe.categories.map((category, index) => (
@@ -203,7 +202,7 @@ function ViewRecipe(props: Props) {
             </View>
 
             <View>
-              <Text style={styles.label}>Equipments:</Text>
+              <Text style={[styles.label, textStyles.h4]}>Equipments:</Text>
               <View style={styles.tagContainer}>
                 {Array.isArray(typedSampleRecipe.equipments) &&
                   typedSampleRecipe.equipments.map((equipment, index) => (
@@ -217,13 +216,13 @@ function ViewRecipe(props: Props) {
 
           <View style={[styles.column]}>
             <View>
-              <Text style={styles.label}>Ingredients:</Text>
+              <Text style={[styles.label, textStyles.h4]}>Ingredients:</Text>
               {typedSampleRecipe.ingredients.map((ingredient, index) => (
                 <View
                   key={index}
                   style={{ flexDirection: "row", alignItems: "center" }}
                 >
-                  <Text style={styles.text}>
+                  <Text style={[textStyles.body]}>
                     {ingredient.qty} {ingredient.unit} of {ingredient.item}
                   </Text>
                   {index !== typedSampleRecipe.ingredients.length - 1 && (
@@ -234,7 +233,7 @@ function ViewRecipe(props: Props) {
             </View>
 
             <View>
-              <Text style={styles.label}>Instructions: </Text>
+              <Text style={[styles.label, textStyles.h4]}>Instructions: </Text>
             </View>
           </View>
         </View>
@@ -268,9 +267,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textAlign: "left",
   },
-  text: {
-    fontSize: 16,
-  },
+
   tagContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -297,7 +294,6 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   subHeader: {
-    fontSize: 15,
     marginBottom: 15,
     marginTop: 10,
     textAlign: "left",
@@ -308,13 +304,10 @@ const styles = StyleSheet.create({
     color: colors.button,
   },
   description: {
-    fontSize: 15,
     fontStyle: "italic",
     marginTop: 4,
   },
   img: {
-    // maxWidth: 300,
-    //maxHeight:300,
     width: 300,
     height: 300,
     borderRadius: 6,
@@ -328,7 +321,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   label: {
-    fontSize: 16,
     textAlign: "left",
     fontWeight: "bold",
     color: "#00473E",
