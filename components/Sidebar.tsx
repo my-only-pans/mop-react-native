@@ -9,7 +9,7 @@ const routes = [
   { href: "/recipes", label: "Recipes" },
   { href: "/user/profile/kitchen", label: "MyKitchen" },
   { href: "/user/profile", label: "MyProfile" },
-  { href: "/about", label: "About us" },
+  { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
   { href: "/privacy/terms", label: "Terms and Condition" },
