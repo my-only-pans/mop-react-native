@@ -77,10 +77,6 @@ function EditorBlock(props: Props) {
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    //  log the height of content of inputRef
-  }, [text]);
-
   const handleHeightChange = (
     e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
   ) => {
@@ -131,7 +127,7 @@ function EditorBlock(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    // marginBottom: 12,
+    marginBottom: 12,
   },
   tooltipContainer: {
     height: "auto",
