@@ -1,17 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  ListBlock,
-  TextBlock,
-  TextBlockType,
-} from "../../../types/RecipeTypes";
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextInput,
-  TextStyle,
-  View,
-} from "react-native";
+import { TextBlock, TextBlockType } from "../../../types/RecipeTypes";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { textStyles } from "../../../theme/text";
 import { Icon } from "react-native-elements";
 import { Tooltip } from "@rneui/themed";
@@ -99,7 +88,7 @@ function EditorBlock(props: Props) {
             visible={showOptions}
             onOpen={() => setShowOptions(true)}
             onClose={() => setShowOptions(false)}
-            containerStyle={{ height: "auto" }}
+            containerStyle={styles.tooltipContainer}
             backgroundColor="#ddd"
             popover={
               <EditorBlockOptions
@@ -125,14 +114,16 @@ function EditorBlock(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: "row",
-    // alignItems: "center",
     marginBottom: 12,
+  },
+  tooltipContainer: {
+    height: "auto",
+    alignItems: "stretch",
+    width: "auto",
   },
   options: {
     position: "absolute",
     left: -25,
-    // top: '50%',
   },
 });
 

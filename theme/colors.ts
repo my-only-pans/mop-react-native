@@ -8,6 +8,7 @@ const colors = {
   button: "#FAAE2B",
   info: "#006572",
   background: "#F2F7F5",
+  danger: "#FA5246",
 };
 
 export default colors;

@@ -23,11 +23,11 @@ export const textStyles = StyleSheet.create({
     fontWeight: "bold",
   },
   h4: {
-    fontSize: fontSizes.md,
-    fontWeight: "bold",
+    fontSize: fontSizes.lg,
+    fontWeight: "normal",
   },
   h5: {
-    fontSize: fontSizes.base,
+    fontSize: fontSizes.md,
     fontWeight: "bold",
   },
   p: {
