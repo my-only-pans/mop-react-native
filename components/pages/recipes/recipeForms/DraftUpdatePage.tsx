@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { textStyles } from "../../../../theme/text";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Container from "../../../commonComponents/Container";
@@ -120,27 +120,58 @@ function DraftUpdatePage(props: Props) {
     <Container>
       {content && (
         <>
-          <Row
-            style={{ justifyContent: "space-between", marginBottom: 48 }}
-            onlyWeb
-          >
-            <Text style={textStyles.header}>{draft?.title} (Draft)</Text>
-          </Row>
+          <View style={styles.header}>
+            <Row style={styles.navigation}>
+              <View>
+                {section !== sections[0] && (
+                  <Pressable
+                    style={styles.footerArrows}
+                    onPress={() => handleChangeSection("prev")}
+                    disabled={!section || section === sections[0]}
+                  >
+                    <Icon
+                      size={32}
+                      name="chevron-left"
+                      color={
+                        !section || section === sections[0]
+                          ? colors.grey
+                          : "#000"
+                      }
+                    />
+                  </Pressable>
+                )}
+              </View>
+              <View>
+                {section !== sections[sections.length - 1] && (
+                  <Pressable
+                    style={styles.footerArrows}
+                    onPress={() => handleChangeSection("next")}
+                    disabled={section === sections[sections.length - 1]}
+                  >
+                    <Icon
+                      size={32}
+                      name="chevron-right"
+                      color={
+                        section === sections[sections.length - 1]
+                          ? colors.grey
+                          : "#000"
+                      }
+                    />
+                  </Pressable>
+                )}
+              </View>
+            </Row>
+          </View>
+          {section !== "preview" && (
+            <Row gap={10} style={{ alignItems: "center", marginBottom: 48 }}>
+              <Text style={[textStyles.header]}>{draft?.title}</Text>
+              <Text style={styles.section}>
+                {(section as string).toUpperCase()}
+              </Text>
+            </Row>
+          )}
           <View style={styles.content}>{content}</View>
           <Row gap={10} style={styles.footer}>
-            <Pressable
-              style={styles.footerArrows}
-              onPress={() => handleChangeSection("prev")}
-              disabled={!section || section === sections[0]}
-            >
-              <Icon
-                size={32}
-                name="chevron-left"
-                color={
-                  !section || section === sections[0] ? colors.grey : "#000"
-                }
-              />
-            </Pressable>
             <Row
               gap={20}
               rowGap={10}
@@ -159,22 +190,6 @@ function DraftUpdatePage(props: Props) {
                 Publish
               </StyledButton>
             </Row>
-
-            <Pressable
-              style={styles.footerArrows}
-              onPress={() => handleChangeSection("next")}
-              disabled={section === sections[sections.length - 1]}
-            >
-              <Icon
-                size={32}
-                name="chevron-right"
-                color={
-                  section === sections[sections.length - 1]
-                    ? colors.grey
-                    : "#000"
-                }
-              />
-            </Pressable>
           </Row>
         </>
       )}
@@ -197,10 +212,22 @@ function DraftUpdatePage(props: Props) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    paddingBottom: 24,
+    paddingBottom: 64,
     marginBottom: 24,
     borderBottomColor: colors.grey,
     borderBottomWidth: 1,
+  },
+  header: {
+    borderBottomColor: colors.grey,
+    borderBottomWidth: 1,
+    paddingBottom: 24,
+    marginBottom: 24,
+  },
+  section: {
+    color: colors.info,
+  },
+  navigation: {
+    justifyContent: "space-between",
   },
   footer: {
     justifyContent: "space-between",
