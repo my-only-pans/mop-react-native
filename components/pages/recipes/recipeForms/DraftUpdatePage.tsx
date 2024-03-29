@@ -31,11 +31,9 @@ function DraftUpdatePage(props: Props) {
   const [draft, setDraft] = useState<RecipeType>();
 
   const fetchDraft = async () => {
-    const res = await axios.get(getServerUrl() + "/recipe/draft", {
-      params: { draftId },
+    const res = await axios.get(getServerUrl() + `/recipe/draft/${draftId}`, {
       headers: { Authorization: await getAuthToken() },
     });
-
     setDraft(res.data);
   };
 
@@ -46,7 +44,7 @@ function DraftUpdatePage(props: Props) {
   let content: ReactNode = null;
 
   const handleChangeSection = (d: "prev" | "next") => {
-    let index = sections.findIndex((s) => s === section);
+    let index = !section ? 0 : sections.findIndex((s) => s === section);
 
     if (d === "prev") {
       if (index !== 0) {
@@ -90,17 +88,6 @@ function DraftUpdatePage(props: Props) {
 
   if (draft) {
     switch (section) {
-      case "details":
-        content = (
-          <RecipeDetailsForm
-            draft={draft}
-            setDraft={setDraft}
-            onClickNext={() => {
-              router.setParams({ section: "requirements" });
-            }}
-          />
-        );
-        break;
       case "requirements":
         content = <RecipeRequirementsForm draft={draft} setDraft={setDraft} />;
         break;
@@ -110,8 +97,16 @@ function DraftUpdatePage(props: Props) {
       case "preview":
         content = <RecipeDraftPreview draft={draft} />;
         break;
-
       default:
+        content = (
+          <RecipeDetailsForm
+            draft={draft}
+            setDraft={setDraft}
+            onClickNext={() => {
+              router.setParams({ section: "requirements" });
+            }}
+          />
+        );
         break;
     }
   }
@@ -136,12 +131,14 @@ function DraftUpdatePage(props: Props) {
             <Pressable
               style={styles.footerArrows}
               onPress={() => handleChangeSection("prev")}
-              disabled={section === sections[0]}
+              disabled={!section || section === sections[0]}
             >
               <Icon
                 size={32}
                 name="chevron-left"
-                color={section === sections[0] ? colors.grey : "#000"}
+                color={
+                  !section || section === sections[0] ? colors.grey : "#000"
+                }
               />
             </Pressable>
             <Row
