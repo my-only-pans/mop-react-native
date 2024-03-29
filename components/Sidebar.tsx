@@ -12,7 +12,7 @@ const routes = [
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
-  { href: "/privacy/terms", label: "Terms and Condition" },
+  { href: "/privacy", label: "Privacy" },
   { href: "/user/login", label: "Login" },
   { href: "/user/register", label: "Register" },
   { href: "/recipes/new", label: "Create Recipe" },

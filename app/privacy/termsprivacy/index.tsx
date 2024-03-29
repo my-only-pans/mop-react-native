@@ -1,21 +1,21 @@
 import { Link } from "expo-router";
 import React from "react";
 import { View } from "react-native";
-import TermsAndConditionsPage from "../../../components/pages/privacy/Terms_&_Coditions";
 import PrivacyMenu from "../../../components/pages/privacy/menu/PrivacyMenu";
+import Terms_AND_Privacy from "../../../components/pages/privacy/Terms_&_Privacy";
 
 interface Props {}
 
-function Terms_and_Condition(props: Props) {
+function TermsPrivacy(props: Props) {
   const {} = props;
 
   return (
     <View>
-      <Link href="/privacy/terms"/>
+      <Link href="/privacy/termsprivacy"/>
       <PrivacyMenu/>
-      <TermsAndConditionsPage/>
+      <Terms_AND_Privacy/>
     </View>
   );
 }
 
-export default Terms_and_Condition;
+export default TermsPrivacy;

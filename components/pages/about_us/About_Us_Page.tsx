@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 20,
     marginLeft: 20
   },
   heading: {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   sectionText: {
-    // marginBottom: 15,
+    marginLeft: 15,
     color: colors.paragraph
   },
   bold: {
