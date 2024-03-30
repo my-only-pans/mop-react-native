@@ -15,7 +15,7 @@ const PartnerDisplay = () => {
       <View style={styles.swiperContainer}>
         <Swiper
             autoplay
-            autoplayTimeout={4} // Set the timeout for automatic swiping
+            autoplayTimeout={4} 
             style={styles.wrapper}
         >
             <View style={styles.slide}>
