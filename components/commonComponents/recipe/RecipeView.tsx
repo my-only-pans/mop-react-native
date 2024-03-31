@@ -8,10 +8,10 @@ import {
   Platform,
   TouchableOpacity,
   Image,
-  ScrollView,
+  ScrollView, 
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { RecipeType } from "../../../types/RecipeTypes";
+import { RecipeType, RecipeIngredientType, TextBlockType, RecipeInstructions } from "../../../types/RecipeTypes";
 import textStyles from "../../../theme/text";
 import colors from "../../../theme/colors";
 import Editor from "../editor/Editor";
@@ -35,6 +35,7 @@ function RecipeView(props: Props) {
     categories,
     equipment,
     ingredients,
+    instructions,
   } = recipe;
 
   const [servings, setServings] = useState(serving);
@@ -54,15 +55,20 @@ function RecipeView(props: Props) {
   };
 
   const ingredientOutput = useMemo(() => {
+    if (!ingredients) {
+      return [];
+    }
+  
     const servingRatio = servings / serving;
-
+  
     const updatedIngredients = ingredients.map((ingredient) => ({
       ...ingredient,
       amount: ingredient.amount * servingRatio,
     }));
-
+  
     return updatedIngredients;
-  }, [servings]);
+  }, [servings, ingredients]);
+  
 
   return (
     <View style={styles.container}>
@@ -195,7 +201,7 @@ function RecipeView(props: Props) {
         </View>
         <View>
           <Text style={[styles.label]}>Instructions: </Text>
-          <Editor readonly value={recipe.instructions} />
+          <Editor readonly value={instructions} />
         </View>
       </View>
     </View>
@@ -291,3 +297,4 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 });
+
