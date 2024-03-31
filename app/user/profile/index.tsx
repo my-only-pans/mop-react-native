@@ -11,6 +11,7 @@ import {
 import Container from "../../../components/commonComponents/Container";
 import StyledButton from "../../../components/commonComponents/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import colors from "../../../theme/colors";
 
 function ProfileView() {
   const [dietaryPreference, setDietaryPreference] = useState("");
@@ -72,82 +73,8 @@ function ProfileView() {
         onChangeText={setDietaryPreference}
         editable={editableFields}
       />
-      <Text style={styles.label}>Cuisine:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Filipino"
-        value={cuisine}
-        onChangeText={setCuisine}
-        editable={editableFields}
-      />
-      <Text style={styles.label}>Prep & Cook Time:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="1 hour"
-        value={prepCook}
-        onChangeText={setPrepCook}
-        editable={editableFields}
-      />
-      <Text style={styles.label}>Serves:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="2"
-        value={servingSize}
-        onChangeText={setServingSize}
-        editable={editableFields}
-      />
-
-      <View style={styles.profilePicture}>
-        <Image
-          source={require("../../../assets/sample.png")}
-          style={styles.image}
-        />
-      </View>
-      <View>
-        <Text style={styles.userFullName}>Leviel Kulet</Text>
-        <Text style={styles.userName}>@levielkulet</Text>
-        <Text style={styles.bio}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida,
-          mauris ac sodales semper, neque velit mollis velit, eget cursus lectus
-          quam sit amet lacus.
-        </Text>
-      </View>
-
-      <View>
-        <Text style={styles.header}>MyPreferences</Text>
-      </View>
-      <Text style={styles.label}>Dietary Preference:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder=""
-        value={dietaryPreference}
-        onChangeText={setDietaryPreference}
-        editable={editableFields}
-      />
-      <Text style={styles.label}>Cuisine:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder=""
-        value={cuisine}
-        onChangeText={setCuisine}
-        editable={editableFields}
-      />
-      <Text style={styles.label}>Prep & Cook Time:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="In minutes"
-        value={prepCook}
-        onChangeText={setPrepCook}
-        editable={editableFields}
-      />
-      <Text style={styles.label}>Serves:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder=""
-        value={servingSize}
-        onChangeText={setServingSize}
-        editable={editableFields}
-      />
+  
+      
 
       <View style={{ gap: 10, width: "100%" }}>
         <StyledButton
@@ -189,6 +116,7 @@ const styles = StyleSheet.create({
     padding: 20,
     maxWidth: 900,
     marginHorizontal: "auto",
+    backgroundColor: colors.background,
   },
   profilePicture: {
     backgroundColor: "red",
