@@ -13,10 +13,10 @@ const About_Us_Page = () => {
   ];
 
   const teamMembers = [
-    { name: 'Charie Hare', position: 'Web Developer', image: require('../../../assets/team/default-transformed.png') },
-    { name: 'Hector Robles', position: 'Web Developer', image: require('../../../assets/team/default-transformed.png') },
+    { name: 'Charie Hare', position: 'Web Developer', image: require('../../../assets/team/Charie - Gyoza dumplings.png') },
+    { name: 'Hector Robles', position: 'Web Developer', image: require('../../../assets/team/hector.jpg') },
     { name: 'Mary Leviel Ame Nicolas', position: 'Web Developer', image: require('../../../assets/team/Leviel - Bibimbap.jpg') },
-    { name: 'Socheat Keo', position: 'Web Developer', image: require('../../../assets/team/default-transformed.png') },
+    { name: 'Socheat Keo', position: 'Web Developer', image: require('../../../assets/team/socheat.jpg') },
     { name: 'Tanya Ntoto Masiala ', position: 'Web Developer', image: require('../../../assets/team/Tanya - sweet-fried-plantains.png') },
   ];
 
@@ -134,32 +134,32 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 20,
     marginLeft: 20
   },
   heading: {
     color:  colors.headline,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 15,
     marginLeft: 20,
-    marginRight: 20
   },
   sectionTitle: {
+    color:  colors.headline,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   sectionText: {
-    marginBottom: 8,
+    marginLeft: 15,
     color: colors.paragraph
   },
   bold: {
     fontWeight: 'bold',
   },
   value_section: {
-    marginBottom: 5,
+    marginBottom: 15,
     marginLeft: 20,
   },
   value: {
@@ -169,18 +169,19 @@ const styles = StyleSheet.create({
   teamSectionTitle:{
     flex: 1,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 15,
     alignSelf:'center',
     justifyContent: 'center',
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    color:  colors.headline
   },
   teamMemberContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   teamMemberImage: {
     width: 80,

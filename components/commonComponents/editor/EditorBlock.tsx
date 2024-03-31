@@ -68,7 +68,7 @@ function EditorBlock(props: Props) {
   }, [type]);
 
   if (readonly) {
-    return <Text style={getStyle()}>{text}</Text>;
+    return <Text style={[getStyle(), styles.container]}>{text}</Text>;
   }
 
   useEffect(() => {

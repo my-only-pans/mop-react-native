@@ -1,6 +1,6 @@
 import React from "react";
-import { Text, View } from "react-native";
 import { RecipeType } from "../../../../types/RecipeTypes";
+import RecipeView from "../../../commonComponents/recipe/RecipeView";
 
 interface Props {
   draft: RecipeType;
@@ -9,12 +9,7 @@ interface Props {
 function RecipeDraftPreview(props: Props) {
   const { draft } = props;
 
-  return (
-    <View>
-      <Text>Preview</Text>
-      <Text>{draft.title}</Text>
-    </View>
-  );
+  return <RecipeView recipe={draft} isDraft />;
 }
 
 export default RecipeDraftPreview;
