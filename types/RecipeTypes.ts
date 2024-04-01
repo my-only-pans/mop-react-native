@@ -45,6 +45,8 @@ export interface RecipeType {
   categories?: string[];
   instructions: RecipeInstructions;
   imageUrl?: string;
+  averageRating?: number;
+  totalRates?: number;
 }
 
 export enum TextBlockType {
