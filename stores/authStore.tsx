@@ -25,6 +25,7 @@ class AuthStore {
   logout() {
     this.authToken = null;
     this.myProfile = null;
+    this.firebaseToken = null;
   }
 }
 

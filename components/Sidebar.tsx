@@ -45,7 +45,7 @@ function Sidebar() {
       routes.splice(
         1,
         0,
-        { href: "/recipes/myrecipes", label: "My Recipes" },
+        { href: "/recipes/my-recipes", label: "My Recipes" },
         { href: "/user/profile/kitchen", label: "MyKitchen" },
         { href: "/recipes/new", label: "Create Recipe" }
       );
