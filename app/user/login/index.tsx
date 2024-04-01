@@ -9,12 +9,14 @@ import getServerUrl from "../../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar, TextInput } from "react-native-paper";
 import Container from "../../../components/commonComponents/Container";
+import { useAuthStore } from "../../../stores/authStore";
 
 interface FirebaseUser extends User {
   accessToken?: string; // Extend the interface to include accessToken
 }
 
 function Login() {
+  const { login } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,8 @@ function Login() {
       if (!user.accessToken) {
         throw new Error("Invalid login credentials.");
       }
+
+      AsyncStorage.setItem("firebaseToken", user.accessToken);
 
       const {
         data: { authToken },
@@ -54,6 +58,8 @@ function Login() {
       );
 
       const myProfileString = JSON.stringify(myProfile);
+
+      login(authToken, user.accessToken, myProfile);
 
       if (Platform.OS === "web") {
         localStorage.setItem("myProfile", myProfileString);
