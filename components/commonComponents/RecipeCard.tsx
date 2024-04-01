@@ -31,7 +31,8 @@ function RecipeCard(props: Props) {
         <Text style={styles.owner}>By: {owner?.username}</Text>
         <View style={styles.footer}>
           <Text style={styles.rating}>
-            {"*".repeat(averageRating || 0)} ({totalRates || 0})
+            {averageRating ? "*".repeat(averageRating) : null}
+            {totalRates ? `(${totalRates})` : null}
           </Text>
           <Text>{moment(createdAt).fromNow()}</Text>
         </View>
