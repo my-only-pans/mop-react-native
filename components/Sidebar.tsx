@@ -6,13 +6,13 @@ import { Icon } from "react-native-elements";
 
 const routes = [
   { href: "/recipes", label: "Recipes" },
+  { href: "/recipes/myrecipes", label: "My Recipes" },
   { href: "/user/profile/kitchen", label: "MyKitchen" },
+  { href: "/recipes/new", label: "Create Recipe" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
   { href: "/partners", label: "Partners" },
   { href: "/privacy", label: "Privacy" },
-  { href: "/recipes/new", label: "Create Recipe" },
-  { href: "/recipes/myrecipes", label: "My Recipes" },
 ];
 
 const styles = StyleSheet.create({
