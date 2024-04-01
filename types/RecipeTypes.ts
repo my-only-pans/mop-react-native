@@ -47,6 +47,7 @@ export interface RecipeType {
   imageUrl?: string;
   averageRating?: number;
   totalRates?: number;
+  draft: string;
 }
 
 export enum TextBlockType {

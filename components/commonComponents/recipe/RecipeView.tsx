@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Text,
   View,
@@ -15,6 +15,8 @@ import { RecipeType } from "../../../types/RecipeTypes";
 import textStyles from "../../../theme/text";
 import colors from "../../../theme/colors";
 import Editor from "../editor/Editor";
+import RecipeButtons from "../../pages/recipes/RecipeButtons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   recipe: RecipeType;
@@ -23,6 +25,7 @@ interface Props {
 
 function RecipeView(props: Props) {
   const { recipe, isDraft = false } = props;
+  const [myProfile, setMyProfile] = useState<any>();
 
   const {
     _id,
@@ -35,9 +38,22 @@ function RecipeView(props: Props) {
     categories,
     equipment,
     ingredients,
+    draft,
   } = recipe;
 
   const [servings, setServings] = useState(serving);
+
+  const fetchMyProfile = async () => {
+    const profile = await AsyncStorage.getItem("myProfile");
+
+    console.log(`profile ${profile}`);
+    console.log(`owner.id : ${owner._id}`);
+    setMyProfile(JSON.parse(profile));
+  };
+
+  useEffect(() => {
+    fetchMyProfile();
+  }, []);
 
   // Function to decrease serving count
   const decreaseServing = () => {
@@ -64,32 +80,38 @@ function RecipeView(props: Props) {
     return updatedIngredients;
   }, [servings]);
 
+  console.log(typeof myProfile);
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, {flexWrap: 'wrap'}]}>
         <Text style={[styles.header, textStyles.h1]}>
           {title} {isDraft && "(Draft)"}
         </Text>
         <View style={[styles.row]}>
-          <Icon name="star" color={colors.highlight} type="material" />
-          <Icon name="star" color={colors.highlight} type="material" />
-          <Icon name="star" color={colors.highlight} type="material" />
-          <Icon name="star" color={colors.highlight} type="material" />
-          <Icon name="star" color={colors.highlight} type="material" />
+          {/* //put rating here */}
         </View>
 
-        <View style={[styles.row, { marginVertical: 6, alignItems: "center" }]}>
-          <Text style={[styles.submittedBy, textStyles.h5]}>Submitted by:</Text>
-          <Link href={"./"} style={[styles.userName, textStyles.h6]}>
-            {owner.username}
-          </Link>
+        <View style={[styles.row, {justifyContent: 'space-between', width:'100%'}]}>
+          <View style={[styles.row, { marginVertical: 6, alignItems: "center" }]}>
+            <Text style={[styles.submittedBy, textStyles.h5]}>Submitted by:</Text>
+            <Link href={"./"} style={[styles.userName, textStyles.h6]}>
+              {owner.username}
+            </Link>
+          </View>
+          <View style={[{alignItems: 'flex-end'}]}>
+            <RecipeButtons 
+                isOwner={owner._id === myProfile?._id}
+                draftId={draft} 
+                recipeId={_id}/>
+          </View>
+          
         </View>
 
         <Text style={[styles.description, textStyles.body]}>{description}</Text>
       </View>
 
       <ScrollView style={[styles.imgContainer]} horizontal>
-        <Pressable onPress={() => {}}>
+        <Pressable onPress={() => { }}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-1.jpg")}
@@ -97,7 +119,7 @@ function RecipeView(props: Props) {
             resizeMethod="resize"
           />
         </Pressable>
-        <Pressable onPress={() => {}}>
+        <Pressable onPress={() => { }}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-19.jpg")}
@@ -105,7 +127,7 @@ function RecipeView(props: Props) {
             resizeMethod="resize"
           />
         </Pressable>
-        <Pressable onPress={() => {}}>
+        <Pressable onPress={() => { }}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-24.jpg")}
@@ -262,13 +284,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   img: {
-    width: 300,
-    height: 300,
+    width: 280,
+    height: 280,
     borderRadius: 6,
     marginRight: 10,
   },
   imgContainer: {
-    gap: 6,
+    gap: 8,
     marginVertical: 14,
   },
   timeContainer: {
