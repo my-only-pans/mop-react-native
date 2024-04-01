@@ -87,8 +87,9 @@ function RecipeView(props: Props) {
         <Text style={[styles.header, textStyles.h1]}>
           {title} {isDraft && "(Draft)"}
         </Text>
+
         <View style={[styles.row]}>
-          {/* //put rating here */}
+          {/* //!!!!!!!!!!!!put rating here */}
         </View>
 
         <View style={[styles.row, {justifyContent: 'space-between', width:'100%'}]}>
