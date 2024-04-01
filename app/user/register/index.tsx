@@ -69,7 +69,7 @@ function Registration() {
     if (newErrorMessages.length) {
       return;
     }
-
+    console.log(`${getServerUrl()}/user`);
     axios
       .post(`${getServerUrl()}/user`, {
         firstName,

@@ -112,8 +112,8 @@ function DraftUpdatePage(props: Props) {
   }
 
   const isPublishDisabled =
-    !draft?.equipment.length ||
-    !draft.ingredients.length ||
+    !draft?.equipment?.length ||
+    !draft.ingredients?.length ||
     !draft.instructions?.find((b) => b.text);
 
   return (
