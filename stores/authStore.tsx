@@ -4,7 +4,7 @@ import { observable, action, makeObservable } from "mobx";
 import { MyProfileType } from "../types/UserTypes";
 
 class AuthStore {
-  @observable myProfile: MyProfileType | {} = {};
+  @observable myProfile: MyProfileType | null = null;
 
   @observable authToken: string | null = null;
 
@@ -24,7 +24,7 @@ class AuthStore {
   @action.bound
   logout() {
     this.authToken = null;
-    this.myProfile = {};
+    this.myProfile = null;
   }
 }
 
