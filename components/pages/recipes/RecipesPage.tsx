@@ -6,119 +6,43 @@ import { Searchbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
-import { RecipeItemType } from "../../../types/RecipeTypes";
+import { RecipeItemType, RecipeType } from "../../../types/RecipeTypes";
 import RecipeCard from "../../commonComponents/RecipeCard";
+import axios from "axios";
+import getServerUrl from "../../../utils/getServerUrl";
+import getAuthToken from "../../../utils/getAuthToken";
+import getErrorMessage from "../../../utils/getErrorMessage";
 
-// TODO Replace with actula data
-const SAMPLE_FEATURED_RECIPES: RecipeItemType[] = [
-  {
-    _id: "1",
-    name: "Fried Chicken",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "2",
-    name: "Beef Stew",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "3",
-    name: "Fish and Chips",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "4",
-    name: "Poutine",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "5",
-    name: "Ramen",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "6",
-    name: "Salad",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "7",
-    name: "Steak",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-];
+const PAGE_LIMIT = 20;
 
-for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
-  SAMPLE_FEATURED_RECIPES[i].imageUrl = `https://picsum.photos/seed/${
-    i + 1
-  }/200/200`;
-}
-
-interface Props {}
-
-function RecipesPage(props: Props) {
-  const {} = props;
+function RecipesPage() {
   const { category } = useLocalSearchParams();
 
+  const [loading, setLoading] = useState(true);
   const [searchString, setSearchString] = useState("");
+  const [total, setTotal] = useState(0);
+  const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
-  const fetchRecipes = () => {
+  const fetchRecipes = async () => {
+    setLoading(true);
+    axios
+      .get(getServerUrl() + "/recipe", {
+        params: {
+          limit: PAGE_LIMIT,
+        },
+        headers: {
+          Authorization: await getAuthToken(),
+        },
+      })
+      .then((res) => {
+        setTotal(res.data.total);
+        setRecipes(res.data.recipes);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(getErrorMessage(error));
+        setLoading(false);
+      });
     console.log("QUERY RECIPES", { category });
   };
 
@@ -137,6 +61,26 @@ function RecipesPage(props: Props) {
   const handleClear = () => {
     setSearchString("");
   };
+
+  if (loading) {
+    return (
+      <Container style={{ alignItems: "center" }}>
+        <Text>Loading Recipes...</Text>
+      </Container>
+    );
+  }
+
+  if (!recipes?.length) {
+    return (
+      <Container style={{ alignItems: "center" }}>
+        <Text>Loading Recipes...</Text>
+      </Container>
+    );
+  }
+
+  for (let i = 0; i < recipes.length; i++) {
+    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
+  }
 
   return (
     <Container>
@@ -160,9 +104,11 @@ function RecipesPage(props: Props) {
         />
       </View>
       <View>
-        <Text style={[textStyles.h1, styles.heading]}>200 SEARCH RESULTS</Text>
+        <Text style={[textStyles.h1, styles.heading]}>
+          {total} SEARCH RESULTS
+        </Text>
         <View style={styles.list}>
-          {SAMPLE_FEATURED_RECIPES.map((recipe) => (
+          {recipes.map((recipe) => (
             <RecipeCard key={recipe._id} recipe={recipe} />
           ))}
         </View>
