@@ -18,7 +18,7 @@ function RecipeButtons(props: Props) {
     //TODO : fix draft id route
     //fixx delete button
     //add bookmark route
-    
+
     console.log(`recipeId:  ${recipeId}`);
     console.log(`isOwner: ${isOwner}`);
 
@@ -31,7 +31,7 @@ function RecipeButtons(props: Props) {
                 (
                     <>
 
-                        <Link href={`./recipe/draft/${draftId}`}>
+                        <Link href={`/recipes/draft/${draftId}?section=details`}>
                             <Icon
                                 name='edit'
                                 color={colors.highlight}
