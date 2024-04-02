@@ -61,7 +61,7 @@ function MainPage(props: Props) {
             router.push(`/recipes?searchString=${filters?.searchString}`);
           }}
           showFilterBtn={false}
-          initialValues={{}}
+          initialValues={{ searchString: "" }}
         />
       </View>
 
