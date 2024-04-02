@@ -48,7 +48,12 @@ function RecipeView(props: Props) {
 
     console.log(`profile ${profile}`);
     console.log(`owner.id : ${owner._id}`);
-    setMyProfile(JSON.parse(profile));
+    //setMyProfile(JSON.parse(profile));
+    if (profile !== null) {
+      setMyProfile(JSON.parse(profile));
+    } else {
+      console.log(`profile ${profile}`);
+    }
   };
 
   useEffect(() => {
