@@ -1,14 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Container from "../../commonComponents/Container";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome6";
-import colors from "../../../theme/colors";
-import { Searchbar } from "react-native-paper";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { textStyles } from "../../../theme/text";
-import {
-  RecipeItemType,
-  SimpleRecipeItemType,
-} from "../../../types/RecipeTypes";
+import { SimpleRecipeItemType } from "../../../types/RecipeTypes";
 import RecipeItem from "../../commonComponents/RecipeItem";
 import { RECIPE_CATEGORIES } from "../../../constants";
 import RecipeCategoriItem from "../../commonComponents/RecipeCategoriItem";
