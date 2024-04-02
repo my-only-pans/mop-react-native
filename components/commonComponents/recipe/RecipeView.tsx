@@ -81,7 +81,7 @@ function RecipeView(props: Props) {
         <View style={[styles.row, { marginVertical: 6, alignItems: "center" }]}>
           <Text style={[styles.submittedBy, textStyles.h5]}>Submitted by:</Text>
           <Link href={"./"} style={[styles.userName, textStyles.h6]}>
-            {owner.username}
+            {owner?.username}
           </Link>
         </View>
 

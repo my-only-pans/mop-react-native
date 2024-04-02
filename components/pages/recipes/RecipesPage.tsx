@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Container from "../../commonComponents/Container";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Searchbar } from "react-native-paper";
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
-import {
-  GetRecipesQueryType,
-  RecipeItemType,
-  RecipeType,
-} from "../../../types/RecipeTypes";
+import { GetRecipesQueryType, RecipeType } from "../../../types/RecipeTypes";
 import RecipeCard from "../../commonComponents/RecipeCard";
 import axios from "axios";
 import getServerUrl from "../../../utils/getServerUrl";
@@ -17,12 +12,13 @@ import getAuthToken from "../../../utils/getAuthToken";
 import getErrorMessage from "../../../utils/getErrorMessage";
 import Row from "../../commonComponents/Row";
 import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
+import convertParamsArray from "../../../utils/convertParamsArray";
 
 const PAGE_LIMIT = 20;
 
 function RecipesPage() {
   const params = useLocalSearchParams();
-  const { category, page } = params;
+  const { categories, page } = params;
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -31,15 +27,12 @@ function RecipesPage() {
   const [total, setTotal] = useState(0);
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = async (filter?: GetRecipesQueryType) => {
     setLoading(true);
+
     axios
       .get(getServerUrl() + "/recipe", {
-        params: {
-          limit: PAGE_LIMIT,
-          page: page || 1,
-          // TODO insert filters
-        },
+        params: { limit: PAGE_LIMIT, ...filter },
         headers: {
           Authorization: await getAuthToken(),
         },
@@ -61,11 +54,27 @@ function RecipesPage() {
   };
 
   useEffect(() => {
-    fetchRecipes();
-  }, [category, page]);
+    const filters = {
+      ...params,
+      categories: categories ? convertParamsArray(categories) : undefined,
+      // TODO insert filters
+    };
 
-  const handleApplyFilter = (filters: GetRecipesQueryType) => {
-    console.log(filters);
+    fetchRecipes(filters);
+  }, [page]);
+
+  const handleApplyFilter = (filters?: GetRecipesQueryType) => {
+    let newParams: Record<string, string>;
+
+    if (!filters) {
+      filters = { page: 1 };
+      router.push("/recipes?page=1");
+    } else {
+      newParams = { ...params, ...filters } as Record<string, string>;
+      router.setParams(filters as Record<string, string>);
+    }
+
+    fetchRecipes(filters);
   };
 
   let content;
@@ -111,7 +120,10 @@ function RecipesPage() {
   return (
     <Container>
       <View style={styles.header}>
-        <RecipeSearchBar onApplyFilter={handleApplyFilter} />
+        <RecipeSearchBar
+          onApplyFilter={handleApplyFilter}
+          initialValues={params}
+        />
       </View>
       <View style={{ flexGrow: 1, justifyContent: "center" }}>
         <Text style={[textStyles.h1, styles.heading]}>

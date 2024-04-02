@@ -8,27 +8,41 @@ import Row from "./Row";
 import { useUiSore } from "../../stores/uiStore";
 
 interface Props {
-  onApplyFilter: (filters: GetRecipesQueryType) => any;
+  initialValues: GetRecipesQueryType;
+  onApplyFilter: (filters?: GetRecipesQueryType) => any;
 }
 
 function RecipeSearchBar(props: Props) {
-  const { showDialog } = useUiSore();
-  const { onApplyFilter } = props;
-  const [filters, setFilters] = useState<GetRecipesQueryType>({
-    searchString: "",
-  });
+  const { showDialog, closeDialog } = useUiSore();
+  const { onApplyFilter, initialValues } = props;
+  const [filters, setFilters] = useState<GetRecipesQueryType>(initialValues);
 
   const handleUpdateFilters = (key: string, value: any) => {
     setFilters({ ...filters, [key]: value });
   };
 
-  const handleSearch = () => {
-    onApplyFilter(filters);
+  const handleFilterDialogSubmit = (
+    newFilters: GetRecipesQueryType | null | undefined
+  ) => {
+    let updatedFilters;
+    if (!newFilters) {
+      newFilters = null;
+      setFilters({});
+    } else {
+      updatedFilters = { ...filters, ...newFilters };
+      setFilters(updatedFilters);
+    }
+    onApplyFilter(updatedFilters);
+    closeDialog();
   };
 
   const handleOpenFilters = () => {
     showDialog({
       content: "filterDialog",
+      context: {
+        initialFilters: filters,
+        onSubmit: handleFilterDialogSubmit,
+      },
     });
   };
 
@@ -39,8 +53,8 @@ function RecipeSearchBar(props: Props) {
           value={filters.searchString || ""}
           onChangeText={(v) => handleUpdateFilters("searchString", v)}
           style={styles.searchbar}
-          onIconPress={handleSearch}
-          onSubmitEditing={handleSearch}
+          onIconPress={() => onApplyFilter(filters)}
+          onSubmitEditing={() => onApplyFilter(filters)}
           onTraileringIconPress={() => handleUpdateFilters("searchString", "")}
         />
         <Icon.Button
