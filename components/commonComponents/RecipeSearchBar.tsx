@@ -9,12 +9,17 @@ import { useUiSore } from "../../stores/uiStore";
 
 interface Props {
   initialValues: GetRecipesQueryType;
-  onApplyFilter: (filters?: GetRecipesQueryType) => any;
+  onApplyFilter?: (filters?: GetRecipesQueryType) => any;
+  showFilterBtn?: boolean;
 }
 
 function RecipeSearchBar(props: Props) {
   const { showDialog, closeDialog } = useUiSore();
-  const { onApplyFilter, initialValues } = props;
+  const {
+    onApplyFilter = () => {},
+    initialValues,
+    showFilterBtn = false,
+  } = props;
   const [filters, setFilters] = useState<GetRecipesQueryType>(initialValues);
 
   const handleUpdateFilters = (key: string, value: any) => {
@@ -57,15 +62,17 @@ function RecipeSearchBar(props: Props) {
           onSubmitEditing={() => onApplyFilter(filters)}
           onTraileringIconPress={() => handleUpdateFilters("searchString", "")}
         />
-        <Icon.Button
-          name="sliders"
-          size={24}
-          backgroundColor="transparent"
-          color="#000"
-          underlayColor={colors.highlight}
-          onPress={handleOpenFilters}
-          iconStyle={{ marginRight: 0 }}
-        />
+        {showFilterBtn && (
+          <Icon.Button
+            name="sliders"
+            size={24}
+            backgroundColor="transparent"
+            color="#000"
+            underlayColor={colors.highlight}
+            onPress={handleOpenFilters}
+            iconStyle={{ marginRight: 0 }}
+          />
+        )}
       </Row>
     </>
   );
@@ -74,6 +81,7 @@ function RecipeSearchBar(props: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+    flex: 1,
     justifyContent: "flex-end",
   },
   searchbar: {

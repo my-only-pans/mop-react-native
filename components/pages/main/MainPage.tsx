@@ -12,6 +12,8 @@ import {
 import RecipeItem from "../../commonComponents/RecipeItem";
 import { RECIPE_CATEGORIES } from "../../../constants";
 import RecipeCategoriItem from "../../commonComponents/RecipeCategoriItem";
+import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
+import { useRouter } from "expo-router";
 
 // TODO Replace with actula data
 const SAMPLE_FEATURED_RECIPES: SimpleRecipeItemType[] = [
@@ -54,40 +56,18 @@ for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
 interface Props {}
 
 function MainPage(props: Props) {
-  const [searchString, setSearchString] = useState("");
+  const router = useRouter();
   const {} = props;
-
-  const handleClickFilter = () => {
-    console.log("FILTER OPEN");
-  };
-
-  const handleSearch = () => {
-    console.log(searchString);
-  };
-
-  const handleClear = () => {
-    setSearchString("");
-  };
 
   return (
     <Container>
       <View style={styles.header}>
-        <Searchbar
-          value={searchString}
-          onChangeText={setSearchString}
-          style={styles.searchbar}
-          onIconPress={handleSearch}
-          onSubmitEditing={handleSearch}
-          onTraileringIconPress={handleClear}
-        />
-        <Icon.Button
-          name="sliders"
-          size={24}
-          backgroundColor="transparent"
-          color="#000"
-          underlayColor={colors.highlight}
-          onPress={handleClickFilter}
-          iconStyle={{ marginRight: 0 }}
+        <RecipeSearchBar
+          onApplyFilter={(filters) => {
+            router.push(`/recipes?searchString=${filters?.searchString}`);
+          }}
+          showFilterBtn={false}
+          initialValues={{}}
         />
       </View>
 

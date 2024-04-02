@@ -123,6 +123,7 @@ function RecipesPage() {
         <RecipeSearchBar
           onApplyFilter={handleApplyFilter}
           initialValues={params}
+          showFilterBtn
         />
       </View>
       <View style={{ flexGrow: 1, justifyContent: "center" }}>
