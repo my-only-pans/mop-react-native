@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import { Slot, usePathname, useRouter } from "expo-router";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import {
@@ -14,22 +14,36 @@ import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthStore } from "../stores/authStore";
-import getErrorMessage from "../utils/getErrorMessage";
 import axios from "axios";
 import getServerUrl from "../utils/getServerUrl";
-import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
-import { Button, Modal, Snackbar } from "react-native-paper";
+import { Dialog, Modal, Snackbar } from "react-native-paper";
+import GlobalDialog from "../components/commonComponents/GlobalDialog";
+import { useUiSore } from "../stores/uiStore";
+
+const protectedPaths = [
+  "/user",
+  "/recipes/my-recipes",
+  "/recipes/new",
+  "/recipes/draft",
+];
 
 function HomeLayout() {
   const { login, logout, myProfile } = useAuthStore();
+  const { dialogProps } = useUiSore();
   const [loginMessage, setLoginMessage] = useState("");
+
+  const router = useRouter();
+  const path = usePathname();
 
   const getProfile = async () => {
     setLoginMessage("");
     const firebaseToken = await AsyncStorage.getItem("firebaseToken");
 
     if (!firebaseToken) {
+      if (protectedPaths.find((r) => path.startsWith(r))) {
+        router.push("/login");
+      }
       return logout();
     }
 
@@ -66,10 +80,17 @@ function HomeLayout() {
           });
       })
       .catch((error) => {
+        if (protectedPaths.find((r) => path.startsWith(r))) {
+          router.push("/login");
+        }
+
         console.log(error);
         setLoginMessage(
           "You have been logged out due to inactivity. Please login"
         );
+        AsyncStorage.removeItem("firebaseToken");
+        AsyncStorage.removeItem("authToken");
+        AsyncStorage.removeItem("myProfile");
       });
   };
 
@@ -103,6 +124,7 @@ function HomeLayout() {
       </View>
       {Platform.OS !== "web" ? <MobileNavigationBar /> : null}
       <ExpoStatusBar hidden />
+      <GlobalDialog />
     </View>
   );
 }

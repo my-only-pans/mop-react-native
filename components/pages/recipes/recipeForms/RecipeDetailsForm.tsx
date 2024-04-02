@@ -21,7 +21,7 @@ interface Props {
   onClickNext?: (section: string) => void;
 }
 
-function RecipeDetailsForm({ draft, onClickNext }: Props) {
+function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
   const [title, setTitle] = useState<string>(draft?.title || "");
   const [description, setDescription] = useState<string>(
     draft?.description || ""
@@ -51,6 +51,7 @@ function RecipeDetailsForm({ draft, onClickNext }: Props) {
       .map((c) => c.trim().toLowerCase());
 
     setCategories([...new Set([...categories, ...newCategories])]);
+    setDraft && draft && setDraft({...draft, categories: newCategories})
     setCategoryValue("");
   };
 
@@ -108,6 +109,10 @@ function RecipeDetailsForm({ draft, onClickNext }: Props) {
 
   const handleRemoveCategory = async (category: string) => {
     setCategories(categories.filter((c) => c !== category));
+    const newCategories = categoryValue
+      .split(/,|\n/)
+      .map((c) => c.trim().toLowerCase());
+    setDraft && draft && setDraft({...draft, categories: newCategories})
   };
 
   return (

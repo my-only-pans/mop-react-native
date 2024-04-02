@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { firebaseAuth } from "../../../firebase/firebaseApp";
+import { firebaseAuth } from "../../firebase/firebaseApp";
 import axios from "axios";
 import { Checkbox, Snackbar } from "react-native-paper";
-import getServerUrl from "../../../utils/getServerUrl";
-import colors from "../../../theme/colors";
+import getServerUrl from "../../utils/getServerUrl";
+import colors from "../../theme/colors";
 
 interface Status {
   type: "success" | "failed";
@@ -61,7 +61,9 @@ function Registration() {
       newErrorMessages.push("Password should match");
     }
     if (!isChecked) {
-      newErrorMessages.push("Please agree to the Terms and Conditions and Privacy Policy to sign-up");
+      newErrorMessages.push(
+        "Please agree to the Terms and Conditions and Privacy Policy to sign-up"
+      );
     }
 
     setErrorMessages(newErrorMessages);
@@ -160,26 +162,24 @@ function Registration() {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            <View  style={styles.termsContainer}>
+            <View style={styles.termsContainer}>
               <Checkbox
-                status={isChecked ? 'checked' : 'unchecked'}
+                status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {
                   setIsChecked(!isChecked);
                 }}
-              /> 
+              />
 
-              <Text >
-                I agree with My Only Pans 
+              <Text>
+                I agree with My Only Pans
                 <Link href="/privacy/terms" style={styles.link}>
                   {" "}
-                    Tersms and Conditions 
+                  Tersms and Conditions
                 </Link>
-
                 <Text> and</Text>
-
                 <Link href="/privacy" style={styles.link}>
                   {" "}
-                    Privacy Policy
+                  Privacy Policy
                 </Link>
               </Text>
             </View>
@@ -188,7 +188,7 @@ function Registration() {
             </TouchableOpacity>
             <Text style={styles.subHeader}>
               Already have an account?
-              <Link href="/user/login" style={styles.link}>
+              <Link href="/login" style={styles.link}>
                 {" "}
                 Sign in
               </Link>
@@ -205,7 +205,7 @@ function Registration() {
             ? {
                 label: "Login",
                 onPress: () => {
-                  router.push("/user/login");
+                  router.push("/login");
                 },
               }
             : {
@@ -301,8 +301,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
