@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from "react";
 import Container from "../../commonComponents/Container";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Searchbar } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
-import { RecipeItemType, RecipeType } from "../../../types/RecipeTypes";
+import { GetRecipesQueryType, RecipeType } from "../../../types/RecipeTypes";
 import RecipeCard from "../../commonComponents/RecipeCard";
 import axios from "axios";
 import getServerUrl from "../../../utils/getServerUrl";
 import getAuthToken from "../../../utils/getAuthToken";
 import getErrorMessage from "../../../utils/getErrorMessage";
 import Row from "../../commonComponents/Row";
+import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
+import convertParamsArray from "../../../utils/convertParamsArray";
 
 const PAGE_LIMIT = 20;
 
 function RecipesPage() {
-  const { category, page } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const { categories, page } = params;
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
 
-  const [searchString, setSearchString] = useState("");
   const [total, setTotal] = useState(0);
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
-  const fetchRecipes = async () => {
+  const fetchRecipes = async (filter?: GetRecipesQueryType) => {
     setLoading(true);
+
     axios
       .get(getServerUrl() + "/recipe", {
-        params: {
-          limit: PAGE_LIMIT,
-          page: page || 1,
-          // TODO insert filters
-        },
+        params: { limit: PAGE_LIMIT, ...filter },
         headers: {
           Authorization: await getAuthToken(),
         },
@@ -57,19 +54,27 @@ function RecipesPage() {
   };
 
   useEffect(() => {
-    fetchRecipes();
-  }, [category, page]);
+    const filters = {
+      ...params,
+      categories: categories ? convertParamsArray(categories) : undefined,
+      // TODO insert filters
+    };
 
-  const handleClickFilter = () => {
-    console.log("FILTER OPEN");
-  };
+    fetchRecipes(filters);
+  }, [page]);
 
-  const handleSearch = () => {
-    console.log(searchString);
-  };
+  const handleApplyFilter = (filters?: GetRecipesQueryType | null) => {
+    let newParams: Record<string, string>;
 
-  const handleClear = () => {
-    setSearchString("");
+    if (!filters) {
+      filters = { page: 1 };
+      router.push("/recipes?page=1");
+    } else {
+      newParams = { ...params, ...filters } as Record<string, string>;
+      router.setParams(filters as Record<string, string>);
+    }
+
+    fetchRecipes(filters);
   };
 
   let content;
@@ -115,22 +120,10 @@ function RecipesPage() {
   return (
     <Container>
       <View style={styles.header}>
-        <Searchbar
-          value={searchString}
-          onChangeText={setSearchString}
-          style={styles.searchbar}
-          onIconPress={handleSearch}
-          onSubmitEditing={handleSearch}
-          onTraileringIconPress={handleClear}
-        />
-        <Icon.Button
-          name="sliders"
-          size={24}
-          backgroundColor="transparent"
-          color="#000"
-          underlayColor={colors.highlight}
-          onPress={handleClickFilter}
-          iconStyle={{ marginRight: 0 }}
+        <RecipeSearchBar
+          onApplyFilter={handleApplyFilter}
+          initialValues={params}
+          showFilterBtn
         />
       </View>
       <View style={{ flexGrow: 1, justifyContent: "center" }}>
@@ -174,17 +167,7 @@ function RecipesPage() {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    gap: 20,
     marginBottom: 48,
-    // position: "relative",
-  },
-  searchbar: {
-    flex: 1,
-    maxWidth: 400,
-    flexGrow: 1,
   },
   heading: {
     marginBottom: 24,

@@ -64,7 +64,7 @@ const TermsAndConditionsPage: React.FC = (props : Props) => {
         </Text>
 
         <Title style={styles.title}>Contact Us</Title>
-        <Text variant="bodyLarge" style={styles.paragraph}>If you have any questions about these Terms, please contact us at help@mop.com</Text>
+        <Text variant="bodyLarge" style={styles.paragraph}>If you have any questions about these Terms, please contact us at privacy@myonlypans.com</Text>
       </View>
     </ScrollView>
   );

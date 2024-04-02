@@ -1,17 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import Container from "../../commonComponents/Container";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome6";
-import colors from "../../../theme/colors";
-import { Searchbar } from "react-native-paper";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { textStyles } from "../../../theme/text";
-import {
-  RecipeItemType,
-  SimpleRecipeItemType,
-} from "../../../types/RecipeTypes";
+import { SimpleRecipeItemType } from "../../../types/RecipeTypes";
 import RecipeItem from "../../commonComponents/RecipeItem";
 import { RECIPE_CATEGORIES } from "../../../constants";
 import RecipeCategoriItem from "../../commonComponents/RecipeCategoriItem";
+import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
+import { useRouter } from "expo-router";
 
 // TODO Replace with actula data
 const SAMPLE_FEATURED_RECIPES: SimpleRecipeItemType[] = [
@@ -54,40 +50,22 @@ for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
 interface Props {}
 
 function MainPage(props: Props) {
-  const [searchString, setSearchString] = useState("");
+  const router = useRouter();
   const {} = props;
-
-  const handleClickFilter = () => {
-    console.log("FILTER OPEN");
-  };
-
-  const handleSearch = () => {
-    console.log(searchString);
-  };
-
-  const handleClear = () => {
-    setSearchString("");
-  };
 
   return (
     <Container>
       <View style={styles.header}>
-        <Searchbar
-          value={searchString}
-          onChangeText={setSearchString}
-          style={styles.searchbar}
-          onIconPress={handleSearch}
-          onSubmitEditing={handleSearch}
-          onTraileringIconPress={handleClear}
-        />
-        <Icon.Button
-          name="sliders"
-          size={24}
-          backgroundColor="transparent"
-          color="#000"
-          underlayColor={colors.highlight}
-          onPress={handleClickFilter}
-          iconStyle={{ marginRight: 0 }}
+        <RecipeSearchBar
+          onApplyFilter={(filters) => {
+            if (filters?.searchString) {
+              router.push(`/recipes?searchString=${filters?.searchString}`);
+            } else {
+              router.push("/recipes?page=1");
+            }
+          }}
+          showFilterBtn={false}
+          initialValues={{ searchString: "" }}
         />
       </View>
 

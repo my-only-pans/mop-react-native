@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Text, Title } from 'react-native-paper';
 import colors from '../../../theme/colors';
+import { Link } from 'expo-router';
 
 const PrivacyPolicy = () => {
   return (
@@ -74,7 +75,11 @@ const PrivacyPolicy = () => {
 
       <Title style={styles.title}>Contact Us</Title>
       <Text variant="bodyLarge" style={styles.paragraph}>
-        If you have any questions or concerns about this privacy policy or your personal information, please contact us at help@mop.com.
+        If you have any questions or concerns about this privacy policy or your personal information, please contact us at privacy@myonlypans.com. or fill out a form
+        <Link href="/contact" style={styles.link}>
+          {" "}
+            here
+        </Link>
       </Text>
 
       <Title style={styles.title}>Effective Date</Title>
@@ -114,6 +119,9 @@ const styles = StyleSheet.create({
   listItem: {
     fontWeight: 'bold',
     marginRight: 5,
+  },
+  link: {
+    color: colors.info,
   },
 });
 

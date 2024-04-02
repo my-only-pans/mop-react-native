@@ -75,3 +75,27 @@ export interface ListBlock {
 }
 
 export type RecipeInstructions = Array<TextBlock>;
+
+export type SortByFieldType =
+  | "title"
+  | "prepTime"
+  | "cookTime"
+  | "averageRating"
+  | undefined
+  | null;
+
+export type SortOrderType = "ascending" | "descending" | "asc" | "desc";
+export interface GetRecipesQueryType {
+  limit?: number;
+  page?: number;
+  sortBy?: SortByFieldType;
+  sortOrder?: SortOrderType;
+  searchString?: string;
+  owner?: string;
+  categories?: string[] | undefined; // These are arrays and needed to be parsed
+  ingredients?: string; // These are arrays and needed to be parsed
+  equipment?: string; // These are arrays and needed to be parsed
+  prepTime?: number;
+  cookTime?: number;
+  difficulty?: number;
+}

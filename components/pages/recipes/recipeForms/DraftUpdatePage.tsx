@@ -31,10 +31,16 @@ function DraftUpdatePage(props: Props) {
   const [draft, setDraft] = useState<RecipeType>();
 
   const fetchDraft = async () => {
-    const res = await axios.get(getServerUrl() + `/recipe/draft/${draftId}`, {
-      headers: { Authorization: await getAuthToken() },
-    });
-    setDraft(res.data);
+    axios
+      .get(getServerUrl() + `/recipe/draft/${draftId}`, {
+        headers: { Authorization: await getAuthToken() },
+      })
+      .then(({ data }) => {
+        setDraft(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {

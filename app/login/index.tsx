@@ -2,14 +2,14 @@ import { Link, router } from "expo-router";
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
-import { firebaseAuth } from "../../../firebase/firebaseApp";
-import colors from "../../../theme/colors";
+import { firebaseAuth } from "../../firebase/firebaseApp";
+import colors from "../../theme/colors";
 import axios from "axios";
-import getServerUrl from "../../../utils/getServerUrl";
+import getServerUrl from "../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar, TextInput } from "react-native-paper";
-import Container from "../../../components/commonComponents/Container";
-import { useAuthStore } from "../../../stores/authStore";
+import Container from "../../components/commonComponents/Container";
+import { useAuthStore } from "../../stores/authStore";
 
 interface FirebaseUser extends User {
   accessToken?: string; // Extend the interface to include accessToken
@@ -114,7 +114,7 @@ function Login() {
       </Pressable>
       <Text style={styles.subHeader}>
         Don't have an account yet?
-        <Link href="/user/register" style={styles.link}>
+        <Link href="/register" style={styles.link}>
           {" "}
           Sign-up here
         </Link>

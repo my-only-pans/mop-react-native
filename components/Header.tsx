@@ -30,7 +30,7 @@ function Header(props: Props) {
     if (myProfile && authToken) {
       router.push("/user/profile");
     } else {
-      router.push("/user/login");
+      router.push("/login");
     }
   };
 
