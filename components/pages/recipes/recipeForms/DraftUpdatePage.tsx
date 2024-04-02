@@ -24,7 +24,7 @@ const sections = ["details", "requirements", "instructions", "preview"];
 
 function DraftUpdatePage(props: Props) {
   const {} = props;
-  const { draftId, section } = useLocalSearchParams();
+  const { draftId, section = "details" } = useLocalSearchParams();
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState<string | null>();
 

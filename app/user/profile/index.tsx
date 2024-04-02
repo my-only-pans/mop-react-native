@@ -12,12 +12,14 @@ import Container from "../../../components/commonComponents/Container";
 import StyledButton from "../../../components/commonComponents/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../../theme/colors";
+import { useAuthStore } from "../../../stores/authStore";
 
 function ProfileView() {
-  const [email, setEmail] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [dietaryPreference, setDietaryPreference] = useState('');
+  const { logout, myProfile } = useAuthStore();
+  const [email, setEmail] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [dietaryPreference, setDietaryPreference] = useState("");
   const [editableFields, setEditableFields] = useState(false);
 
   const router = useRouter();
@@ -38,6 +40,7 @@ function ProfileView() {
   const handleLogout = () => {
     AsyncStorage.removeItem("myProfile");
     AsyncStorage.removeItem("authToken");
+    logout();
 
     router.push("/");
   };
@@ -93,7 +96,6 @@ function ProfileView() {
               onChangeText={setContactNumber}
               editable={false}
             />
-
           </View>
         </View>
 
@@ -109,14 +111,14 @@ function ProfileView() {
         </View>
 
         {/* <View style={styles.buttonContainer}> */}
-          <View style={{ gap: 10, width: "45%" }}>
-            <StyledButton
-              style={styles.btn}
-              onPress={!editableFields ? handleClickEdit : handleClickSave}
-            >
-              {editableFields ? "Save" : "Edit Preferences"}
-            </StyledButton>
-          </View>
+        <View style={{ gap: 10, width: "45%" }}>
+          <StyledButton
+            style={styles.btn}
+            onPress={!editableFields ? handleClickEdit : handleClickSave}
+          >
+            {editableFields ? "Save" : "Edit Preferences"}
+          </StyledButton>
+        </View>
         {/* </View> */}
 
         <View style={styles.divider}></View>
@@ -129,8 +131,8 @@ function ProfileView() {
           onPress={
             !editableFields
               ? () => {
-                router.push("/user/profile/update");
-              }
+                  router.push("/user/profile/update");
+                }
               : handleClickCancel
           }
         >
@@ -185,16 +187,15 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      gap: 43, 
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 43,
   },
   header: {
     fontSize: 20,
     fontWeight: "bold",
     paddingBottom: 30,
     textAlign: "left",
-
   },
   userFullName: {
     fontSize: 20,
