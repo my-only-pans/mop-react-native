@@ -1,130 +1,64 @@
 import React, { useEffect, useState } from "react";
 import Container from "../../commonComponents/Container";
-import { Link, useLocalSearchParams } from "expo-router";
-import { FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Searchbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
-import { RecipeItemType } from "../../../types/RecipeTypes";
+import { RecipeItemType, RecipeType } from "../../../types/RecipeTypes";
 import RecipeCard from "../../commonComponents/RecipeCard";
+import axios from "axios";
+import getServerUrl from "../../../utils/getServerUrl";
+import getAuthToken from "../../../utils/getAuthToken";
+import getErrorMessage from "../../../utils/getErrorMessage";
+import Row from "../../commonComponents/Row";
 
-// TODO Replace with actula data
-const SAMPLE_FEATURED_RECIPES: RecipeItemType[] = [
-  {
-    _id: "1",
-    name: "Fried Chicken",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "2",
-    name: "Beef Stew",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "3",
-    name: "Fish and Chips",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "4",
-    name: "Poutine",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "5",
-    name: "Ramen",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "6",
-    name: "Salad",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-  {
-    _id: "7",
-    name: "Steak",
-    owner: {
-      _id: "owner1",
-      username: "jdoe",
-    },
-    rating: {
-      avg: 4.8,
-      ratingNum: 248,
-    },
-    createdAt: "2024-03-14T01:30:00.000-05:00",
-  },
-];
+const PAGE_LIMIT = 20;
 
-for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
-  SAMPLE_FEATURED_RECIPES[i].imageUrl = `https://picsum.photos/seed/${
-    i + 1
-  }/200/200`;
-}
+function RecipesPage() {
+  const { category, page } = useLocalSearchParams();
+  const router = useRouter();
 
-interface Props {}
-
-function RecipesPage(props: Props) {
-  const {} = props;
-  const { category } = useLocalSearchParams();
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
 
   const [searchString, setSearchString] = useState("");
+  const [total, setTotal] = useState(0);
+  const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
-  const fetchRecipes = () => {
-    console.log("QUERY RECIPES", { category });
+  const fetchRecipes = async () => {
+    setLoading(true);
+    axios
+      .get(getServerUrl() + "/recipe", {
+        params: {
+          limit: PAGE_LIMIT,
+          page: page || 1,
+          // TODO insert filters
+        },
+        headers: {
+          Authorization: await getAuthToken(),
+        },
+      })
+      .then((res) => {
+        setTotal(res.data.total);
+        setRecipes(res.data.recipes);
+        if (res.data.recipes.length >= PAGE_LIMIT) {
+          setHasMore(true);
+        } else {
+          setHasMore(false);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(getErrorMessage(error));
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
     fetchRecipes();
-  }, [category]);
+  }, [category, page]);
 
   const handleClickFilter = () => {
     console.log("FILTER OPEN");
@@ -137,6 +71,46 @@ function RecipesPage(props: Props) {
   const handleClear = () => {
     setSearchString("");
   };
+
+  let content;
+
+  if (loading) {
+    content = (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ justifyContent: "center" }}>Loading Recipes...</Text>
+      </View>
+    );
+  } else if (!recipes?.length) {
+    content = (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ justifyContent: "center" }}>No recipes found</Text>
+      </View>
+    );
+  } else {
+    content = (
+      <View style={styles.list}>
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe._id} recipe={recipe} />
+        ))}
+      </View>
+    );
+  }
+
+  for (let i = 0; i < recipes.length; i++) {
+    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
+  }
 
   return (
     <Container>
@@ -159,14 +133,41 @@ function RecipesPage(props: Props) {
           iconStyle={{ marginRight: 0 }}
         />
       </View>
-      <View>
-        <Text style={[textStyles.h1, styles.heading]}>200 SEARCH RESULTS</Text>
-        <View style={styles.list}>
-          {SAMPLE_FEATURED_RECIPES.map((recipe) => (
-            <RecipeCard key={recipe._id} recipe={recipe} />
-          ))}
-        </View>
+      <View style={{ flexGrow: 1, justifyContent: "center" }}>
+        <Text style={[textStyles.h1, styles.heading]}>
+          {total} Recipes Found
+        </Text>
+        {content}
       </View>
+      <Row
+        style={[
+          styles.loadMoreContainer,
+          {
+            justifyContent: !page || page == "1" ? "flex-end" : "space-between",
+          },
+        ]}
+      >
+        {page && page !== "1" && (
+          <Pressable
+            onPress={() =>
+              router.setParams({ page: (Number(page) - 1).toString() })
+            }
+          >
+            <Text style={styles.loadMoreText}>Previous</Text>
+          </Pressable>
+        )}
+        {hasMore && (
+          <Pressable
+            onPress={() =>
+              router.setParams({
+                page: page ? (Number(page) + 1).toString() : "2",
+              })
+            }
+          >
+            <Text style={styles.loadMoreText}>Next</Text>
+          </Pressable>
+        )}
+      </Row>
     </Container>
   );
 }
@@ -193,6 +194,14 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     columnGap: 16,
     rowGap: 48,
+  },
+  loadMoreContainer: {
+    marginTop: 48,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  loadMoreText: {
+    color: colors.info,
   },
 });
 
