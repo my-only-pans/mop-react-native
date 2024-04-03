@@ -1,169 +1,234 @@
 import { Link, router } from "expo-router";
 import axios from "axios";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { Button } from "react-native-paper";
 import { textStyles } from "../../../theme/text";
-import RecipeItem from "../../../components/commonComponents/RecipeItem";
-import { RECIPE_CATEGORIES } from "../../../constants";
-import { RecipeType } from "../../../types/RecipeTypes";
-import RecipeCategoriItem from "../../../components/commonComponents/RecipeCategoriItem";
 import RecipeSearchBar from "../../../components/commonComponents/RecipeSearchBar";
-import { SimpleRecipeItemType } from "../../../types/RecipeTypes";
 import Container from "../../../components/commonComponents/Container";
 import getServerUrl from "../../../utils/getServerUrl";
 import { useLocalSearchParams } from "expo-router";
 import getAuthToken from "../../../utils/getAuthToken";
+import { GetRecipesQueryType, RecipeType } from "../../../types/RecipeTypes";
+import getErrorMessage from "../../../utils/getErrorMessage";
+import convertParamsArray from "../../../utils/convertParamsArray";
+import RecipeCard from "../../../components/commonComponents/RecipeCard";
+import Row from "../../../components/commonComponents/Row";
+import colors from "../../../theme/colors";
 
+const PAGE_LIMIT = 20;
 
+function ViewMyRecipes() {
+  const { recipeId } = useLocalSearchParams();
 
-const SAMPLE_FEATURED_RECIPES: SimpleRecipeItemType[] = [
-    {
-      _id: "1",
-      name: "Fried Chicken",
-    },
-    {
-      _id: "2",
-      name: "Beef Stew",
-    },
-    {
-      _id: "3",
-      name: "Fish and Chips",
-    },
-    {
-      _id: "4",
-      name: "Poutine",
-    },
-    {
-      _id: "5",
-      name: "Ramen",
-    },
-    {
-      _id: "6",
-      name: "Salad",
-    },
-    {
-      _id: "7",
-      name: "Steak",
-    },
-  ];
-  
-  for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
-    SAMPLE_FEATURED_RECIPES[i].imageUrl = `https://picsum.photos/seed/${
-      i + 1
-    }/200/200`;
+  const params = useLocalSearchParams();
+  const { categories, page } = params;
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+
+  const [recipes, setRecipes] = useState<RecipeType[]>([]);
+
+  const fetchRecipes = async (filter?: GetRecipesQueryType) => {
+    setLoading(true);
+
+    axios
+      .get(getServerUrl() + "/recipe", {
+        params: { limit: PAGE_LIMIT, ...filter },
+        headers: {
+          Authorization: await getAuthToken(),
+        },
+      })
+      .then((res) => {
+        setRecipes(res.data.recipes);
+        if (res.data.recipes.length >= PAGE_LIMIT) {
+          setHasMore(true);
+        } else {
+          setHasMore(false);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(getErrorMessage(error));
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    const filters = {
+      ...params,
+      categories: categories ? convertParamsArray(categories) : undefined,
+      // TODO insert filters
+    };
+
+    fetchRecipes(filters);
+  }, [page]);
+
+  const handleApplyFilter = (filters?: GetRecipesQueryType | null) => {
+    let newParams: Record<string, string>;
+
+    if (!filters) {
+      filters = { page: 1 };
+      router.push("/recipes?page=1");
+    } else {
+      newParams = { ...params, ...filters } as Record<string, string>;
+      router.setParams(filters as Record<string, string>);
+    }
+
+    fetchRecipes(filters);
+  };
+
+  let content;
+
+  if (loading) {
+    content = (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ justifyContent: "center" }}>Loading Recipes...</Text>
+      </View>
+    );
+  } else if (!recipes?.length) {
+    content = (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ justifyContent: "center" }}>No recipes found</Text>
+      </View>
+    );
+  } else {
+    content = (
+      <View style={styles.list}>
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe._id} recipe={recipe} />
+        ))}
+      </View>
+    );
   }
 
+  for (let i = 0; i < recipes.length; i++) {
+    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
+  }
 
-function ViewMyRecipes(){
-    const [recipe, setRecipe] = useState<RecipeType | null>();
-    const [loading, setLoading] = useState(true);
-    const { recipeId } = useLocalSearchParams();
+  return (
+    <Container>
+      <View style={styles.header}>
+        <RecipeSearchBar
+          onApplyFilter={handleApplyFilter}
+          initialValues={params}
+          showFilterBtn
+        />
+      </View>
 
-    const fetchRecipe = async () => {
-        setLoading(true);
-        axios
-        .get(getServerUrl() + `/recipe/${recipeId}`, {
-            params: {
-            _id: recipeId,
-            },
-            headers: {
-            Authorization: await getAuthToken(),
-            },
-        })
-        .then((res) => {
-            setRecipe(res.data);
-            setLoading(false);
-        })
-        .catch((error) => {
-            setLoading(false);
-            console.log(error);
-        });
-    };
-    
+      <View style={styles.header}>
 
-    const handleDraftsPress = () => {
+        <Button mode="contained">
+          <Link href={`/recipes/my-recipes`}>My Recipes</Link>
+        </Button>
+
+        <Button mode="contained">
+          <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
+        </Button>
+
+        <Button mode="contained">
+          <Link href={`/recipes/my-recipes/my-saved-recipes`}>
+            My Saved Recipes
+          </Link>
+        </Button>
         
-    };
+      </View>
+
+      <Text style={[textStyles.h1, styles.heading]}>My Recipes</Text>
+      <View style={{ flexGrow: 1, justifyContent: "center" }}>
     
-    const handleMyRecipesPress = () => {
-        // Fetch recipes when "My Recipes" button is clicked
-        fetchRecipe();
-    };
-    
-    const handleSavedPress = () => {
-        
-    };
-
-    
-
-
-    return (
-        <Container>
-            <View style={styles.header}>
-                <RecipeSearchBar
-                onApplyFilter={(filters) => {
-                    router.push(`/recipes?searchString=${filters?.searchString}`);
-                }}
-                showFilterBtn={false}
-                initialValues={{}}
-                />
-            </View>
-
-            <View style={styles.header}>
-                {/* Buttons for mydraft, myrecipe, mysavedrecipe */}
-                <Button mode="contained" onPress={handleDraftsPress}>
-                My Drafts
-                </Button>
-                <Button mode="contained" onPress={handleMyRecipesPress}>
-                My Recipes
-                </Button>
-                <Button mode="contained" onPress={handleSavedPress}>
-                My Saved Recipes
-                </Button>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={[textStyles.h1, styles.heading]}>My Recipes</Text>
-                <FlatList
-                data={SAMPLE_FEATURED_RECIPES}
-                horizontal
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-                keyExtractor={(item) => item._id}
-                renderItem={({ item }) => <RecipeItem recipe={item} />}
-                contentContainerStyle={styles.list}
-                />
-            </View>
-        </Container>
-    );
+        {content}
+      </View>
+      <View style={styles.section}>
+      <Row
+        style={[
+          styles.loadMoreContainer,
+          {
+            justifyContent: !page || page == "1" ? "flex-end" : "space-between",
+          },
+        ]}
+      >
+        {page && page !== "1" && (
+          <Pressable
+            onPress={() =>
+              router.setParams({ page: (Number(page) - 1).toString() })
+            }
+          >
+            <Text style={styles.loadMoreText}>Previous</Text>
+          </Pressable>
+        )}
+        {hasMore && (
+          <Pressable
+            onPress={() =>
+              router.setParams({
+                page: page ? (Number(page) + 1).toString() : "2",
+              })
+            }
+          >
+            <Text style={styles.loadMoreText}>Next</Text>
+          </Pressable>
+        )}
+      </Row>
+      </View>
+    </Container>
+  );
 }
 
 const styles = StyleSheet.create({
-    header: {
-      flexDirection: "row",
-      justifyContent: "flex-end",
-      alignItems: "center",
-      gap: 20,
-      marginBottom: 48,
-    },
-    section: {
-      marginBottom: 64,
-    },
-    list: {
-      paddingBottom: 12,
-    },
-    searchbar: {
-      flex: 1,
-      maxWidth: 400,
-      flexGrow: 1,
-    },
-    heading: {
-      marginBottom: 24,
-    },
-    separator: {
-      width: 24,
-    },
-  });
-  
+  header: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 20,
+    marginBottom: 48,
+  },
+  section: {
+    marginBottom: 64,
+  },
+  list: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    columnGap: 16,
+    rowGap: 48,
+  },
+  searchbar: {
+    flex: 1,
+    maxWidth: 400,
+    flexGrow: 1,
+  },
+  heading: {
+    marginBottom: 24,
+  },
+  separator: {
+    width: 24,
+  },
+  loadMoreContainer: {
+    marginTop: 48,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  loadMoreText: {
+    color: colors.info,
+  },
+});
+
 export default ViewMyRecipes;
