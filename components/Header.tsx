@@ -41,7 +41,7 @@ function Header(props: Props) {
       </Link>
       <Pressable onPress={handleClickAvataer}>
         <Avatar.Image
-          source={require("../assets/team/default-transformed.png")}
+          source={require("../assets/team/placeholder-avatar.png")}
           size={30}
         />
       </Pressable>

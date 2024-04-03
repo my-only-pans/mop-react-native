@@ -29,6 +29,7 @@ const protectedPaths = [
 function HomeLayout() {
   const { login, logout } = useAuthStore();
   const [loginMessage, setLoginMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const path = usePathname();
@@ -38,7 +39,12 @@ function HomeLayout() {
     const authToken = await AsyncStorage.getItem("authToken");
 
     if (!authToken) {
-      if (protectedPaths.find((r) => path.startsWith(r))) {
+      if (
+        protectedPaths.find((r) => {
+          return path.startsWith(r);
+        })
+      ) {
+        setLoading(false);
         router.push("/login");
       }
       return logout();
@@ -64,9 +70,12 @@ function HomeLayout() {
           AsyncStorage.setItem("myProfile", myProfileString);
           AsyncStorage.setItem("authToken", authToken);
         }
+
+        setLoading(false);
       })
       .catch((error) => {
         if (protectedPaths.find((r) => path.startsWith(r))) {
+          setLoading(false);
           router.push("/login");
         }
 
@@ -103,7 +112,7 @@ function HomeLayout() {
             {loginMessage}
           </Snackbar>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Slot />
+            {!loading && <Slot />}
           </ScrollView>
         </KeyboardAvoidingView>
       </View>

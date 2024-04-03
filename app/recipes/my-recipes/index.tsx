@@ -2,12 +2,7 @@ import { Link, router } from "expo-router";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Button } from "react-native-paper";
 import { textStyles } from "../../../theme/text";
 import RecipeSearchBar from "../../../components/commonComponents/RecipeSearchBar";
@@ -121,10 +116,6 @@ function ViewMyRecipes() {
     );
   }
 
-  for (let i = 0; i < recipes.length; i++) {
-    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
-  }
-
   return (
     <Container>
       <View style={styles.header}>
@@ -136,7 +127,6 @@ function ViewMyRecipes() {
       </View>
 
       <View style={styles.header}>
-
         <Button mode="contained">
           <Link href={`/recipes/my-recipes`}>My Recipes</Link>
         </Button>
@@ -150,44 +140,41 @@ function ViewMyRecipes() {
             My Saved Recipes
           </Link>
         </Button>
-        
       </View>
 
       <Text style={[textStyles.h1, styles.heading]}>My Recipes</Text>
-      <View style={{ flexGrow: 1, justifyContent: "center" }}>
-    
-        {content}
-      </View>
+      <View style={{ flexGrow: 1, justifyContent: "center" }}>{content}</View>
       <View style={styles.section}>
-      <Row
-        style={[
-          styles.loadMoreContainer,
-          {
-            justifyContent: !page || page == "1" ? "flex-end" : "space-between",
-          },
-        ]}
-      >
-        {page && page !== "1" && (
-          <Pressable
-            onPress={() =>
-              router.setParams({ page: (Number(page) - 1).toString() })
-            }
-          >
-            <Text style={styles.loadMoreText}>Previous</Text>
-          </Pressable>
-        )}
-        {hasMore && (
-          <Pressable
-            onPress={() =>
-              router.setParams({
-                page: page ? (Number(page) + 1).toString() : "2",
-              })
-            }
-          >
-            <Text style={styles.loadMoreText}>Next</Text>
-          </Pressable>
-        )}
-      </Row>
+        <Row
+          style={[
+            styles.loadMoreContainer,
+            {
+              justifyContent:
+                !page || page == "1" ? "flex-end" : "space-between",
+            },
+          ]}
+        >
+          {page && page !== "1" && (
+            <Pressable
+              onPress={() =>
+                router.setParams({ page: (Number(page) - 1).toString() })
+              }
+            >
+              <Text style={styles.loadMoreText}>Previous</Text>
+            </Pressable>
+          )}
+          {hasMore && (
+            <Pressable
+              onPress={() =>
+                router.setParams({
+                  page: page ? (Number(page) + 1).toString() : "2",
+                })
+              }
+            >
+              <Text style={styles.loadMoreText}>Next</Text>
+            </Pressable>
+          )}
+        </Row>
       </View>
     </Container>
   );
