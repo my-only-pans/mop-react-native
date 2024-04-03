@@ -1,57 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../../commonComponents/Container";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { textStyles } from "../../../theme/text";
-import { SimpleRecipeItemType } from "../../../types/RecipeTypes";
+import { RecipeType, SimpleRecipeItemType } from "../../../types/RecipeTypes";
 import RecipeItem from "../../commonComponents/RecipeItem";
 import { RECIPE_CATEGORIES } from "../../../constants";
 import RecipeCategoriItem from "../../commonComponents/RecipeCategoriItem";
 import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import getServerUrl from "../../../utils/getServerUrl";
+import getErrorMessage from "../../../utils/getErrorMessage";
+import RecipeCard from "../../commonComponents/RecipeCard";
 
-// TODO Replace with actula data
-const SAMPLE_FEATURED_RECIPES: SimpleRecipeItemType[] = [
-  {
-    _id: "1",
-    name: "Fried Chicken",
-  },
-  {
-    _id: "2",
-    name: "Beef Stew",
-  },
-  {
-    _id: "3",
-    name: "Fish and Chips",
-  },
-  {
-    _id: "4",
-    name: "Poutine",
-  },
-  {
-    _id: "5",
-    name: "Ramen",
-  },
-  {
-    _id: "6",
-    name: "Salad",
-  },
-  {
-    _id: "7",
-    name: "Steak",
-  },
-];
-
-for (let i = 0; i < SAMPLE_FEATURED_RECIPES.length; i++) {
-  SAMPLE_FEATURED_RECIPES[i].imageUrl = `https://picsum.photos/seed/${
-    i + 1
-  }/200/200`;
-}
-
-interface Props {}
-
-function MainPage(props: Props) {
+function MainPage() {
   const router = useRouter();
-  const {} = props;
+  const [featuredRecipes, setFeaturedRecipes] = useState<RecipeType[]>([]);
+  const [latestRecipes, setLatestRecipes] = useState<RecipeType[]>([]);
+
+  const fetchFeaturedRecipes = async () => {
+    axios
+      .get(getServerUrl() + "/recipe", {
+        params: {
+          sortBy: "averageRating",
+          sortOrder: "desc",
+          limit: 5,
+        },
+      })
+      .then((res) => {
+        setFeaturedRecipes(res.data.recipes);
+      })
+      .catch((error) => {
+        console.log(getErrorMessage(error));
+      });
+  };
+
+  const fetchLatestRecipes = async () => {
+    axios
+      .get(getServerUrl() + "/recipe", {
+        params: {
+          sortBy: "createdAt",
+          sortOrder: "desc",
+          limit: 5,
+        },
+      })
+      .then((res) => {
+        setLatestRecipes(res.data.recipes);
+      })
+      .catch((error) => {
+        console.log(getErrorMessage(error));
+      });
+  };
+
+  useEffect(() => {
+    fetchFeaturedRecipes();
+    fetchLatestRecipes();
+  }, []);
 
   return (
     <Container>
@@ -72,11 +76,11 @@ function MainPage(props: Props) {
       <View style={styles.section}>
         <Text style={[textStyles.h1, styles.heading]}>FEATURED RECIPES</Text>
         <FlatList
-          data={SAMPLE_FEATURED_RECIPES}
+          data={featuredRecipes}
           horizontal
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <RecipeItem recipe={item} />}
+          renderItem={({ item }) => <RecipeCard recipe={item} />}
           contentContainerStyle={styles.list}
         />
       </View>
@@ -96,11 +100,11 @@ function MainPage(props: Props) {
       <View style={styles.section}>
         <Text style={[textStyles.h1, styles.heading]}>LATEST RECIPES</Text>
         <FlatList
-          data={SAMPLE_FEATURED_RECIPES}
+          data={latestRecipes}
           horizontal
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           keyExtractor={(item) => item._id}
-          renderItem={({ item }) => <RecipeItem recipe={item} />}
+          renderItem={({ item }) => <RecipeCard recipe={item} />}
           contentContainerStyle={styles.list}
         />
       </View>

@@ -20,7 +20,7 @@ function RecipeCategoriItem({ category }: Props) {
   const { key, image, label } = category;
 
   return (
-    <Link href={`/recipes/?category=${key}`}>
+    <Link href={`/recipes/?categories=${key}`}>
       <View style={styles.container}>
         <Image source={image} style={styles.image} />
         <Text style={styles.label} numberOfLines={1}>

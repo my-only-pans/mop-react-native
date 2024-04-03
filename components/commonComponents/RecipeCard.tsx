@@ -24,7 +24,14 @@ function RecipeCard(props: Props) {
   return (
     <Link href={`/recipes/${_id}`} style={{ flex: 0 }}>
       <View style={styles.container}>
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+        <Image
+          source={
+            imageUrl
+              ? { uri: imageUrl }
+              : require("../../assets/placholder-food-img.png")
+          }
+          style={styles.image}
+        />
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
