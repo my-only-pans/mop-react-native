@@ -58,10 +58,14 @@ function MainPage(props: Props) {
       <View style={styles.header}>
         <RecipeSearchBar
           onApplyFilter={(filters) => {
-            router.push(`/recipes?searchString=${filters?.searchString}`);
+            if (filters?.searchString) {
+              router.push(`/recipes?searchString=${filters?.searchString}`);
+            } else {
+              router.push("/recipes?page=1");
+            }
           }}
           showFilterBtn={false}
-          initialValues={{}}
+          initialValues={{ searchString: "" }}
         />
       </View>
 

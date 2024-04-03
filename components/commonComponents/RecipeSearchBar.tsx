@@ -9,7 +9,7 @@ import { useUiSore } from "../../stores/uiStore";
 
 interface Props {
   initialValues: GetRecipesQueryType;
-  onApplyFilter?: (filters?: GetRecipesQueryType) => any;
+  onApplyFilter?: (filters?: GetRecipesQueryType | null) => any;
   showFilterBtn?: boolean;
 }
 
@@ -51,6 +51,18 @@ function RecipeSearchBar(props: Props) {
     });
   };
 
+  const handleClearSearchbar = () => {
+    handleUpdateFilters("searchString", "");
+  };
+
+  const handleSubmitSearch = () => {
+    if (!filters.searchString) {
+      onApplyFilter(null);
+    } else {
+      onApplyFilter(filters);
+    }
+  };
+
   return (
     <>
       <Row gap={10} style={styles.container}>
@@ -58,9 +70,9 @@ function RecipeSearchBar(props: Props) {
           value={filters.searchString || ""}
           onChangeText={(v) => handleUpdateFilters("searchString", v)}
           style={styles.searchbar}
-          onIconPress={() => onApplyFilter(filters)}
-          onSubmitEditing={() => onApplyFilter(filters)}
-          onTraileringIconPress={() => handleUpdateFilters("searchString", "")}
+          onIconPress={handleSubmitSearch}
+          onSubmitEditing={handleSubmitSearch}
+          onClearIconPress={handleClearSearchbar}
         />
         {showFilterBtn && (
           <Icon.Button

@@ -2,7 +2,7 @@ import { Link, router } from "expo-router";
 import React, { useState } from 'react';
 import UpdateProfile from "../update";
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import TagInputUser from "../../../../components/TagInputUser";
+import TagInput from "../../../../components/TagInput";
 
 
 function ProfileView() {
@@ -24,7 +24,7 @@ function ProfileView() {
                     </View>
                 </View>
                 <View>
-                    <TagInputUser
+                    <TagInput
                         tags={myIngredients}
                         label='Enter your available ingredients:'
                         placeholder=''

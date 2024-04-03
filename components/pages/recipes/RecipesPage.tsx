@@ -63,7 +63,7 @@ function RecipesPage() {
     fetchRecipes(filters);
   }, [page]);
 
-  const handleApplyFilter = (filters?: GetRecipesQueryType) => {
+  const handleApplyFilter = (filters?: GetRecipesQueryType | null) => {
     let newParams: Record<string, string>;
 
     if (!filters) {
