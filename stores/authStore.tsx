@@ -10,6 +10,10 @@ class AuthStore {
 
   @observable firebaseToken: string | null = null;
 
+  @observable userEquipment: string[] | null = null;
+
+  @observable userIngredients: string[] | null = null;
+
   constructor() {
     makeObservable(this);
   }
@@ -19,6 +23,8 @@ class AuthStore {
     this.authToken = authToken;
     this.firebaseToken = firebaseToken;
     this.myProfile = myProfile;
+    this.userEquipment = myProfile.equipment;
+    this.userIngredients = myProfile.ingredients;
   }
 
   @action.bound
@@ -26,6 +32,16 @@ class AuthStore {
     this.authToken = null;
     this.myProfile = null;
     this.firebaseToken = null;
+  }
+
+  @action.bound
+  setUserEquipment(equipment: string[]) {
+    this.userEquipment = equipment;
+  }
+
+  @action.bound
+  setUserIngredients(ingredients: string[]) {
+    this.userIngredients = ingredients;
   }
 }
 

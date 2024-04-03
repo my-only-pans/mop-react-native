@@ -4,4 +4,6 @@ export interface MyProfileType {
   firstName: string;
   lastName: string;
   email: string;
+  equipment: string[];
+  ingredients: string[];
 }
