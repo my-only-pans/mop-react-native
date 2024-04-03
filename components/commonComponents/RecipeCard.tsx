@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
 import {
   Dimensions,
   Image,
@@ -14,15 +14,20 @@ import { fontSizes } from "../../theme/text";
 
 interface Props {
   recipe: RecipeType;
+  isDraft?: boolean;
 }
 
 function RecipeCard(props: Props) {
-  const { recipe } = props;
+  const { recipe, isDraft = false } = props;
   const { _id, imageUrl, title, owner, createdAt, averageRating, totalRates } =
     recipe;
 
+  const redirectUrl = useMemo(() => {
+    return isDraft ? `/recipes/draft/${_id}` : `/recipes/${_id}`;
+  }, [isDraft]);
+
   return (
-    <Link href={`/recipes/${_id}`} style={{ flex: 0 }}>
+    <Link href={redirectUrl} style={{ flex: 0 }}>
       <View style={styles.container}>
         <Image
           source={
