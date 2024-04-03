@@ -64,14 +64,8 @@ const TermsAndConditionsPage: React.FC = (props : Props) => {
         </Text>
 
         <Title style={styles.title}>Contact Us</Title>
-        <Text variant="bodyLarge" style={styles.paragraph}>If you have any questions about these Terms, please contact us at mop.help@inc.com</Text>
-
-        <Text variant="bodyLarge">By using our platform, you agree to these Terms and our Privacy Policy.</Text>
+        <Text variant="bodyLarge" style={styles.paragraph}>If you have any questions about these Terms, please contact us at privacy@myonlypans.com</Text>
       </View>
-
-      <Button mode="contained" style={styles.button} onPress={() => {}}>
-        Agree to Terms
-      </Button>
     </ScrollView>
   );
 };
@@ -84,30 +78,24 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   content: {
-    marginBottom: 20,
+    marginBottom: 15,
     marginLeft: 30
   },
   headline:{
     fontSize: 32,
     color: colors.headline,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   title:{
-    color: "black",
+    color: colors.headline,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   paragraph:{
-    fontSize: 20,
+    fontSize: 16,
     color: colors.paragraph,
-    marginBottom: 20,
-  },
-  button: {
-    marginTop: 10,
-    backgroundColor: colors.button,
-    width: 200,
-    alignSelf: 'center'
+    marginBottom: 15,
   },
 });
 

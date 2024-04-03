@@ -2,19 +2,21 @@ import { Link, router } from "expo-router";
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
-import { firebaseAuth } from "../../../firebase/firebaseApp";
-import colors from "../../../theme/colors";
+import { firebaseAuth } from "../../firebase/firebaseApp";
+import colors from "../../theme/colors";
 import axios from "axios";
-import getServerUrl from "../../../utils/getServerUrl";
+import getServerUrl from "../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar, TextInput } from "react-native-paper";
-import Container from "../../../components/commonComponents/Container";
+import Container from "../../components/commonComponents/Container";
+import { useAuthStore } from "../../stores/authStore";
 
 interface FirebaseUser extends User {
   accessToken?: string; // Extend the interface to include accessToken
 }
 
 function Login() {
+  const { login } = useAuthStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,8 @@ function Login() {
       if (!user.accessToken) {
         throw new Error("Invalid login credentials.");
       }
+
+      AsyncStorage.setItem("firebaseToken", user.accessToken);
 
       const {
         data: { authToken },
@@ -54,6 +58,8 @@ function Login() {
       );
 
       const myProfileString = JSON.stringify(myProfile);
+
+      login(authToken, user.accessToken, myProfile);
 
       if (Platform.OS === "web") {
         localStorage.setItem("myProfile", myProfileString);
@@ -90,6 +96,8 @@ function Login() {
         value={email}
         onChangeText={setEmail}
         disabled={loading}
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
 
       <TextInput
@@ -106,7 +114,7 @@ function Login() {
       </Pressable>
       <Text style={styles.subHeader}>
         Don't have an account yet?
-        <Link href="/user/register" style={styles.link}>
+        <Link href="/register" style={styles.link}>
           {" "}
           Sign-up here
         </Link>

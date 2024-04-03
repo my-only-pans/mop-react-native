@@ -1,13 +1,11 @@
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
-import { StyleSheet, Text, View , TextProps} from "react-native";
-import React from 'react';
-
+import { StyleSheet, Text, View, TextProps } from "react-native";
+import React from "react";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
-      <ExpoStatusBar style="auto" hidden={true} />
     </View>
   );
 }
@@ -28,5 +26,5 @@ interface CustomTextProps extends TextProps {
 
 // Set default font family for all Text components
 (Text as CustomTextProps).defaultProps = {
-  style: { fontFamily: 'Poppins-Regular' },
+  style: { fontFamily: "Poppins-Regular" },
 };

@@ -1,8 +1,9 @@
 import React from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import colors from "../theme/colors";
 import { Avatar } from "react-native-paper";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {}
 
@@ -20,18 +21,30 @@ const styles = StyleSheet.create({
 
 function Header(props: Props) {
   const {} = props;
+  const router = useRouter();
+
+  const handleClickAvataer = async () => {
+    const myProfile = await AsyncStorage.getItem("myProfile");
+    const authToken = await AsyncStorage.getItem("authToken");
+
+    if (myProfile && authToken) {
+      router.push("/user/profile");
+    } else {
+      router.push("/login");
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Link href="/">
         <Text style={styles.logo}>MyOnlyPans</Text>
       </Link>
-      <Link href="/user/profile">
+      <Pressable onPress={handleClickAvataer}>
         <Avatar.Image
           source={require("../assets/team/default-transformed.png")}
           size={30}
         />
-      </Link>
+      </Pressable>
     </View>
   );
 }
