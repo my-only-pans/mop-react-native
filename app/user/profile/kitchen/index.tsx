@@ -2,8 +2,7 @@ import { Link, router } from "expo-router";
 import React, { useState } from 'react';
 import UpdateProfile from "../update";
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import TagInputUser from "../../../../components/TagInputUser";
-import TagInput from "../../../../components/TagInputUser";
+import TagInput from "../../../../components/TagInput";
 import colors from "../../../../theme/colors";
 
 function ProfileView() {
@@ -15,13 +14,6 @@ function ProfileView() {
         setMyIngredients([...myIngredients, ...newMyIngredients]);
     };
 
-    // const handleAddMyEquipment = (newMyEquipment: string[]) => {
-    //     // Add new equipment to the current state 
-    //     setMyEquipment([...myEquipment, ...newMyEquipment]);
-
-    // };
-
-    //------updated 
     const handleAddMyEquipment = (newMyEquipment: string[]) => {
         // Add new equipment to the current state and global state
         setMyEquipment([...myEquipment, ...newMyEquipment]);
@@ -39,13 +31,6 @@ function ProfileView() {
                     </View>
                 </View>
                 <View>
-                    {/* <TagInputUser
-                        tags={myEquipment}
-                        label='Enter your available equipment:'
-                        placeholder=''
-                        onUpdateTags={handleAddMyEquipment}
-                    /> */}
-
                     <TagInput
                         tags={myEquipment}
                         label="Enter your available equipment:"
