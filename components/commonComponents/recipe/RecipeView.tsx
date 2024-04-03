@@ -114,7 +114,8 @@ function RecipeView(props: Props) {
             <RecipeButtons 
                 isOwner={owner._id === myProfile?._id}
                 draftId={draft} 
-                recipeId={_id}/>
+                recipeId={_id}
+                userId={myProfile?._id}/>
           </View>
           
         </View>
