@@ -6,7 +6,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import MobileNavigationBar from "../components/commonComponents/MobileNavigationBar";
@@ -17,9 +16,8 @@ import { useAuthStore } from "../stores/authStore";
 import axios from "axios";
 import getServerUrl from "../utils/getServerUrl";
 import { observer } from "mobx-react-lite";
-import { Dialog, Modal, Snackbar } from "react-native-paper";
+import { Snackbar } from "react-native-paper";
 import GlobalDialog from "../components/commonComponents/GlobalDialog";
-import { useUiSore } from "../stores/uiStore";
 
 const protectedPaths = [
   "/user",
@@ -29,9 +27,9 @@ const protectedPaths = [
 ];
 
 function HomeLayout() {
-  const { login, logout, myProfile } = useAuthStore();
-  const { dialogProps } = useUiSore();
+  const { login, logout } = useAuthStore();
   const [loginMessage, setLoginMessage] = useState("");
+  const [initialized, setInitialized] = useState(false);
 
   const router = useRouter();
   const path = usePathname();
@@ -44,6 +42,7 @@ function HomeLayout() {
       if (protectedPaths.find((r) => path.startsWith(r))) {
         router.push("/login");
       }
+      setInitialized(true);
       return logout();
     }
 
@@ -77,6 +76,7 @@ function HomeLayout() {
               AsyncStorage.setItem("myProfile", myProfileString);
               AsyncStorage.setItem("authToken", authToken);
             }
+            setInitialized(true);
           });
       })
       .catch((error) => {
@@ -91,6 +91,7 @@ function HomeLayout() {
         AsyncStorage.removeItem("firebaseToken");
         AsyncStorage.removeItem("authToken");
         AsyncStorage.removeItem("myProfile");
+        setInitialized(true);
       });
   };
 
@@ -118,7 +119,7 @@ function HomeLayout() {
             {loginMessage}
           </Snackbar>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Slot />
+            {initialized && <Slot />}
           </ScrollView>
         </KeyboardAvoidingView>
       </View>

@@ -13,26 +13,50 @@ import getErrorMessage from "../../../utils/getErrorMessage";
 import Row from "../../commonComponents/Row";
 import RecipeSearchBar from "../../commonComponents/RecipeSearchBar";
 import convertParamsArray from "../../../utils/convertParamsArray";
+import { useAuthStore } from "../../../stores/authStore";
+import { toJS } from "mobx";
+import { observer } from "mobx-react-lite";
+import { Switch } from "react-native-paper";
 
 const PAGE_LIMIT = 20;
 
 function RecipesPage() {
+  const { userIngredients, userEquipment, myProfile } = useAuthStore();
   const params = useLocalSearchParams();
   const { categories, page } = params;
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
+  const [useOnlyUserEquipment, setUseOnlyUserEquipment] = useState(true);
+  const [useOnlyUserIngredient, setUseOnlyUserIngredient] = useState(true);
 
   const [total, setTotal] = useState(0);
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
   const fetchRecipes = async (filter?: GetRecipesQueryType) => {
+    console.log({
+      userEquipment: toJS(userEquipment),
+      userIngredients: toJS(userIngredients),
+    });
     setLoading(true);
+
+    let ingredients;
+    let equipment;
+
+    if (useOnlyUserIngredient) {
+      ingredients = userIngredients?.length ? userIngredients : userIngredients;
+    }
+
+    if (useOnlyUserEquipment) {
+      equipment = userEquipment?.length ? userEquipment : userEquipment;
+    }
+
+    console.log({ limit: PAGE_LIMIT, ...filter, ingredients, equipment });
 
     axios
       .get(getServerUrl() + "/recipe", {
-        params: { limit: PAGE_LIMIT, ...filter },
+        params: { limit: PAGE_LIMIT, ...filter, ingredients, equipment },
         headers: {
           Authorization: await getAuthToken(),
         },
@@ -61,16 +85,13 @@ function RecipesPage() {
     };
 
     fetchRecipes(filters);
-  }, [page]);
+  }, [page, useOnlyUserEquipment, useOnlyUserIngredient]);
 
   const handleApplyFilter = (filters?: GetRecipesQueryType | null) => {
-    let newParams: Record<string, string>;
-
     if (!filters) {
       filters = { page: 1 };
       router.push("/recipes?page=1");
     } else {
-      newParams = { ...params, ...filters } as Record<string, string>;
       router.setParams(filters as Record<string, string>);
     }
 
@@ -126,10 +147,28 @@ function RecipesPage() {
           showFilterBtn
         />
       </View>
-      <View style={{ flexGrow: 1, justifyContent: "center" }}>
+      <View style={{ justifyContent: "center" }}>
         <Text style={[textStyles.h1, styles.heading]}>
           {total} Recipes Found
         </Text>
+        <View style={styles.switches}>
+          <Row gap={10}>
+            <Text>Use only MyKitchen Equipment:</Text>
+            <Switch
+              value={useOnlyUserEquipment}
+              onValueChange={setUseOnlyUserEquipment}
+              color={colors.highlight}
+            />
+          </Row>
+          <Row gap={10}>
+            <Text>Use only MyKitchen Ingredients:</Text>
+            <Switch
+              value={useOnlyUserIngredient}
+              onValueChange={setUseOnlyUserIngredient}
+              color={colors.highlight}
+            />
+          </Row>
+        </View>
         {content}
       </View>
       <Row
@@ -172,6 +211,10 @@ const styles = StyleSheet.create({
   heading: {
     marginBottom: 24,
   },
+  switches: {
+    gap: 10,
+    marginBottom: 24,
+  },
   list: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -188,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipesPage;
+export default observer(RecipesPage);
