@@ -17,6 +17,7 @@ import colors from "../../../theme/colors";
 import Editor from "../editor/Editor";
 import RecipeButtons from "../../pages/recipes/RecipeButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RatingRecipe from "../rating/Rating";
 
 interface Props {
   recipe: RecipeType;
@@ -39,6 +40,7 @@ function RecipeView(props: Props) {
     equipment,
     ingredients,
     draft,
+    rating,
   } = recipe;
 
   const [servings, setServings] = useState(serving);
@@ -85,7 +87,7 @@ function RecipeView(props: Props) {
     return updatedIngredients;
   }, [servings]);
 
-  console.log(typeof myProfile);
+  console.log('rating:' ,rating);
   return (
     <View style={styles.container}>
       <View style={[styles.headerContainer, {flexWrap: 'wrap'}]}>
@@ -95,6 +97,10 @@ function RecipeView(props: Props) {
 
         <View style={[styles.row]}>
           {/* //!!!!!!!!!!!!put rating here */}
+          <RatingRecipe 
+              recipeId={_id}
+              rating={rating}
+          />
         </View>
 
         <View style={[styles.row, {justifyContent: 'space-between', width:'100%'}]}>
