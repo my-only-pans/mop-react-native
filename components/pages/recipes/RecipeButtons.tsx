@@ -1,28 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Text, Platform, } from 'react-native';
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
 import { Icon } from "react-native-elements";
 import axios from "axios";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import getServerUrl from "../../../utils/getServerUrl";
+import getAuthToken from "../../../utils/getAuthToken";
+import getErrorMessage from "../../../utils/getErrorMessage";
 
 interface Props {
     isOwner?: boolean;
     draftId?: string;
     recipeId?: string;
+    userId?: string;
 }
 
 function RecipeButtons(props: Props) {
-    const { draftId, isOwner = false, recipeId } = props;
-    
-    //TODO : fix draft id route
+    const { draftId, isOwner = false, recipeId, userId } = props;
+    const [loading, setLoading] = useState(false);
+
+
+    //TODO : 
     //fixx delete button
-    //add bookmark route
+    //add bookmark save recipe route
 
     console.log(`recipeId:  ${recipeId}`);
     console.log(`isOwner: ${isOwner}`);
 
     const iconSize = Platform.OS === "web" ? 30 : 20;
+
+
+    const handleSaveRecipe = async () => {
+        setLoading(true);
+
+        const body = { recipeId };
+
+        axios
+            .post(getServerUrl() + "/saved", body, {
+                headers: { Authorization: await getAuthToken() },
+            })
+            .then((res) => {
+                console.log(res);
+                if (res.data) {
+                    setLoading(false);
+                    //router.push(`/recipes/draft/${res.data._id}?section=requirements`);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                setError(getErrorMessage(error).message);
+                return setLoading(false);
+            });
+    };
 
     return (
 
@@ -50,7 +80,7 @@ function RecipeButtons(props: Props) {
 
                     </>
                 ) : (
-                    <Link href={`./recipe/save/${recipeId}`}>
+                    <Link href={`./recipe/saved/${recipeId}`}>
                         <Icon
                             name='bookmark'
                             color={colors.highlight}
@@ -78,3 +108,7 @@ const styles = StyleSheet.create({
 
 
 export default RecipeButtons;
+
+function setError(message: any) {
+    throw new Error("Function not implemented.");
+}
