@@ -40,7 +40,6 @@ function ProfileView() {
   const handleLogout = () => {
     AsyncStorage.removeItem("myProfile");
     AsyncStorage.removeItem("authToken");
-    AsyncStorage.removeItem("firebaseToken");
     logout();
 
     router.push("/");

@@ -8,8 +8,6 @@ class AuthStore {
 
   @observable authToken: string | null = null;
 
-  @observable firebaseToken: string | null = null;
-
   @observable userEquipment: string[] | null = null;
 
   @observable userIngredients: string[] | null = null;
@@ -19,9 +17,8 @@ class AuthStore {
   }
 
   @action.bound
-  login(authToken: string, firebaseToken: string, myProfile: MyProfileType) {
+  login(authToken: string, myProfile: MyProfileType) {
     this.authToken = authToken;
-    this.firebaseToken = firebaseToken;
     this.myProfile = myProfile;
     this.userEquipment = myProfile.equipment;
     this.userIngredients = myProfile.ingredients;
@@ -31,7 +28,6 @@ class AuthStore {
   logout() {
     this.authToken = null;
     this.myProfile = null;
-    this.firebaseToken = null;
   }
 
   @action.bound

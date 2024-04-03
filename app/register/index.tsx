@@ -1,5 +1,4 @@
 import { Link, router } from "expo-router";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   View,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { firebaseAuth } from "../../firebase/firebaseApp";
 import axios from "axios";
 import { Checkbox, Snackbar } from "react-native-paper";
 import getServerUrl from "../../utils/getServerUrl";
