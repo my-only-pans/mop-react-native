@@ -1,9 +1,5 @@
-import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import UpdateProfile from "../update";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import TagInputUser from "../../../../components/TagInputUser";
-import TagInput from "../../../../components/TagInputUser";
+import { View, Text, StyleSheet } from "react-native";
 import colors from "../../../../theme/colors";
 import axios from "axios";
 import getServerUrl from "../../../../utils/getServerUrl";
