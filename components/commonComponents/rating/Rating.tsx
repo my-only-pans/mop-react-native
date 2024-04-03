@@ -1,21 +1,46 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
+import getErrorMessage from '../../../utils/getErrorMessage';
+import getServerUrl from "../../../utils/getServerUrl";
+import getAuthToken from "../../../utils/getAuthToken";
 
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Snackbar } from "react-native-paper";
 
-interface RateRecipeProps {
-  recipeId: string,
-  rating: number,
+interface Props {
+  recipeId: string;
+  rating: { avg: number; ratingNum: number; } | undefined;
 }
 
-const RatingRecipe: React.FC<RateRecipeProps> = ({ recipeId }) => {
+function RatingRecipe (props: Props){
+  const { recipeId, rating} = props;
+  const router = useRouter();
+  const [serverMessage, setServerMessage] = useState<string | null>();
+
   const [starRating, setStarRating] = useState<number>(0);
+  //const  localRating; 
 
   //handle rating selection
-  const handleRating = (star: number) => {
+  const handleRating = async (star: number) => {
     setStarRating(star);
-   
+    console.log('clicked rating: ' , star);
+
+
+    axios
+      .put(getServerUrl() + "/recipe/rate", 
+      { recipeId, rating: star }, 
+      {headers: { Authorization: await getAuthToken() }
+      })
+      .then((res) => {
+        // TODO display success
+        setServerMessage("Recipe successfuly rated");
+      })
+      .catch((error) => console.log(getErrorMessage(error)));
   };
+
+
 
   return (
     <View style={styles.container}>
