@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   logo: { color: colors.highlight, fontWeight: "900", fontSize: 24 },
   logoImage: { 
-    height: Platform.OS === "web" ? 50 : 35, 
+    //height: Platform.OS === "web" ? 50 : 35, 
     width: Platform.OS === "web" ? 220 : 130,
     resizeMode: 'contain', 
 },
