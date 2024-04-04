@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   headerContainer: {
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   header: {
     fontSize: 20,

@@ -79,7 +79,8 @@ const styles = StyleSheet.create({
   title:{
     color: colors.primary,
     marginBottom: 15,
-    marginLeft: 15
+    marginLeft: 15,
+    fontFamily: 'Poppins-Bold',
   },
   paragraph:{
     color: colors.paragraph,
