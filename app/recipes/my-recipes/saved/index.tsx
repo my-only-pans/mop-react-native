@@ -98,10 +98,6 @@ function SavedRecipesPage() {
     );
   }
 
-  for (let i = 0; i < recipes.length; i++) {
-    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
-  }
-
   return (
     <Container>
       <View style={styles.header}>
