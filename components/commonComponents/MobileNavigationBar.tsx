@@ -18,7 +18,7 @@ const links = [
     icon: "library-add",
   },
   {
-    href: "/recipes/saved",
+    href: "/recipes/my-recipes",
     icon: "bookmarks",
   },
 ];

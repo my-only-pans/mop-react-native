@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Platform } from "react-native";
 import { Button } from "react-native-paper";
 import { textStyles } from "../../../../theme/text";
 import { RecipeType } from "../../../../types/RecipeTypes";
@@ -16,6 +16,9 @@ function ViewMyDrafts() {
   const [loading, setLoading] = useState(true);
 
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
+
+  const buttonContainerStyle = [styles.buttonContainer,
+    Platform.OS === 'web' ? styles.buttonContainerWeb : styles.buttonContainerMobile];
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -79,17 +82,19 @@ function ViewMyDrafts() {
   return (
     <Container>
       <View style={styles.header}>
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes`}>My Recipes</Link>
-        </Button>
+        <View style={buttonContainerStyle}>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes`}>My Recipes</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
+          </Button>
+        </View>
       </View>
 
       <Text style={[textStyles.h1, styles.heading]}>My Drafts</Text>
@@ -99,12 +104,27 @@ function ViewMyDrafts() {
 }
 
 const styles = StyleSheet.create({
-  header: {
+ 
+  buttonContainer: {
+    justifyContent: "flex-end",
+    paddingVertical: 4,
+  },
+  buttonContainerWeb: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
     gap: 20,
     marginBottom: 48,
+  },
+  buttonContainerMobile: {
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    gap:4,
+  },
+  header: {
+    
   },
   section: {
     marginBottom: 64,
@@ -133,6 +153,28 @@ const styles = StyleSheet.create({
   },
   loadMoreText: {
     color: colors.info,
+  },
+  buttonWeb: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: "#007bff",
+  },
+  buttonTextWeb: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonMobile: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: "#007bff",
+  },
+  buttonTextMobile: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

@@ -2,7 +2,7 @@ import { Link } from "expo-router";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, StyleSheet, Pressable, Platform } from "react-native";
 import { Button } from "react-native-paper";
 import { textStyles } from "../../../theme/text";
 import Container from "../../../components/commonComponents/Container";
@@ -30,6 +30,8 @@ function ViewMyRecipes() {
   const [hasMore, setHasMore] = useState(false);
 
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
+  const buttonContainerStyle = [styles.buttonContainer,
+    Platform.OS === 'web' ? styles.buttonContainerWeb : styles.buttonContainerMobile];
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -100,17 +102,19 @@ function ViewMyRecipes() {
   return (
     <Container>
       <View style={styles.header}>
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes`}>My Recipes</Link>
-        </Button>
+        <View style={buttonContainerStyle}>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes`}>My Recipes</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
+          </Button>
+        </View>
       </View>
 
       <Text style={[textStyles.h1, styles.heading]}>My Recipes</Text>
@@ -152,12 +156,27 @@ function ViewMyRecipes() {
 }
 
 const styles = StyleSheet.create({
-  header: {
+  
+  buttonContainer: {
+    justifyContent: "flex-end",
+    paddingVertical: 4,
+  },
+  buttonContainerWeb: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
     gap: 20,
     marginBottom: 48,
+  },
+  buttonContainerMobile: {
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    gap:4,
+  },
+  header: {
+    
   },
   section: {
     marginBottom: 64,

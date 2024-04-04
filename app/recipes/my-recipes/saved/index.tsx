@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   FlatList,
   Pressable,
+  Platform
 } from "react-native";
 import { Button } from "react-native-paper";
 import { textStyles } from "../../../../theme/text";
@@ -38,6 +39,10 @@ function SavedRecipesPage() {
   const [hasMore, setHasMore] = useState(false);
 
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
+
+  const buttonContainerStyle = [styles.buttonContainer,
+  Platform.OS === 'web' ? styles.buttonContainerWeb : styles.buttonContainerMobile];
+
 
   const fetchRecipes = async () => {
     setLoading(true);
@@ -105,17 +110,19 @@ function SavedRecipesPage() {
   return (
     <Container>
       <View style={styles.header}>
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes`}>My Recipes</Link>
-        </Button>
+        <View style={buttonContainerStyle}>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes`}>My Recipes</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/my-drafts`}>My Drafts</Link>
+          </Button>
 
-        <Button mode="contained">
-          <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
-        </Button>
+          <Button mode="contained">
+            <Link href={`/recipes/my-recipes/saved`}>My Saved Recipes</Link>
+          </Button>
+        </View>
       </View>
 
       <Text style={[textStyles.h1, styles.heading]}>My Saved Recipes</Text>
@@ -125,12 +132,25 @@ function SavedRecipesPage() {
 }
 
 const styles = StyleSheet.create({
-  header: {
+  buttonContainer: {
+    justifyContent: "flex-end",
+    paddingVertical: 4,
+  },
+  buttonContainerWeb: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
     gap: 20,
     marginBottom: 48,
+  },
+  buttonContainerMobile: {
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    gap:4,
+  },
+  header: {
   },
   section: {
     marginBottom: 64,
