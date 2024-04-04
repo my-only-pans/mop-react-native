@@ -173,14 +173,15 @@ function Registration() {
               onChangeText={setConfirmPassword}
             />
 
-            <View style={[styles.termsContainer, spaceStyles.row]}>
-            <View style={[{ }]}>
+            <View style={[styles.termsContainer, ]}>
+            
               <Checkbox
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {
                   setIsChecked(!isChecked);
                 }}
               />
+              <View style={[spaceStyles.row]}>
                 <Text>
                   I agree with My Only Pans
                   <Link href="/privacy/terms" style={styles.link}>
