@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
 import colors from "../../../../theme/colors";
-import textStyles from "../../../../theme/text";
 
 interface Props {};
 
@@ -20,7 +19,7 @@ const PrivacyMenu = (props: Props) => {
         <View style={styles.container}>
         {routes.map(({ href, label }) => (
             <Link key={href} href={href} style={styles.link}>
-            <Text style={[styles.linkText, textStyles.h4]}>{label}</Text>
+            <Text style={styles.linkText}>{label}</Text>
             </Link>
         ))}
         </View>
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10, 
     },
     linkText: {
-        color: colors.tertiary, 
+        color: colors.primary, 
         fontSize: 28, 
     },
 });
