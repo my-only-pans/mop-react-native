@@ -38,7 +38,7 @@ function RecipeCard(props: Props) {
           }
           style={styles.image}
         />
-        <Text style={styles.title} numberOfLines={1} ellipsizeMode="head">
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
           {title}
         </Text>
         <Text style={styles.owner}>By: {owner?.username}</Text>
@@ -56,7 +56,7 @@ function RecipeCard(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 200,
+    width: Platform.OS === "web" ? 200 : Dimensions.get("screen").width - 64,
   },
   image: {
     width: Platform.OS === "web" ? 200 : Dimensions.get("screen").width - 64,
