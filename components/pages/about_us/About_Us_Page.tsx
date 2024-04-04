@@ -2,7 +2,6 @@ import React from "react";
 import { View, StyleSheet, ScrollView, Image, Platform } from "react-native"; // Import Platform
 import { Text } from "react-native-paper";
 import colors from "../../../theme/colors";
-import textStyles from "../../../theme/text";
 
 const About_Us_Page = () => {
   const values = [
@@ -46,14 +45,14 @@ const About_Us_Page = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View>
-          <Text variant="headlineLarge" style={[styles.heading, textStyles.h1]}>
+          <Text variant="headlineLarge" style={styles.heading}>
             About Us
           </Text>
         </View>
         <br />
 
         <View style={styles.section}>
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             At My Only Pans, we believe in the magic of homemade meals to bring
             joy, creativity, and connections to people's lives. We're dedicated
             to empowering home cooks, food enthusiasts, and culinary explorers
@@ -62,11 +61,11 @@ const About_Us_Page = () => {
         </View>
 
         <View style={styles.section}>
-          <Text variant="titleLarge" style={[styles.sectionTitle, textStyles.h3]}>
+          <Text variant="titleLarge" style={styles.sectionTitle}>
             Company Overview
           </Text>
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             My Only Pans is a place where food lovers of all levels can
             discover, share, and celebrate their passion for cooking. Our
             platform is easy to use, allowing you to search, view, post, review,
@@ -74,7 +73,7 @@ const About_Us_Page = () => {
           </Text>
           <br />
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             But we're more than just recipes. We know that great meals start
             with the right ingredients and tools. That's why we let you list
             what's in your fridge and kitchen equipment and use tags to find
@@ -82,7 +81,7 @@ const About_Us_Page = () => {
           </Text>
           <br />
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             Whether you're a seasoned chef or new to cooking, My Only Pans is
             your destination for culinary exploration and inspiration.
           </Text>
@@ -90,11 +89,11 @@ const About_Us_Page = () => {
         <br />
 
         <View style={styles.section}>
-          <Text variant="titleLarge" style={[styles.sectionTitle, textStyles.h3]}>
+          <Text variant="titleLarge" style={styles.sectionTitle}>
             Mission and Values
           </Text>
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             Our mission is to encourage and enable everyone to explore their
             culinary creativity, one recipe at a time. We're dedicated to
             creating a supportive community that embraces everyone, regardless
@@ -102,12 +101,12 @@ const About_Us_Page = () => {
           </Text>
           <br />
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             Our core values guide us:
             <br />
             <View style={styles.value_section}>
               {values.map((value, index) => (
-                <Text key={index} style={[styles.value, textStyles.p]}>
+                <Text key={index} style={styles.value}>
                   {`${index + 1}. ${value}\n `}
                 </Text>
               ))}
@@ -116,11 +115,11 @@ const About_Us_Page = () => {
         </View>
 
         <View style={styles.section}>
-          <Text variant="titleLarge" style={[styles.sectionTitle, textStyles.h3]}>
+          <Text variant="titleLarge" style={styles.sectionTitle}>
             USP (Unique Selling Proposition)
           </Text>
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             What makes My Only Pans unique is our new approach to culinary
             exploration. We offer more than just recipes. Our unique features,
             like fridge inventory, equipment lists, and customizable search
@@ -130,7 +129,7 @@ const About_Us_Page = () => {
 
           <br />
 
-          <Text variant="bodyLarge" style={[styles.sectionText, textStyles.p]}>
+          <Text variant="bodyLarge" style={styles.sectionText}>
             Whether you're making a quick weeknight meal or planning a fancy
             dinner party, My Only Pans gives you the tools and inspiration to
             cook with confidence and creativity. Join us in reinventing how
@@ -139,7 +138,7 @@ const About_Us_Page = () => {
         </View>
 
         <View style={styles.section}>
-          <Text variant="titleLarge" style={[styles.teamSectionTitle, textStyles.h3]}>
+          <Text variant="titleLarge" style={styles.teamSectionTitle}>
             Meet the Team
           </Text>
 
@@ -152,7 +151,7 @@ const About_Us_Page = () => {
                   onError={() => defaultImage}
                 />
 
-                <View style={[styles.textContainer]}>
+                <View style={styles.textContainer}>
                   <Text variant="bodyLarge">{member.name}</Text>
                   <Text variant="bodyLarge">{member.position}</Text>
                 </View>
