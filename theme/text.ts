@@ -14,7 +14,7 @@ export const textStyles = StyleSheet.create({
   h1: {
     fontSize: fontSizes.xl,
     fontWeight: "bold",
-    fontFamily: "Poppins-Black", // Black weight
+    fontFamily: "Poppins-Bold", // Black weight
     color: colors.headline,
   },
   h2: {

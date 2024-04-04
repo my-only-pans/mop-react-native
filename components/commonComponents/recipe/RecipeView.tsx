@@ -22,10 +22,11 @@ import RatingRecipe from "../rating/Rating";
 interface Props {
   recipe: RecipeType;
   isDraft?: boolean;
+  onReFetch: () => any ;
 }
 
 function RecipeView(props: Props) {
-  const { recipe, isDraft = false } = props;
+  const { recipe, isDraft = false, onReFetch } = props;
   const [myProfile, setMyProfile] = useState<any>();
 
   const {
@@ -100,6 +101,7 @@ function RecipeView(props: Props) {
           <RatingRecipe 
               recipeId={_id}
               rating={rating}
+              onReFetch={onReFetch}
           />
         </View>
 

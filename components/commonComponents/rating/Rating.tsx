@@ -12,10 +12,11 @@ import { Snackbar } from "react-native-paper";
 interface Props {
   recipeId: string;
   rating: { avg: number; ratingNum: number; } | undefined;
+  onReFetch: () => any;
 }
 
 function RatingRecipe (props: Props){
-  const { recipeId, rating} = props;
+  const { recipeId, rating, onReFetch} = props;
   const router = useRouter();
   const [serverMessage, setServerMessage] = useState<string | null>();
 
@@ -27,14 +28,17 @@ function RatingRecipe (props: Props){
     setStarRating(star);
     console.log('clicked rating: ' , star);
 
-
+    const body = { recipeId, rating: star };
+    
+    console.log('body: ' , body);
     axios
-      .put(getServerUrl() + "/recipe/rate", 
-      { recipeId, rating: star }, 
+      .post(getServerUrl() + "/rate", 
+      body, 
       {headers: { Authorization: await getAuthToken() }
       })
       .then((res) => {
         // TODO display success
+        onReFetch();
         setServerMessage("Recipe successfuly rated");
       })
       .catch((error) => console.log(getErrorMessage(error)));

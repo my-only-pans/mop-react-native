@@ -66,7 +66,7 @@ function RecipeViewpage(props: Props) {
   if (recipe) {
     return (
       <Container>
-        <RecipeView recipe={recipe} />
+        <RecipeView recipe={recipe} onReFetch={fetchRecipe} />
       </Container>
     );
   }

@@ -19,12 +19,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// Extend TextProps interface to include defaultProps
-interface CustomTextProps extends TextProps {
-  defaultProps?: any;
-}
 
-// Set default font family for all Text components
-(Text as CustomTextProps).defaultProps = {
-  style: { fontFamily: "Poppins-Regular" },
-};
