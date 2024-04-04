@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import Container from "../../../commonComponents/Container";
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Button, HelperText, Snackbar, TextInput } from "react-native-paper";
 import Row from "../../../commonComponents/Row";
-import { Input, Icon } from "react-native-elements";
-import NumberInput from "../../../commonComponents/form/NumberInput";
+import { Icon, Image } from "react-native-elements";
 import colors from "../../../../theme/colors";
 import StyledButton from "../../../commonComponents/StyledButton";
 import { useRouter } from "expo-router";
@@ -13,7 +19,15 @@ import getServerUrl from "../../../../utils/getServerUrl";
 import getErrorMessage from "../../../../utils/getErrorMessage";
 import Tag from "../../../commonComponents/Tag";
 import { RecipeType } from "../../../../types/RecipeTypes";
-import getAuthToken from "../../../../utils/getAuthToken";
+import * as ImagePicker from "expo-image-picker";
+import * as FilesSystem from "expo-file-system";
+import { useAuthStore } from "../../../../stores/authStore";
+
+const imagesSamples: string[] = [];
+
+for (let i = 1; i <= 5; i++) {
+  imagesSamples.push(`https://picsum.photos/seed/${i + 1}/200/200`);
+}
 
 interface Props {
   draft?: RecipeType;
@@ -22,6 +36,8 @@ interface Props {
 }
 
 function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
+  const { authToken } = useAuthStore();
+
   const [title, setTitle] = useState<string>(draft?.title || "");
   const [description, setDescription] = useState<string>(
     draft?.description || ""
@@ -39,9 +55,13 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     draft?.categories || []
   );
   const [categoryValue, setCategoryValue] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null | undefined>(
+    draft?.imageUrl
+  );
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState<string | null>();
+
+  const [uploadingImage, setUploadingImage] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -70,10 +90,9 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
 
     axios
       .post(getServerUrl() + "/recipe/draft", body, {
-        headers: { Authorization: await getAuthToken() },
+        headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((res) => {
-        console.log(res);
         if (res.data) {
           setLoading(false);
           router.push(`/recipes/draft/${res.data._id}?section=requirements`);
@@ -84,20 +103,6 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
         setError(getErrorMessage(error).message);
         return setLoading(false);
       });
-  };
-
-  const updateRecipeDraft = async () => {
-    const body = {
-      recipeId: draft?._id,
-      title,
-      description,
-      prepTime,
-      cookTime,
-      serving,
-      categories,
-    };
-
-    console.log(body);
   };
 
   const handleClickNext = async () => {
@@ -116,6 +121,57 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     setDraft && draft && setDraft({ ...draft, categories: newCategories });
   };
 
+  const handleClickAddImage = async () => {
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!res.canceled) {
+      const img = res.assets[0].uri;
+
+      setUploadingImage(true);
+
+      try {
+        const formData = new FormData();
+        const fileUri = img;
+
+        const fileRes = await fetch(fileUri);
+        const blob = await fileRes.blob();
+
+        formData.append("image", blob, "image.jpg");
+
+        const axiosConfig = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
+          },
+        };
+
+        console.log(formData);
+
+        axios
+          .post(`${getServerUrl()}/uploadImage`, formData, axiosConfig)
+          .then((res) => {
+            setDraft && draft && setDraft({ ...draft, imageUrl: res.data.url });
+            setImageUrl(res.data.url);
+          })
+          .catch((error) => {
+            console.log("Post Error", error);
+          });
+
+        // Do something with the response, like updating the UI or storing the image URL
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setError(getErrorMessage(error).message);
+      } finally {
+        setUploadingImage(false);
+      }
+    }
+  };
+
   return (
     <View>
       <View style={styles.main}>
@@ -128,6 +184,19 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
           </>
         )}
         <View style={{ rowGap: 20 }}>
+          <View style={styles.imageContainer}>
+            {imageUrl ? (
+              <Image source={{ uri: imageUrl }} style={styles.image} />
+            ) : (
+              <Pressable
+                style={styles.addImageBtn}
+                onPress={handleClickAddImage}
+              >
+                <Icon name="add" />
+                <Text>Add Image</Text>
+              </Pressable>
+            )}
+          </View>
           <View>
             <HelperText type="error" visible={!title}>
               * Required
@@ -303,6 +372,24 @@ const styles = StyleSheet.create({
     marginBottom: 48,
     marginTop: 10,
     textAlign: "left",
+  },
+  imageContainer: {
+    marginHorizontal: "auto",
+  },
+  image: {
+    aspectRatio: 4 / 3,
+    width: Platform.OS !== "web" ? Dimensions.get("screen").width * 0.9 : 500,
+    borderRadius: 10,
+  },
+  addImageBtn: {
+    aspectRatio: 4 / 3,
+    width: Platform.OS !== "web" ? Dimensions.get("screen").width * 0.8 : 500,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    marginHorizontal: "auto",
+    backgroundColor: colors.grey,
+    borderRadius: 10,
   },
   column: {
     flex: 1,
