@@ -8,8 +8,10 @@ import {
   Platform,
 } from "react-native";
 import axios from "axios";
-import { Checkbox, HelperText, Snackbar, 
-  TextInput, } from "react-native-paper";
+import {
+  Checkbox, HelperText, Snackbar,
+  TextInput,
+} from "react-native-paper";
 import getServerUrl from "../../utils/getServerUrl";
 import colors from "../../theme/colors";
 
@@ -101,41 +103,43 @@ function Registration() {
       <View style={[styles.content]}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Create an account</Text>
-          <View style={styles.errorContainer}>
+          <>
             {errorMessages.map((message) => (
-              <Text key={message} style={styles.errorMessage}>
-                {message}
-              </Text>
+              <View style={styles.errorContainer}>
+                <Text key={message} style={styles.errorMessage}>
+                  {message}
+                </Text>
+              </View>
             ))}
-          </View>
+          </>
           <Text style={styles.subHeader}>
             Enter the following information to create an account
           </Text>
         </View>
         <View style={[styles.row]}>
           <View style={[styles.column]}>
-            
+
             <TextInput
               placeholder="First Name"
               label="First Name"
               value={firstName}
               onChangeText={setFirstName}
             />
-            
+
             <TextInput
               placeholder="Last Name"
               label="Last Name"
               value={lastName}
               onChangeText={setLastname}
             />
-            
+
             <TextInput
               placeholder="Email"
               label="Email"
               value={email}
               onChangeText={setEmail}
             />
-           
+
             <TextInput
               label="Contact Number"
               placeholder="Contact Number"
@@ -143,7 +147,7 @@ function Registration() {
               onChangeText={setPhone}
             />
           </View>
-        
+
           <View style={[styles.column]}>
             <TextInput
               label="Username"
@@ -151,7 +155,7 @@ function Registration() {
               value={username}
               onChangeText={setUsername}
             />
-           
+
             <TextInput
               label="Password"
               placeholder="Password"
@@ -159,7 +163,7 @@ function Registration() {
               value={password}
               onChangeText={setPassword}
             />
-            
+
             <TextInput
               label="Confirm Password"
               placeholder="Confirm Password"
@@ -167,9 +171,9 @@ function Registration() {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            
+
             <View style={styles.termsContainer}>
-            
+
               <Checkbox
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {

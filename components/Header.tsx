@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View, Image } from "react-native";
 import colors from "../theme/colors";
 import { Avatar } from "react-native-paper";
 import { Link, useRouter } from "expo-router";
@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logo: { color: colors.highlight, fontWeight: "900", fontSize: 24 },
+  logoImage: { 
+    height: Platform.OS === "web" ? 50 : 35, 
+    width: Platform.OS === "web" ? 220 : 130,
+    resizeMode: 'contain', 
+},
 });
 
 function Header(props: Props) {
@@ -37,7 +42,11 @@ function Header(props: Props) {
   return (
     <View style={styles.container}>
       <Link href="/">
-        <Text style={styles.logo}>MyOnlyPans</Text>
+        {/* <Text style={styles.logo}>MyOnlyPans</Text> */}
+        <Image
+        style={styles.logoImage}
+        source={require('../assets/full-yellow.png')}
+      />
       </Link>
       <Pressable onPress={handleClickAvataer}>
         <Avatar.Image

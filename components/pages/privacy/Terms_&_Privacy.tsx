@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
     color: colors.headline,
     fontWeight: 'bold',
     marginBottom: 15,
-    marginLeft: 15
+    marginLeft: 15,
+    fontFamily: 'Poppins-Bold',
   },
   paragraph:{
     fontSize: 16,
