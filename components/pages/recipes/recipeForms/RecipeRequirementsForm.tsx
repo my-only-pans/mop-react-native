@@ -88,7 +88,11 @@ function RecipeRequirementsForm(props: Props) {
     }
 
     if (ingredients.find((i) => i._id === ingredientName)) {
-      ingredientListErrors.push("Ingredient already exists.");
+      ingredientListErrors.push("Ingredient already exists");
+    }
+
+    if (isNaN(parseInt(ingredientAmount))) {
+      ingredientListErrors.push("Ingredient amount needs to be a number");
     }
   }
 
