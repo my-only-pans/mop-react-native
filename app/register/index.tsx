@@ -114,84 +114,62 @@ function Registration() {
         </View>
         <View style={[styles.row]}>
           <View style={[styles.column]}>
-            <HelperText type="error" visible={!firstName}>
-              * Required
-            </HelperText>
+            
             <TextInput
-              style={styles.input}
               placeholder="First Name"
               label="First Name"
               value={firstName}
               onChangeText={setFirstName}
             />
-            <HelperText type="error" visible={!lastName}>
-              * Required
-            </HelperText>
+            
             <TextInput
-              style={styles.input}
               placeholder="Last Name"
               label="Last Name"
               value={lastName}
               onChangeText={setLastname}
             />
-            <HelperText type="error" visible={!email}>
-              * Required
-            </HelperText>
+            
             <TextInput
-              style={styles.input}
               placeholder="Email"
               label="Email"
               value={email}
               onChangeText={setEmail}
             />
-            <HelperText type="error" visible={!phone}>
-              * Required
-            </HelperText>
+           
             <TextInput
-              style={styles.input}
               label="Contact Number"
               placeholder="Contact Number"
               value={phone}
               onChangeText={setPhone}
             />
           </View>
-          <HelperText type="error" visible={!username}>
-              * Required
-            </HelperText>
+        
           <View style={[styles.column]}>
             <TextInput
-              style={styles.input}
               label="Username"
               placeholder="Username"
               value={username}
               onChangeText={setUsername}
             />
-            <HelperText type="error" visible={!password}>
-              * Required
-            </HelperText>
+           
             <TextInput
-              style={styles.input}
               label="Password"
               placeholder="Password"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
-            <HelperText type="error" visible={!confirmPassword}>
-              * Required
-            </HelperText>
+            
             <TextInput
-              style={styles.input}
               label="Confirm Password"
               placeholder="Confirm Password"
               secureTextEntry
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
-            <HelperText type="error" visible={!isChecked}>
-              * Required
-            </HelperText>
+            
             <View style={styles.termsContainer}>
+            
               <Checkbox
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {

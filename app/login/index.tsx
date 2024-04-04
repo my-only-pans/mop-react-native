@@ -72,9 +72,6 @@ function Login() {
           Enter the following information to Sign in
         </Text>
       </View>
-      <HelperText type="error" visible={!email}>
-        * Required
-      </HelperText>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -86,9 +83,6 @@ function Login() {
         autoCapitalize="none"
       />
 
-      <HelperText type="error" visible={!password}>
-        * Required
-      </HelperText>
       <TextInput
         style={styles.input}
         placeholder="Password"
