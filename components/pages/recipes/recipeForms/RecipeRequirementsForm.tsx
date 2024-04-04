@@ -189,6 +189,8 @@ const styles = StyleSheet.create({
   },
   main: {
     flexGrow: 1,
+    maxWidth: 800,
+    marginHorizontal: "auto",
   },
   sectionHeading: {
     marginBottom: 24,

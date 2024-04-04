@@ -289,6 +289,8 @@ const styles = StyleSheet.create({
   main: {
     flexGrow: 1,
     marginBottom: 48,
+    maxWidth: 700,
+    marginHorizontal: "auto",
   },
   header: {
     fontSize: 20,
