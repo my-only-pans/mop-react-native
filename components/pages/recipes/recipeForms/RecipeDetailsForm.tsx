@@ -65,6 +65,31 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
 
   const router = useRouter();
 
+  const handleChangeTitle = (value: string) => {
+    setTitle(value);
+    setDraft && draft && setDraft({ ...draft, title: value });
+  };
+
+  const handleChangeDescription = (value: string) => {
+    setDescription(value);
+    setDraft && draft && setDraft({ ...draft, description: value });
+  };
+
+  const handleChangePrepTime = (value: string) => {
+    setPrepTime(value);
+    setDraft && draft && setDraft({ ...draft, prepTime: parseFloat(value) });
+  };
+
+  const handleChangeCookTime = (value: string) => {
+    setCookTime(value);
+    setDraft && draft && setDraft({ ...draft, cookTime: parseFloat(value) });
+  };
+
+  const handleChangeServings = (value: string) => {
+    setServing(value);
+    setDraft && draft && setDraft({ ...draft, serving: parseInt(value) });
+  };
+
   const handleAddCategories = () => {
     const newCategories = categoryValue
       .split(/,|\n/)
@@ -150,8 +175,6 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
           },
         };
 
-        console.log(formData);
-
         axios
           .post(`${getServerUrl()}/uploadImage`, formData, axiosConfig)
           .then((res) => {
@@ -205,7 +228,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
               label="Title"
               placeholder="Recipe Title"
               value={title}
-              onChangeText={setTitle}
+              onChangeText={handleChangeTitle}
               numberOfLines={2}
             />
           </View>
@@ -218,7 +241,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
               label="Description"
               placeholder="Recipe Description"
               value={description}
-              onChangeText={setDescription}
+              onChangeText={handleChangeDescription}
               numberOfLines={4}
               multiline
             />
@@ -237,7 +260,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
                 keyboardType="numeric"
                 label="Prep Time"
                 value={prepTime}
-                onChangeText={setPrepTime}
+                onChangeText={handleChangePrepTime}
                 placeholder={"Enter prep time"}
               />
             </View>
@@ -251,7 +274,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
                 keyboardType="numeric"
                 label="Cook Time"
                 value={cookTime}
-                onChangeText={setCookTime}
+                onChangeText={handleChangeCookTime}
                 placeholder={"Enter cook time"}
               />
             </View>
@@ -265,7 +288,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
                 keyboardType="numeric"
                 label="Serving"
                 value={serving}
-                onChangeText={setServing}
+                onChangeText={handleChangeServings}
                 placeholder={"Enter number of servings"}
               />
             </View>
