@@ -35,10 +35,6 @@ function RecipesPage() {
   const [recipes, setRecipes] = useState<RecipeType[]>([]);
 
   const fetchRecipes = async (filter?: GetRecipesQueryType) => {
-    console.log({
-      userEquipment: toJS(userEquipment),
-      userIngredients: toJS(userIngredients),
-    });
     setLoading(true);
 
     let ingredients;
@@ -51,8 +47,6 @@ function RecipesPage() {
     if (useOnlyUserEquipment) {
       equipment = userEquipment?.length ? userEquipment : userEquipment;
     }
-
-    console.log({ limit: PAGE_LIMIT, ...filter, ingredients, equipment });
 
     axios
       .get(getServerUrl() + "/recipe", {

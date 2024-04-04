@@ -66,11 +66,13 @@ function DraftUpdatePage(props: Props) {
   };
 
   const handleSave = async () => {
+    console.log(draft);
     axios
       .put(getServerUrl() + "/recipe/draft", draft, {
         headers: { Authorization: await getAuthToken() },
       })
       .then((res) => {
+        console.log(res);
         // TODO display success
         setServerMessage("Recipe successfuly saved");
       })

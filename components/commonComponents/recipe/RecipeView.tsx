@@ -23,6 +23,7 @@ import getServerUrl from "../../../utils/getServerUrl";
 import { useAuthStore } from "../../../stores/authStore";
 import getErrorMessage from "../../../utils/getErrorMessage";
 import { Snackbar } from "react-native-paper";
+import { testStyles } from "../../../theme/viewStyles";
 
 interface Props {
   recipe: RecipeType;
@@ -94,7 +95,7 @@ function RecipeView(props: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <View style={[styles.headerContainer, { flexWrap: "wrap" }]}>
         <Text style={[styles.header, textStyles.h1]}>
           {title} {isDraft && "(Draft)"}
@@ -119,7 +120,10 @@ function RecipeView(props: Props) {
             <Text style={[styles.submittedBy, textStyles.h5]}>
               Submitted by:
             </Text>
-            <Link href={"./"} style={[styles.userName, textStyles.h6]}>
+            <Link
+              href={`/recipes?owner=${owner._id}`}
+              style={[styles.userName, textStyles.h6]}
+            >
               {owner.username}
             </Link>
           </View>
@@ -139,8 +143,13 @@ function RecipeView(props: Props) {
       </View>
 
       <ScrollView style={[styles.imgContainer]} horizontal>
-        {recipe.imageUrl && (
+        {recipe.imageUrl ? (
           <Image source={{ uri: recipe.imageUrl }} style={styles.image} />
+        ) : (
+          <Image
+            source={require("../../../assets/placholder-food-img.png")}
+            style={styles.image}
+          />
         )}
       </ScrollView>
 

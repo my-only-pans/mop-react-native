@@ -11,6 +11,7 @@ import {
 import { RecipeItemType, RecipeType } from "../../types/RecipeTypes";
 import moment from "moment";
 import { fontSizes } from "../../theme/text";
+import { testStyles } from "../../theme/viewStyles";
 
 interface Props {
   recipe: RecipeType;
@@ -28,7 +29,7 @@ function RecipeCard(props: Props) {
 
   return (
     <Link href={redirectUrl} style={{ flex: 0 }}>
-      <View style={styles.container}>
+      <View style={[styles.container]}>
         <Image
           source={
             imageUrl
@@ -37,7 +38,7 @@ function RecipeCard(props: Props) {
           }
           style={styles.image}
         />
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode="head">
           {title}
         </Text>
         <Text style={styles.owner}>By: {owner?.username}</Text>
@@ -54,7 +55,9 @@ function RecipeCard(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: 200,
+  },
   image: {
     width: Platform.OS === "web" ? 200 : Dimensions.get("screen").width - 64,
     height: 200,
