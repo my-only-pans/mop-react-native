@@ -133,7 +133,7 @@ function DraftUpdatePage(props: Props) {
               style={{ flexWrap: "wrap", flex: 1, justifyContent: "flex-end" }}
             >
               <StyledButton style={styles.footerAction} onPress={handleSave}>
-                Save
+                Save Draft
               </StyledButton>
               <StyledButton
                 style={styles.footerAction}
@@ -159,38 +159,26 @@ function DraftUpdatePage(props: Props) {
           <Row style={styles.navigation}>
             <View>
               {section !== sections[0] && (
-                <Pressable
+                <StyledButton
                   style={styles.footerArrows}
                   onPress={() => handleChangeSection("prev")}
                   disabled={!section || section === sections[0]}
+                  buttonColor={colors.grey}
                 >
-                  <Icon
-                    size={32}
-                    name="chevron-left"
-                    color={
-                      !section || section === sections[0] ? colors.grey : "#000"
-                    }
-                  />
-                </Pressable>
+                  Previous
+                </StyledButton>
               )}
             </View>
             <View>
               {section !== sections[sections.length - 1] && (
-                <Pressable
+                <StyledButton
                   style={styles.footerArrows}
                   onPress={() => handleChangeSection("next")}
                   disabled={section === sections[sections.length - 1]}
+                  buttonColor={colors.highlight}
                 >
-                  <Icon
-                    size={32}
-                    name="chevron-right"
-                    color={
-                      section === sections[sections.length - 1]
-                        ? colors.grey
-                        : "#000"
-                    }
-                  />
-                </Pressable>
+                  Next
+                </StyledButton>
               )}
             </View>
           </Row>

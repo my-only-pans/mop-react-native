@@ -51,7 +51,7 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
       .map((c) => c.trim().toLowerCase());
 
     setCategories([...new Set([...categories, ...newCategories])]);
-    setDraft && draft && setDraft({...draft, categories: newCategories})
+    setDraft && draft && setDraft({ ...draft, categories: newCategories });
     setCategoryValue("");
   };
 
@@ -112,16 +112,20 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     const newCategories = categoryValue
       .split(/,|\n/)
       .map((c) => c.trim().toLowerCase());
-    setDraft && draft && setDraft({...draft, categories: newCategories})
+    setDraft && draft && setDraft({ ...draft, categories: newCategories });
   };
 
   return (
     <View>
       <View style={styles.main}>
-        <Text style={styles.header}>Create a New Recipe</Text>
-        <Text style={styles.subHeader}>
-          Enter the following information to upload your own recipe.
-        </Text>
+        {!draft && (
+          <>
+            <Text style={styles.header}>Create a New Recipe</Text>
+            <Text style={styles.subHeader}>
+              Enter the following information to upload your own recipe.
+            </Text>
+          </>
+        )}
         <View style={{ rowGap: 20 }}>
           <View>
             <HelperText type="error" visible={!title}>
@@ -248,7 +252,10 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
 
       {!draft && (
         <Row style={styles.footer}>
-          <StyledButton buttonColor="#bbb" onPress={() => router.push("/")}>
+          <StyledButton
+            buttonColor={colors.grey}
+            onPress={() => router.push("/")}
+          >
             Cancel
           </StyledButton>
           <StyledButton
