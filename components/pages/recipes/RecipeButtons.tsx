@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Platform, } from 'react-native';
+import { View, StyleSheet, Text, Platform, Pressable, } from 'react-native';
 import colors from "../../../theme/colors";
 import { textStyles } from "../../../theme/text";
 import { Icon } from "react-native-elements";
@@ -80,14 +80,14 @@ function RecipeButtons(props: Props) {
 
                     </>
                 ) : (
-                    <Link href={`./recipe/saved/${recipeId}`}>
+                    <Pressable onPress={handleSaveRecipe}>
                         <Icon
                             name='bookmark'
                             color={colors.highlight}
                             type="material"
                             size={iconSize}
                         />
-                    </Link>
+                    </Pressable>
                 )
             }
         </View>

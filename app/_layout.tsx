@@ -111,6 +111,10 @@ function HomeLayout() {
 
   useEffect(() => {
     getProfile();
+    if (Platform.OS === 'web') {
+      // Update the page title
+      document.title = "MyOnlyPans";
+    }
   }, []);
 
   if (!fontsLoaded && !fontError) {
