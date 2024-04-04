@@ -5,7 +5,7 @@ import colors from "../../theme/colors";
 import axios from "axios";
 import getServerUrl from "../../utils/getServerUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Snackbar, TextInput } from "react-native-paper";
+import { HelperText, Snackbar, TextInput } from "react-native-paper";
 import Container from "../../components/commonComponents/Container";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -75,6 +75,7 @@ function Login() {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        label="Email"
         value={email}
         onChangeText={setEmail}
         disabled={loading}
@@ -85,6 +86,7 @@ function Login() {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        label="Password"
         secureTextEntry
         value={password}
         onChangeText={setPassword}

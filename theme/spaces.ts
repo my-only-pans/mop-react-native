@@ -29,6 +29,22 @@ const spaceStyles = StyleSheet.create( {
         flexShrink: 0,
         gap: 20,
     },
+    btn: {
+        flex: 1,
+        marginHorizontal: 5,
+        textAlign: "center",
+        backgroundColor: "#FAAE2B",
+        width: "100%",
+        marginTop: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+      },
+      btnText: {
+        textAlign: "center",
+        color: "#00332C",
+        fontSize: 16,
+      },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
