@@ -32,7 +32,8 @@ function RecipeRequirementsForm(props: Props) {
   const handleAddEquipment = () => {
     const equipmentArr = equipmentValue
       .split(/,|\n/)
-      .map((c) => c.trim().toLowerCase());
+      .map((e) => e.trim().toLowerCase())
+      .filter((e) => e);
 
     const newEquipment = [...new Set([...equipment, ...equipmentArr])];
     setDraft({ ...draft, equipment: newEquipment });
@@ -40,11 +41,17 @@ function RecipeRequirementsForm(props: Props) {
   };
 
   const handleAddIngredient = () => {
+    if (!ingredientName || !ingredientAmount || !ingredientUnit) {
+      return;
+    }
+
     const newRecipeIngredient = {
       _id: ingredientName,
-      amount: parseInt(ingredientAmount),
+      amount: parseFloat(ingredientAmount),
       unit: ingredientUnit,
     };
+
+    console.log(newRecipeIngredient);
 
     setDraft({
       ...draft,
@@ -65,28 +72,34 @@ function RecipeRequirementsForm(props: Props) {
     });
   };
 
-  const existingIngredient = !!ingredients.find(
-    (i) => i._id === ingredientName
-  );
+  const ingredientListErrors = [];
 
-  let addIngredientDisabled = true;
-  const ingredientsFieldsComplete =
-    ingredientAmount &&
-    ingredientName &&
-    ingredientUnit &&
-    !isNaN(parseInt(ingredientAmount));
+  if (ingredientName || ingredientAmount || ingredientUnit) {
+    if (!ingredientName) {
+      ingredientListErrors.push("Ingredient name is required");
+    }
 
-  if (ingredientsFieldsComplete && !existingIngredient) {
-    addIngredientDisabled = false;
+    if (!ingredientAmount) {
+      ingredientListErrors.push("Ingredient amount is required");
+    }
+
+    if (!ingredientUnit) {
+      ingredientListErrors.push("Ingredient unit is required");
+    }
+
+    if (ingredients.find((i) => i._id === ingredientName)) {
+      ingredientListErrors.push("Ingredient already exists");
+    }
+
+    if (isNaN(parseInt(ingredientAmount))) {
+      ingredientListErrors.push("Ingredient amount needs to be a number");
+    }
   }
 
   return (
     <View style={styles.container}>
-      {/* <Row>
-        <Text style={[textStyles.subHeader]}>Recipe Requirements</Text>
-      </Row> */}
       <View style={styles.main}>
-        <View style={[styles.column, { marginBottom: 48 }]}>
+        <View>
           <Text style={(textStyles.h5, styles.sectionHeading)}>Equipment</Text>
           <Row style={[styles.equipmentForm]}>
             <View style={styles.equipmentInput}>
@@ -96,6 +109,7 @@ function RecipeRequirementsForm(props: Props) {
                 label="Equipment Name"
                 placeholder="Frying Pan, Stove, Oven"
                 onEndEditing={handleAddEquipment}
+                onSubmitEditing={handleAddEquipment}
               />
             </View>
             <Button
@@ -118,7 +132,7 @@ function RecipeRequirementsForm(props: Props) {
             ))}
           </View>
         </View>
-        <View style={[styles.column]}>
+        <View>
           <Text style={(textStyles.h5, styles.sectionHeading)}>
             Ingredients
           </Text>
@@ -145,22 +159,18 @@ function RecipeRequirementsForm(props: Props) {
                 onChangeText={setIngredientUnit}
                 label="Unit"
                 placeholder="piece"
+                onSubmitEditing={handleAddIngredient}
               />
               <Button
                 icon="plus"
                 onPress={handleAddIngredient}
-                disabled={addIngredientDisabled}
+                disabled={!!ingredientListErrors.length}
               >
                 Add
               </Button>
             </Row>
-            <HelperText
-              type="error"
-              visible={existingIngredient || !ingredientsFieldsComplete}
-            >
-              {!ingredientsFieldsComplete
-                ? "Ingredient fields are required"
-                : "* Ingredient already exists"}
+            <HelperText type="error" visible={!!ingredientListErrors.length}>
+              {ingredientListErrors.map((e) => e).join(", ")}
             </HelperText>
           </View>
           <RecipeIngredientList
@@ -178,10 +188,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   main: {
-    // flexGrow: 1,
-  },
-  column: {
-    flex: 1,
+    flexGrow: 1,
+    maxWidth: 800,
+    marginHorizontal: "auto",
   },
   sectionHeading: {
     marginBottom: 24,

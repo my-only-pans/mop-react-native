@@ -1,29 +1,37 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import axios from "axios";
 import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Pressable,
+} from "react-native";
 import { Button } from "react-native-paper";
-import { textStyles } from "../../../theme/text";
-import Container from "../../../components/commonComponents/Container";
-import getServerUrl from "../../../utils/getServerUrl";
+import { textStyles } from "../../../../theme/text";
+import { GetRecipesQueryType, RecipeType } from "../../../../types/RecipeTypes";
+import RecipeSearchBar from "../../../../components/commonComponents/RecipeSearchBar";
+import Container from "../../../../components/commonComponents/Container";
+import getServerUrl from "../../../../utils/getServerUrl";
 import { useLocalSearchParams } from "expo-router";
-import getAuthToken from "../../../utils/getAuthToken";
-import { RecipeType } from "../../../types/RecipeTypes";
-import getErrorMessage from "../../../utils/getErrorMessage";
-import RecipeCard from "../../../components/commonComponents/RecipeCard";
-import Row from "../../../components/commonComponents/Row";
-import colors from "../../../theme/colors";
-import { useAuthStore } from "../../../stores/authStore";
+import getAuthToken from "../../../../utils/getAuthToken";
+import RecipeCard from "../../../../components/commonComponents/RecipeCard";
+import getErrorMessage from "../../../../utils/getErrorMessage";
+import convertParamsArray from "../../../../utils/convertParamsArray";
+import Row from "../../../../components/commonComponents/Row";
+import colors from "../../../../theme/colors";
 
 const PAGE_LIMIT = 20;
 
-function ViewMyRecipes() {
-  const { myProfile } = useAuthStore();
+function SavedRecipesPage() {
   const { recipeId } = useLocalSearchParams();
 
   const params = useLocalSearchParams();
-  const { page } = params;
+  const { categories, page } = params;
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -35,20 +43,13 @@ function ViewMyRecipes() {
     setLoading(true);
 
     axios
-      .get(getServerUrl() + "/recipe", {
-        params: { limit: PAGE_LIMIT, owner: myProfile?._id },
+      .get(getServerUrl() + "/recipe/saved", {
         headers: {
           Authorization: await getAuthToken(),
         },
       })
       .then((res) => {
-        console.log(res);
-        setRecipes(res.data.recipes);
-        if (res.data.recipes.length >= PAGE_LIMIT) {
-          setHasMore(true);
-        } else {
-          setHasMore(false);
-        }
+        setRecipes(res.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -59,7 +60,7 @@ function ViewMyRecipes() {
 
   useEffect(() => {
     fetchRecipes();
-  }, [page]);
+  }, []);
 
   let content;
 
@@ -97,6 +98,10 @@ function ViewMyRecipes() {
     );
   }
 
+  for (let i = 0; i < recipes.length; i++) {
+    recipes[i].imageUrl = `https://picsum.photos/seed/${i + 1}/200/200`;
+  }
+
   return (
     <Container>
       <View style={styles.header}>
@@ -113,40 +118,8 @@ function ViewMyRecipes() {
         </Button>
       </View>
 
-      <Text style={[textStyles.h1, styles.heading]}>My Recipes</Text>
-      <View style={{ flexGrow: 1 }}>{content}</View>
-      <View style={styles.section}>
-        <Row
-          style={[
-            styles.loadMoreContainer,
-            {
-              justifyContent:
-                !page || page == "1" ? "flex-end" : "space-between",
-            },
-          ]}
-        >
-          {page && page !== "1" && (
-            <Pressable
-              onPress={() =>
-                router.setParams({ page: (Number(page) - 1).toString() })
-              }
-            >
-              <Text style={styles.loadMoreText}>Previous</Text>
-            </Pressable>
-          )}
-          {hasMore && (
-            <Pressable
-              onPress={() =>
-                router.setParams({
-                  page: page ? (Number(page) + 1).toString() : "2",
-                })
-              }
-            >
-              <Text style={styles.loadMoreText}>Next</Text>
-            </Pressable>
-          )}
-        </Row>
-      </View>
+      <Text style={[textStyles.h1, styles.heading]}>My Saved Recipes</Text>
+      <View style={{ flexGrow: 1, justifyContent: "center" }}>{content}</View>
     </Container>
   );
 }
@@ -189,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ViewMyRecipes;
+export default SavedRecipesPage;
