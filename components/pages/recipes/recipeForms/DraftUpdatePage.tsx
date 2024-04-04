@@ -127,61 +127,10 @@ function DraftUpdatePage(props: Props) {
       {content && (
         <>
           <View style={styles.header}>
-            <Row style={styles.navigation}>
-              <View>
-                {section !== sections[0] && (
-                  <Pressable
-                    style={styles.footerArrows}
-                    onPress={() => handleChangeSection("prev")}
-                    disabled={!section || section === sections[0]}
-                  >
-                    <Icon
-                      size={32}
-                      name="chevron-left"
-                      color={
-                        !section || section === sections[0]
-                          ? colors.grey
-                          : "#000"
-                      }
-                    />
-                  </Pressable>
-                )}
-              </View>
-              <View>
-                {section !== sections[sections.length - 1] && (
-                  <Pressable
-                    style={styles.footerArrows}
-                    onPress={() => handleChangeSection("next")}
-                    disabled={section === sections[sections.length - 1]}
-                  >
-                    <Icon
-                      size={32}
-                      name="chevron-right"
-                      color={
-                        section === sections[sections.length - 1]
-                          ? colors.grey
-                          : "#000"
-                      }
-                    />
-                  </Pressable>
-                )}
-              </View>
-            </Row>
-          </View>
-          {section !== "preview" && (
-            <Row gap={10} style={{ alignItems: "center", marginBottom: 48 }}>
-              <Text style={[textStyles.header]}>{draft?.title}</Text>
-              <Text style={styles.section}>
-                {(section as string).toUpperCase()}
-              </Text>
-            </Row>
-          )}
-          <View style={styles.content}>{content}</View>
-          <Row gap={10} style={styles.footer}>
             <Row
               gap={20}
               rowGap={10}
-              style={{ flexWrap: "wrap", flex: 1, justifyContent: "center" }}
+              style={{ flexWrap: "wrap", flex: 1, justifyContent: "flex-end" }}
             >
               <StyledButton style={styles.footerAction} onPress={handleSave}>
                 Save
@@ -196,6 +145,54 @@ function DraftUpdatePage(props: Props) {
                 Publish
               </StyledButton>
             </Row>
+          </View>
+
+          {section !== "preview" && (
+            <Row gap={10} style={{ alignItems: "center", marginBottom: 48 }}>
+              <Text style={[textStyles.header]}>{draft?.title}</Text>
+              <Text style={styles.section}>
+                {(section as string).toUpperCase()}
+              </Text>
+            </Row>
+          )}
+          <View style={styles.content}>{content}</View>
+          <Row style={styles.navigation}>
+            <View>
+              {section !== sections[0] && (
+                <Pressable
+                  style={styles.footerArrows}
+                  onPress={() => handleChangeSection("prev")}
+                  disabled={!section || section === sections[0]}
+                >
+                  <Icon
+                    size={32}
+                    name="chevron-left"
+                    color={
+                      !section || section === sections[0] ? colors.grey : "#000"
+                    }
+                  />
+                </Pressable>
+              )}
+            </View>
+            <View>
+              {section !== sections[sections.length - 1] && (
+                <Pressable
+                  style={styles.footerArrows}
+                  onPress={() => handleChangeSection("next")}
+                  disabled={section === sections[sections.length - 1]}
+                >
+                  <Icon
+                    size={32}
+                    name="chevron-right"
+                    color={
+                      section === sections[sections.length - 1]
+                        ? colors.grey
+                        : "#000"
+                    }
+                  />
+                </Pressable>
+              )}
+            </View>
           </Row>
         </>
       )}
@@ -236,7 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   footer: {
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   footerAction: {
     flexShrink: 0,
