@@ -47,6 +47,7 @@ function HomeLayout() {
         setLoading(false);
         router.push("/login");
       }
+      setLoading(false);
       return logout();
     }
 
