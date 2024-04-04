@@ -28,7 +28,7 @@ import { testStyles } from "../../../theme/viewStyles";
 interface Props {
   recipe: RecipeType;
   isDraft?: boolean;
-  onRefetch: () => any;
+  onRefetch?: () => any;
   message?: string;
 }
 
@@ -87,7 +87,7 @@ function RecipeView(props: Props) {
         { headers: { Authorization: `Bearer ${authToken}` } }
       )
       .then((res) => {
-        onRefetch();
+        onRefetch && onRefetch();
         // TODO display success
         // setServerMessage("Recipe successfuly rated");
       })
