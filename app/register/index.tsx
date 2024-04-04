@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
   Platform,
 } from "react-native";
 import axios from "axios";
-import { Checkbox, Snackbar } from "react-native-paper";
+import { Checkbox, HelperText, Snackbar, 
+  TextInput, } from "react-native-paper";
 import getServerUrl from "../../utils/getServerUrl";
 import colors from "../../theme/colors";
 
@@ -114,53 +114,62 @@ function Registration() {
         </View>
         <View style={[styles.row]}>
           <View style={[styles.column]}>
+            
             <TextInput
-              style={styles.input}
               placeholder="First Name"
+              label="First Name"
               value={firstName}
               onChangeText={setFirstName}
             />
+            
             <TextInput
-              style={styles.input}
               placeholder="Last Name"
+              label="Last Name"
               value={lastName}
               onChangeText={setLastname}
             />
+            
             <TextInput
-              style={styles.input}
               placeholder="Email"
+              label="Email"
               value={email}
               onChangeText={setEmail}
             />
+           
             <TextInput
-              style={styles.input}
+              label="Contact Number"
               placeholder="Contact Number"
               value={phone}
               onChangeText={setPhone}
             />
           </View>
+        
           <View style={[styles.column]}>
             <TextInput
-              style={styles.input}
+              label="Username"
               placeholder="Username"
               value={username}
               onChangeText={setUsername}
             />
+           
             <TextInput
-              style={styles.input}
+              label="Password"
               placeholder="Password"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
+            
             <TextInput
-              style={styles.input}
+              label="Confirm Password"
               placeholder="Confirm Password"
               secureTextEntry
               value={confirmPassword}
               onChangeText={setConfirmPassword}
             />
+            
             <View style={styles.termsContainer}>
+            
               <Checkbox
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {
@@ -201,17 +210,17 @@ function Registration() {
         action={
           status?.type === "success"
             ? {
-                label: "Login",
-                onPress: () => {
-                  router.push("/login");
-                },
-              }
+              label: "Login",
+              onPress: () => {
+                router.push("/login");
+              },
+            }
             : {
-                label: "Close",
-                onPress: () => {
-                  setStatus(null);
-                },
-              }
+              label: "Close",
+              onPress: () => {
+                setStatus(null);
+              },
+            }
         }
       >
         {status?.message}

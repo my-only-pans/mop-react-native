@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { RecipeType } from "../../../types/RecipeTypes";
@@ -22,6 +23,7 @@ import getServerUrl from "../../../utils/getServerUrl";
 import { useAuthStore } from "../../../stores/authStore";
 import getErrorMessage from "../../../utils/getErrorMessage";
 import { Snackbar } from "react-native-paper";
+import { testStyles } from "../../../theme/viewStyles";
 
 interface Props {
   recipe: RecipeType;
@@ -93,7 +95,7 @@ function RecipeView(props: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <View style={[styles.headerContainer, { flexWrap: "wrap" }]}>
         <Text style={[styles.header, textStyles.h1]}>
           {title} {isDraft && "(Draft)"}
@@ -122,44 +124,30 @@ function RecipeView(props: Props) {
               {owner.username}
             </Link>
           </View>
-          <View style={[{ alignItems: "flex-end" }]}>
-            <RecipeButtons
-              isOwner={owner._id === myProfile?._id}
-              draftId={draft}
-              recipeId={_id}
-              userId={myProfile?._id}
-            />
-          </View>
+          {!isDraft && (
+            <View style={[{ alignItems: "flex-end" }]}>
+              <RecipeButtons
+                isOwner={owner._id === myProfile?._id}
+                draftId={draft}
+                recipeId={_id}
+                userId={myProfile?._id}
+              />
+            </View>
+          )}
         </View>
 
         <Text style={[styles.description, textStyles.body]}>{description}</Text>
       </View>
 
       <ScrollView style={[styles.imgContainer]} horizontal>
-        <Pressable onPress={() => {}}>
+        {recipe.imageUrl ? (
+          <Image source={{ uri: recipe.imageUrl }} style={styles.image} />
+        ) : (
           <Image
-            style={styles.img}
-            source={require("../../../assets/recipes/Ramen-Eggs-1.jpg")}
-            resizeMode="cover"
-            resizeMethod="resize"
+            source={require("../../../assets/placholder-food-img.png")}
+            style={styles.image}
           />
-        </Pressable>
-        <Pressable onPress={() => {}}>
-          <Image
-            style={styles.img}
-            source={require("../../../assets/recipes/Ramen-Eggs-19.jpg")}
-            resizeMode="cover"
-            resizeMethod="resize"
-          />
-        </Pressable>
-        <Pressable onPress={() => {}}>
-          <Image
-            style={styles.img}
-            source={require("../../../assets/recipes/Ramen-Eggs-24.jpg")}
-            resizeMode="cover"
-            resizeMethod="resize"
-          />
-        </Pressable>
+        )}
       </ScrollView>
 
       <View style={[styles.row]}>
@@ -266,7 +254,12 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textAlign: "left",
   },
-
+  image: {
+    aspectRatio: 4 / 3,
+    flex: 1,
+    width: Platform.OS !== "web" ? Dimensions.get("screen").width * 0.9 : 500,
+    borderRadius: 10,
+  },
   tagContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
