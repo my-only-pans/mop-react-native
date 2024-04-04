@@ -18,10 +18,9 @@ import getServerUrl from "../../../../utils/getServerUrl";
 import getErrorMessage from "../../../../utils/getErrorMessage";
 import Tag from "../../../commonComponents/Tag";
 import { RecipeType } from "../../../../types/RecipeTypes";
-import getAuthToken from "../../../../utils/getAuthToken";
 import * as ImagePicker from "expo-image-picker";
 import * as FilesSystem from "expo-file-system";
-import firebase from "../../../../firebaseConfig";
+import { useAuthStore } from "../../../../stores/authStore";
 
 const imagesSamples: string[] = [];
 
@@ -36,6 +35,8 @@ interface Props {
 }
 
 function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
+  const { authToken } = useAuthStore();
+
   const [title, setTitle] = useState<string>(draft?.title || "");
   const [description, setDescription] = useState<string>(
     draft?.description || ""
@@ -53,10 +54,14 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     draft?.categories || []
   );
   const [categoryValue, setCategoryValue] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null | undefined>(
+    draft?.imageUrl
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>();
+
   const [image, setImage] = useState<string | null>();
-  const [uploadingImages, setUploadingImages] = useState<boolean>(false);
+  const [uploadingImage, setUploadingImage] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -85,10 +90,9 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
 
     axios
       .post(getServerUrl() + "/recipe/draft", body, {
-        headers: { Authorization: await getAuthToken() },
+        headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((res) => {
-        console.log(res);
         if (res.data) {
           setLoading(false);
           router.push(`/recipes/draft/${res.data._id}?section=requirements`);
@@ -117,10 +121,6 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     setDraft && draft && setDraft({ ...draft, categories: newCategories });
   };
 
-  const handleDeleteImage = async (uri) => {
-    console.log(uri);
-  };
-
   const handleClickAddImage = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -131,39 +131,52 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
 
     if (!res.canceled) {
       setImage(res.assets[0].uri);
+      handleUploadImage();
     }
   };
 
   const handleUploadImage = async () => {
-    if (!image) return;
+    if (!image) {
+      return;
+    }
+
+    setUploadingImage(true);
+
     try {
-      const { uri } = await FilesSystem.getInfoAsync(image);
-      const blob = (await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          resolve(xhr.response);
-        };
-        xhr.onerror = (e) => {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", uri, true);
-        xhr.send(null);
-      })) as Blob;
+      const formData = new FormData();
+      const fileUri = image;
 
-      const filename = image?.substring(image.lastIndexOf("/") + 1);
-      const ref = firebase.storage().ref().child(filename);
+      const fileRes = await fetch(fileUri);
+      const blob = await fileRes.blob();
 
-      await ref.put(blob);
+      formData.append("image", blob, "image.jpg");
+      formData.set("recipeId", (draft as RecipeType)._id);
 
-      console.log(ref);
-      setUploadingImages(false);
-      setImage(null);
+      const axiosConfig = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const res = await axios.post(
+        `${getServerUrl()}/uploadImage`,
+        formData,
+        axiosConfig
+      );
+
+      setDraft && draft && setDraft({ ...draft, imageUrl: res.data.url });
+      setImageUrl(res.data.url);
+      // Do something with the response, like updating the UI or storing the image URL
     } catch (error) {
-      console.log(error);
-      setUploadingImages(false);
+      console.error("Error uploading image:", error);
+      setError(getErrorMessage(error).message);
+    } finally {
+      setUploadingImage(false);
     }
   };
+
+  console.log(imageUrl);
 
   return (
     <View>
@@ -177,58 +190,16 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
           </>
         )}
         <View style={{ rowGap: 20 }}>
-          <View style={styles.imageContainer}>
-            <FlatList
-              horizontal
-              data={[...imagesSamples, "add"]}
-              renderItem={(el) => {
-                if (el.item !== "add") {
-                  return (
-                    <View>
-                      <Image
-                        source={{ uri: el.item }}
-                        style={{ width: 200, aspectRatio: 1, borderRadius: 10 }}
-                      />
-                      <Pressable
-                        style={{
-                          position: "absolute",
-                          bottom: 10,
-                          right: 10,
-                          zIndex: 1,
-                          backgroundColor: "rgba(0,0,0,.5)",
-                          padding: 10,
-                          borderRadius: 50,
-                        }}
-                        onPress={() => handleDeleteImage(el.item)}
-                      >
-                        <Icon name="delete" color={colors.danger} />
-                      </Pressable>
-                    </View>
-                  );
-                } else {
-                  return (
-                    <Pressable
-                      onPress={handleClickAddImage}
-                      style={{
-                        width: 200,
-                        aspectRatio: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: colors.grey,
-                        borderRadius: 10,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Icon name="add" />
-                      <Text>Add Image</Text>
-                    </Pressable>
-                  );
-                }
-              }}
-              keyExtractor={(el) => el}
-              ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-            />
-          </View>
+          {imageUrl ? (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: imageUrl }} style={styles.image} />
+            </View>
+          ) : (
+            <Pressable style={styles.addImageBtn} onPress={handleClickAddImage}>
+              <Icon name="add" />
+              <Text>Add Image</Text>
+            </Pressable>
+          )}
           <View>
             <HelperText type="error" visible={!title}>
               * Required
@@ -405,7 +376,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "left",
   },
-  imageContainer: {},
+  imageContainer: {
+    marginHorizontal: "auto",
+  },
+  image: { aspectRatio: 1, height: 300, borderRadius: 10 },
+  addImageBtn: {
+    height: 300,
+    width: 300,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    marginHorizontal: "auto",
+    backgroundColor: colors.grey,
+    borderRadius: 10,
+  },
   column: {
     flex: 1,
   },
