@@ -48,7 +48,8 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
   const handleAddCategories = () => {
     const newCategories = categoryValue
       .split(/,|\n/)
-      .map((c) => c.trim().toLowerCase());
+      .map((c) => c.trim().toLowerCase())
+      .filter((c) => c);
 
     setCategories([...new Set([...categories, ...newCategories])]);
     setDraft && draft && setDraft({ ...draft, categories: newCategories });
