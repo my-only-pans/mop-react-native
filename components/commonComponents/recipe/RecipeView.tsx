@@ -120,7 +120,10 @@ function RecipeView(props: Props) {
             <Text style={[styles.submittedBy, textStyles.h5]}>
               Submitted by:
             </Text>
-            <Link href={"./"} style={[styles.userName, textStyles.h6]}>
+            <Link
+              href={`/recipes?owner=${owner._id}`}
+              style={[styles.userName, textStyles.h6]}
+            >
               {owner.username}
             </Link>
           </View>
