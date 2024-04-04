@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import Container from "../../../commonComponents/Container";
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Button, HelperText, Snackbar, TextInput } from "react-native-paper";
 import Row from "../../../commonComponents/Row";
-import { Input, Icon } from "react-native-elements";
-import NumberInput from "../../../commonComponents/form/NumberInput";
+import { Icon, Image } from "react-native-elements";
 import colors from "../../../../theme/colors";
 import StyledButton from "../../../commonComponents/StyledButton";
 import { useRouter } from "expo-router";
@@ -14,6 +19,15 @@ import getErrorMessage from "../../../../utils/getErrorMessage";
 import Tag from "../../../commonComponents/Tag";
 import { RecipeType } from "../../../../types/RecipeTypes";
 import getAuthToken from "../../../../utils/getAuthToken";
+import * as ImagePicker from "expo-image-picker";
+import * as FilesSystem from "expo-file-system";
+import firebase from "../../../../firebaseConfig";
+
+const imagesSamples: string[] = [];
+
+for (let i = 1; i <= 5; i++) {
+  imagesSamples.push(`https://picsum.photos/seed/${i + 1}/200/200`);
+}
 
 interface Props {
   draft?: RecipeType;
@@ -40,8 +54,9 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
   );
   const [categoryValue, setCategoryValue] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState<string | null>();
+  const [image, setImage] = useState<string | null>();
+  const [uploadingImages, setUploadingImages] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -86,20 +101,6 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
       });
   };
 
-  const updateRecipeDraft = async () => {
-    const body = {
-      recipeId: draft?._id,
-      title,
-      description,
-      prepTime,
-      cookTime,
-      serving,
-      categories,
-    };
-
-    console.log(body);
-  };
-
   const handleClickNext = async () => {
     if (!draft) {
       saveNewRecipeDraft();
@@ -116,6 +117,54 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     setDraft && draft && setDraft({ ...draft, categories: newCategories });
   };
 
+  const handleDeleteImage = async (uri) => {
+    console.log(uri);
+  };
+
+  const handleClickAddImage = async () => {
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!res.canceled) {
+      setImage(res.assets[0].uri);
+    }
+  };
+
+  const handleUploadImage = async () => {
+    if (!image) return;
+    try {
+      const { uri } = await FilesSystem.getInfoAsync(image);
+      const blob = (await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          resolve(xhr.response);
+        };
+        xhr.onerror = (e) => {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      })) as Blob;
+
+      const filename = image?.substring(image.lastIndexOf("/") + 1);
+      const ref = firebase.storage().ref().child(filename);
+
+      await ref.put(blob);
+
+      console.log(ref);
+      setUploadingImages(false);
+      setImage(null);
+    } catch (error) {
+      console.log(error);
+      setUploadingImages(false);
+    }
+  };
+
   return (
     <View>
       <View style={styles.main}>
@@ -128,6 +177,58 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
           </>
         )}
         <View style={{ rowGap: 20 }}>
+          <View style={styles.imageContainer}>
+            <FlatList
+              horizontal
+              data={[...imagesSamples, "add"]}
+              renderItem={(el) => {
+                if (el.item !== "add") {
+                  return (
+                    <View>
+                      <Image
+                        source={{ uri: el.item }}
+                        style={{ width: 200, aspectRatio: 1, borderRadius: 10 }}
+                      />
+                      <Pressable
+                        style={{
+                          position: "absolute",
+                          bottom: 10,
+                          right: 10,
+                          zIndex: 1,
+                          backgroundColor: "rgba(0,0,0,.5)",
+                          padding: 10,
+                          borderRadius: 50,
+                        }}
+                        onPress={() => handleDeleteImage(el.item)}
+                      >
+                        <Icon name="delete" color={colors.danger} />
+                      </Pressable>
+                    </View>
+                  );
+                } else {
+                  return (
+                    <Pressable
+                      onPress={handleClickAddImage}
+                      style={{
+                        width: 200,
+                        aspectRatio: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: colors.grey,
+                        borderRadius: 10,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Icon name="add" />
+                      <Text>Add Image</Text>
+                    </Pressable>
+                  );
+                }
+              }}
+              keyExtractor={(el) => el}
+              ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+            />
+          </View>
           <View>
             <HelperText type="error" visible={!title}>
               * Required
@@ -304,6 +405,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "left",
   },
+  imageContainer: {},
   column: {
     flex: 1,
   },
