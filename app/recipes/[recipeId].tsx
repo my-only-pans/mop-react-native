@@ -5,7 +5,6 @@ import axios from "axios";
 import getServerUrl from "../../utils/getServerUrl";
 import { useLocalSearchParams } from "expo-router";
 import getAuthToken from "../../utils/getAuthToken";
-import getErrorMessage from "../../utils/getErrorMessage";
 import Container from "../../components/commonComponents/Container";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -41,8 +40,6 @@ function RecipeViewpage(props: Props) {
     fetchRecipe();
   }, []);
 
-  console.log({ loading, recipe });
-
   if (loading) {
     return (
       <Container>
@@ -66,7 +63,7 @@ function RecipeViewpage(props: Props) {
   if (recipe) {
     return (
       <Container>
-        <RecipeView recipe={recipe} />
+        <RecipeView recipe={recipe} onRefetch={fetchRecipe} />
       </Container>
     );
   }
