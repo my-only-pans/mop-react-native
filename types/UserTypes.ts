@@ -8,4 +8,5 @@ export interface MyProfileType {
   ingredients: string[];
   phone: string;
   imageUrl: string;
+  savedRecipes?: string[];
 }
