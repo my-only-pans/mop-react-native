@@ -1,8 +1,6 @@
 import { Link, router } from "expo-router";
-import { User, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Platform, Pressable } from "react-native";
-import { firebaseAuth } from "../../firebase/firebaseApp";
 import colors from "../../theme/colors";
 import axios from "axios";
 import getServerUrl from "../../utils/getServerUrl";
@@ -10,10 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Snackbar, TextInput } from "react-native-paper";
 import Container from "../../components/commonComponents/Container";
 import { useAuthStore } from "../../stores/authStore";
-
-interface FirebaseUser extends User {
-  accessToken?: string; // Extend the interface to include accessToken
-}
 
 function Login() {
   const { login } = useAuthStore();
@@ -25,23 +19,11 @@ function Login() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
-      const user: FirebaseUser = userCredential.user;
-
-      if (!user.accessToken) {
-        throw new Error("Invalid login credentials.");
-      }
-
-      AsyncStorage.setItem("firebaseToken", user.accessToken);
-
       const {
         data: { authToken },
       } = await axios.post(`${getServerUrl()}/user/login`, {
-        firebaseToken: user.accessToken,
+        email,
+        password,
       });
 
       if (!authToken) {
@@ -59,7 +41,7 @@ function Login() {
 
       const myProfileString = JSON.stringify(myProfile);
 
-      login(authToken, user.accessToken, myProfile);
+      login(authToken, myProfile);
 
       if (Platform.OS === "web") {
         localStorage.setItem("myProfile", myProfileString);

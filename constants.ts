@@ -1,21 +1,21 @@
 export const RECIPE_CATEGORIES = [
   {
-    key: "appetizers",
+    key: "appetizer",
     label: "Appetizers",
     image: require("./assets/categories/appetizers.png"),
   },
   {
-    key: "mains",
+    key: "main",
     label: "Mains",
     image: require("./assets/categories/mains.png"),
   },
   {
-    key: "desserts",
+    key: "dessert",
     label: "Desserts",
     image: require("./assets/categories/desserts.png"),
   },
   {
-    key: "sides",
+    key: "side",
     label: "Sides",
     image: require("./assets/categories/sides.png"),
   },

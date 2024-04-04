@@ -29,58 +29,54 @@ const protectedPaths = [
 function HomeLayout() {
   const { login, logout } = useAuthStore();
   const [loginMessage, setLoginMessage] = useState("");
-  const [initialized, setInitialized] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
   const path = usePathname();
 
   const getProfile = async () => {
     setLoginMessage("");
-    const firebaseToken = await AsyncStorage.getItem("firebaseToken");
+    const authToken = await AsyncStorage.getItem("authToken");
 
-    if (!firebaseToken) {
-      if (protectedPaths.find((r) => path.startsWith(r))) {
+    if (!authToken) {
+      if (
+        protectedPaths.find((r) => {
+          return path.startsWith(r);
+        })
+      ) {
+        setLoading(false);
         router.push("/login");
       }
-      setInitialized(true);
+      setLoading(false);
       return logout();
     }
 
     axios
-      .post(`${getServerUrl()}/user/login`, {
-        firebaseToken,
+      .get(`${getServerUrl()}/user/myProfile`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       })
       .then(async (res) => {
-        const { authToken } = res.data;
+        const { data: myProfile } = res;
 
-        if (!authToken) {
-          throw new Error("Login failed. Please try again.");
+        const myProfileString = JSON.stringify(myProfile);
+
+        login(authToken, myProfile);
+
+        if (Platform.OS === "web") {
+          localStorage.setItem("myProfile", myProfileString);
+          localStorage.setItem("authToken", authToken);
+        } else {
+          AsyncStorage.setItem("myProfile", myProfileString);
+          AsyncStorage.setItem("authToken", authToken);
         }
-        axios
-          .get(`${getServerUrl()}/user/myProfile`, {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          })
-          .then((res) => {
-            const { data: myProfile } = res;
 
-            const myProfileString = JSON.stringify(myProfile);
-
-            login(authToken, firebaseToken, myProfile);
-
-            if (Platform.OS === "web") {
-              localStorage.setItem("myProfile", myProfileString);
-              localStorage.setItem("authToken", authToken);
-            } else {
-              AsyncStorage.setItem("myProfile", myProfileString);
-              AsyncStorage.setItem("authToken", authToken);
-            }
-            setInitialized(true);
-          });
+        setLoading(false);
       })
       .catch((error) => {
         if (protectedPaths.find((r) => path.startsWith(r))) {
+          setLoading(false);
           router.push("/login");
         }
 
@@ -88,10 +84,8 @@ function HomeLayout() {
         setLoginMessage(
           "You have been logged out due to inactivity. Please login"
         );
-        AsyncStorage.removeItem("firebaseToken");
         AsyncStorage.removeItem("authToken");
         AsyncStorage.removeItem("myProfile");
-        setInitialized(true);
       });
   };
 
@@ -119,7 +113,7 @@ function HomeLayout() {
             {loginMessage}
           </Snackbar>
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            {initialized && <Slot />}
+            {!loading && <Slot />}
           </ScrollView>
         </KeyboardAvoidingView>
       </View>

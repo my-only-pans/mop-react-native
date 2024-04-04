@@ -13,14 +13,17 @@ import StyledButton from "../../../components/commonComponents/StyledButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../../theme/colors";
 import { useAuthStore } from "../../../stores/authStore";
+import { toJS } from "mobx";
+import { MyProfileType } from "../../../types/UserTypes";
 
 function ProfileView() {
   const { logout, myProfile } = useAuthStore();
-  const [email, setEmail] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [dietaryPreference, setDietaryPreference] = useState("");
   const [editableFields, setEditableFields] = useState(false);
+
+  const { _id, username, firstName, lastName, phone, email, imageUrl } =
+    myProfile as MyProfileType;
+
+  console.log(toJS(myProfile));
 
   const router = useRouter();
 
@@ -40,114 +43,55 @@ function ProfileView() {
   const handleLogout = () => {
     AsyncStorage.removeItem("myProfile");
     AsyncStorage.removeItem("authToken");
-    AsyncStorage.removeItem("firebaseToken");
     logout();
 
     router.push("/");
   };
 
   return (
-    <Container centerVertically style={styles.container}>
-      <Text style={styles.header}>MyProfile</Text>
+    <Container centerVertically>
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.info}>
+            <Text style={styles.header}>MyProfile</Text>
 
-      <View style={styles.profilePicture}>
-        <Image
-          source={require("../../../assets/sample.png")}
-          style={styles.image}
-        />
-      </View>
-
-      <View>
-        <Text style={styles.userFullName}>Leviel Kulet</Text>
-        <Text style={styles.userName}>@levielkulet</Text>
-        <Text style={styles.bio}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed gravida,
-          mauris ac.
-        </Text>
-      </View>
-
-      <View style={styles.column}>
-        <View style={[styles.row]}>
-          <View style={styles.column}>
-            <TextInput
-              style={styles.input}
-              placeholder="levielk@gmail.com"
-              value={email}
-              onChangeText={setEmail}
-              editable={false}
-            />
+            <View style={styles.profilePicture}>
+              <Image
+                source={
+                  imageUrl
+                    ? { uri: imageUrl }
+                    : require("../../../assets/team/placeholder-avatar.png")
+                }
+                style={styles.image}
+              />
+            </View>
+            <Text
+              style={styles.userFullName}
+            >{`${firstName} ${lastName}`}</Text>
+            <Text style={styles.userName}>@{username}</Text>
           </View>
 
-          <View style={styles.column}>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-              editable={false}
-            />
-          </View>
-
-          <View style={styles.column}>
-            <TextInput
-              style={styles.input}
-              placeholder="+647-711-9111"
-              value={contactNumber}
-              onChangeText={setContactNumber}
-              editable={false}
-            />
+          <View style={styles.contact}>
+            <View>
+              <Text style={styles.label}>Email Address</Text>
+              <Text>{email}</Text>
+            </View>
+            <View>
+              <Text style={styles.label}>Contact Number</Text>
+              <Text>{phone}</Text>
+            </View>
           </View>
         </View>
 
-        <View style={styles.column}>
-          <Text style={styles.label}>Dietary Preference:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Vegan"
-            value={dietaryPreference}
-            onChangeText={setDietaryPreference}
-            editable={editableFields}
-          />
-        </View>
-
-        {/* <View style={styles.buttonContainer}> */}
-        <View style={{ gap: 10, width: "45%" }}>
+        <View style={styles.buttonContainer}>
           <StyledButton
             style={styles.btn}
-            onPress={!editableFields ? handleClickEdit : handleClickSave}
+            buttonColor="#ccc"
+            onPress={handleLogout}
           >
-            {editableFields ? "Save" : "Edit Preferences"}
+            Logout
           </StyledButton>
         </View>
-        {/* </View> */}
-
-        <View style={styles.divider}></View>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        {/* <View style={{ gap: 10, width: "120%" }}> */}
-        <StyledButton
-          style={styles.btn}
-          onPress={
-            !editableFields
-              ? () => {
-                  router.push("/user/profile/update");
-                }
-              : handleClickCancel
-          }
-        >
-          {editableFields ? "Cancel" : "Edit Profile"}
-        </StyledButton>
-
-        <StyledButton
-          style={styles.btn}
-          buttonColor="#ccc"
-          onPress={handleLogout}
-        >
-          Logout
-        </StyledButton>
-        {/* </View> */}
       </View>
     </Container>
   );
@@ -155,29 +99,29 @@ function ProfileView() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: Platform.OS === "web" ? 80 : 0,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: 20,
-    maxWidth: 700,
+    maxWidth: 300,
+    width: "100%",
     marginHorizontal: "auto",
-    backgroundColor: colors.background,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: colors.grey,
+    padding: 48,
+    borderRadius: 10,
+    marginBottom: 24,
+    gap: 24,
   },
   row: {
     flexDirection: Platform.OS !== "web" ? "column" : "row",
     gap: 20,
   },
-  column: {
-    flexGrow: 1,
+  contact: {
+    // flexGrow: 1,
     flexShrink: 0,
     gap: 20,
   },
-  divider: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginVertical: 10,
+  info: {
+    alignItems: "center",
   },
   profilePicture: {
     backgroundColor: "red",
@@ -202,13 +146,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingTop: 15,
     fontWeight: "bold",
-    textAlign: "left",
   },
   userName: {
     fontSize: 20,
     // marginBottom: 15,
     // marginTop: 10,
-    textAlign: "left",
   },
   bio: {
     fontSize: 15,
@@ -217,10 +159,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   label: {
-    paddingBottom: 10,
-    paddingTop: 10,
-    fontSize: 15,
-    textAlign: "left",
+    fontWeight: "bold",
+    fontSize: 12,
   },
   input: {
     height: 60,

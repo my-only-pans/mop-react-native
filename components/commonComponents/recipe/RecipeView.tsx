@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
+import { Link, useLocalSearchParams } from "expo-router";
+import React, { useMemo, useState } from "react";
 import {
   Text,
   View,
@@ -16,17 +16,24 @@ import textStyles from "../../../theme/text";
 import colors from "../../../theme/colors";
 import Editor from "../editor/Editor";
 import RecipeButtons from "../../pages/recipes/RecipeButtons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import RatingRecipe from "../rating/Rating";
+import axios from "axios";
+import getServerUrl from "../../../utils/getServerUrl";
+import { useAuthStore } from "../../../stores/authStore";
+import getErrorMessage from "../../../utils/getErrorMessage";
+import { Snackbar } from "react-native-paper";
 
 interface Props {
   recipe: RecipeType;
   isDraft?: boolean;
+  onRefetch: () => any;
+  message?: string;
 }
 
 function RecipeView(props: Props) {
-  const { recipe, isDraft = false } = props;
-  const [myProfile, setMyProfile] = useState<any>();
+  const { recipe, isDraft = false, onRefetch } = props;
+  const { recipeId } = useLocalSearchParams();
+  const { myProfile, authToken } = useAuthStore();
 
   const {
     _id,
@@ -44,23 +51,6 @@ function RecipeView(props: Props) {
   } = recipe;
 
   const [servings, setServings] = useState(serving);
-
-  const fetchMyProfile = async () => {
-    const profile = await AsyncStorage.getItem("myProfile");
-
-    console.log(`profile ${profile}`);
-    console.log(`owner.id : ${owner._id}`);
-    //setMyProfile(JSON.parse(profile));
-    if (profile !== null) {
-      setMyProfile(JSON.parse(profile));
-    } else {
-      console.log(`profile ${profile}`);
-    }
-  };
-
-  useEffect(() => {
-    fetchMyProfile();
-  }, []);
 
   // Function to decrease serving count
   const decreaseServing = () => {
@@ -87,44 +77,66 @@ function RecipeView(props: Props) {
     return updatedIngredients;
   }, [servings]);
 
-  console.log('rating:' ,rating);
+  const handleRating = async (star: number) => {
+    axios
+      .post(
+        getServerUrl() + "/recipe/rate",
+        { recipeId, rating: star },
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      )
+      .then((res) => {
+        onRefetch();
+        // TODO display success
+        // setServerMessage("Recipe successfuly rated");
+      })
+      .catch((error) => console.log(getErrorMessage(error)));
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.headerContainer, {flexWrap: 'wrap'}]}>
+      <View style={[styles.headerContainer, { flexWrap: "wrap" }]}>
         <Text style={[styles.header, textStyles.h1]}>
           {title} {isDraft && "(Draft)"}
         </Text>
 
         <View style={[styles.row]}>
-          {/* //!!!!!!!!!!!!put rating here */}
-          <RatingRecipe 
-              recipeId={_id}
-              rating={rating}
+          <RatingRecipe
+            onRate={handleRating}
+            averageRating={recipe.averageRating || 0}
           />
         </View>
 
-        <View style={[styles.row, {justifyContent: 'space-between', width:'100%'}]}>
-          <View style={[styles.row, { marginVertical: 6, alignItems: "center" }]}>
-            <Text style={[styles.submittedBy, textStyles.h5]}>Submitted by:</Text>
+        <View
+          style={[
+            styles.row,
+            { justifyContent: "space-between", width: "100%" },
+          ]}
+        >
+          <View
+            style={[styles.row, { marginVertical: 6, alignItems: "center" }]}
+          >
+            <Text style={[styles.submittedBy, textStyles.h5]}>
+              Submitted by:
+            </Text>
             <Link href={"./"} style={[styles.userName, textStyles.h6]}>
               {owner.username}
             </Link>
           </View>
-          <View style={[{alignItems: 'flex-end'}]}>
-            <RecipeButtons 
-                isOwner={owner._id === myProfile?._id}
-                draftId={draft} 
-                recipeId={_id}
-                userId={myProfile?._id}/>
+          <View style={[{ alignItems: "flex-end" }]}>
+            <RecipeButtons
+              isOwner={owner._id === myProfile?._id}
+              draftId={draft}
+              recipeId={_id}
+              userId={myProfile?._id}
+            />
           </View>
-          
         </View>
 
         <Text style={[styles.description, textStyles.body]}>{description}</Text>
       </View>
 
       <ScrollView style={[styles.imgContainer]} horizontal>
-        <Pressable onPress={() => { }}>
+        <Pressable onPress={() => {}}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-1.jpg")}
@@ -132,7 +144,7 @@ function RecipeView(props: Props) {
             resizeMethod="resize"
           />
         </Pressable>
-        <Pressable onPress={() => { }}>
+        <Pressable onPress={() => {}}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-19.jpg")}
@@ -140,7 +152,7 @@ function RecipeView(props: Props) {
             resizeMethod="resize"
           />
         </Pressable>
-        <Pressable onPress={() => { }}>
+        <Pressable onPress={() => {}}>
           <Image
             style={styles.img}
             source={require("../../../assets/recipes/Ramen-Eggs-24.jpg")}
@@ -209,8 +221,6 @@ function RecipeView(props: Props) {
           <View>
             <Text style={[styles.label]}>Ingredients:</Text>
             {ingredientOutput.map((ingredient, index) => {
-              console.log(ingredient);
-
               return (
                 <View
                   key={ingredient._id}
@@ -324,5 +334,9 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     paddingVertical: 24,
     gap: 20,
+  },
+  feedback: {
+    position: "absolute",
+    top: 0,
   },
 });
