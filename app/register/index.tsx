@@ -14,6 +14,7 @@ import {
 } from "react-native-paper";
 import getServerUrl from "../../utils/getServerUrl";
 import colors from "../../theme/colors";
+import spaceStyles from "../../theme/spaces";
 
 interface Status {
   type: "success" | "failed";
@@ -172,38 +173,42 @@ function Registration() {
               onChangeText={setConfirmPassword}
             />
 
-            <View style={styles.termsContainer}>
-
+            <View style={[styles.termsContainer, spaceStyles.row]}>
+            <View style={[{ }]}>
               <Checkbox
                 status={isChecked ? "checked" : "unchecked"}
                 onPress={() => {
                   setIsChecked(!isChecked);
                 }}
               />
-
-              <Text>
-                I agree with My Only Pans
-                <Link href="/privacy/terms" style={styles.link}>
-                  {" "}
-                  Tersms and Conditions
-                </Link>
-                <Text> and</Text>
-                <Link href="/privacy" style={styles.link}>
-                  {" "}
-                  Privacy Policy
-                </Link>
-              </Text>
+                <Text>
+                  I agree with My Only Pans
+                  <Link href="/privacy/terms" style={styles.link}>
+                    {" "}
+                    Terms and Conditions
+                  </Link>
+                  <Text> and</Text>
+                  <Link href="/privacy" style={styles.link}>
+                    {" "}
+                    Privacy Policy
+                  </Link>
+                </Text>
+              </View>
             </View>
             <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
               <Text style={styles.btnText}>Sign-up</Text>
             </TouchableOpacity>
-            <Text style={styles.subHeader}>
-              Already have an account?
-              <Link href="/login" style={styles.link}>
-                {" "}
-                Sign in
-              </Link>
-            </Text>
+            <View style={[{ alignContent: "center" }]}>
+              <Text style={[styles.subHeader, { textAlign: "center" }]}>
+                Already have an account?
+                <Link href="/login" style={styles.link}>
+                  {" "}
+                  Sign in
+                </Link>
+              </Text>
+
+            </View>
+
           </View>
         </View>
       </View>
@@ -312,8 +317,10 @@ const styles = StyleSheet.create({
     top: 0,
   },
   termsContainer: {
-    flexDirection: "row",
+    flexDirection: Platform.OS !== "web" ? "column" : "row",
     alignItems: "center",
+    //flexGrow: 1,
+    //flexShrink: 0,
   },
 });
 
