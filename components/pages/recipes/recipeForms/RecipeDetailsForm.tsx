@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Dimensions,
   FlatList,
   Platform,
   Pressable,
@@ -60,7 +61,6 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>();
 
-  const [image, setImage] = useState<string | null>();
   const [uploadingImage, setUploadingImage] = useState<boolean>(false);
 
   const router = useRouter();
@@ -125,58 +125,52 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [4, 3],
       quality: 1,
     });
 
     if (!res.canceled) {
-      setImage(res.assets[0].uri);
-      handleUploadImage();
+      const img = res.assets[0].uri;
+
+      setUploadingImage(true);
+
+      try {
+        const formData = new FormData();
+        const fileUri = img;
+
+        const fileRes = await fetch(fileUri);
+        const blob = await fileRes.blob();
+
+        formData.append("image", blob, "image.jpg");
+
+        const axiosConfig = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
+          },
+        };
+
+        console.log(formData);
+
+        axios
+          .post(`${getServerUrl()}/uploadImage`, formData, axiosConfig)
+          .then((res) => {
+            setDraft && draft && setDraft({ ...draft, imageUrl: res.data.url });
+            setImageUrl(res.data.url);
+          })
+          .catch((error) => {
+            console.log("Post Error", error);
+          });
+
+        // Do something with the response, like updating the UI or storing the image URL
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setError(getErrorMessage(error).message);
+      } finally {
+        setUploadingImage(false);
+      }
     }
   };
-
-  const handleUploadImage = async () => {
-    if (!image) {
-      return;
-    }
-
-    setUploadingImage(true);
-
-    try {
-      const formData = new FormData();
-      const fileUri = image;
-
-      const fileRes = await fetch(fileUri);
-      const blob = await fileRes.blob();
-
-      formData.append("image", blob, "image.jpg");
-      formData.set("recipeId", (draft as RecipeType)._id);
-
-      const axiosConfig = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${authToken}`,
-        },
-      };
-
-      const res = await axios.post(
-        `${getServerUrl()}/uploadImage`,
-        formData,
-        axiosConfig
-      );
-
-      setDraft && draft && setDraft({ ...draft, imageUrl: res.data.url });
-      setImageUrl(res.data.url);
-      // Do something with the response, like updating the UI or storing the image URL
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      setError(getErrorMessage(error).message);
-    } finally {
-      setUploadingImage(false);
-    }
-  };
-
-  console.log(imageUrl);
 
   return (
     <View>
@@ -190,16 +184,19 @@ function RecipeDetailsForm({ draft, setDraft, onClickNext }: Props) {
           </>
         )}
         <View style={{ rowGap: 20 }}>
-          {imageUrl ? (
-            <View style={styles.imageContainer}>
+          <View style={styles.imageContainer}>
+            {imageUrl ? (
               <Image source={{ uri: imageUrl }} style={styles.image} />
-            </View>
-          ) : (
-            <Pressable style={styles.addImageBtn} onPress={handleClickAddImage}>
-              <Icon name="add" />
-              <Text>Add Image</Text>
-            </Pressable>
-          )}
+            ) : (
+              <Pressable
+                style={styles.addImageBtn}
+                onPress={handleClickAddImage}
+              >
+                <Icon name="add" />
+                <Text>Add Image</Text>
+              </Pressable>
+            )}
+          </View>
           <View>
             <HelperText type="error" visible={!title}>
               * Required
@@ -379,10 +376,14 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginHorizontal: "auto",
   },
-  image: { aspectRatio: 1, height: 300, borderRadius: 10 },
+  image: {
+    aspectRatio: 4 / 3,
+    width: Platform.OS !== "web" ? Dimensions.get("screen").width * 0.9 : 500,
+    borderRadius: 10,
+  },
   addImageBtn: {
-    height: 300,
-    width: 300,
+    aspectRatio: 4 / 3,
+    width: Platform.OS !== "web" ? Dimensions.get("screen").width * 0.8 : 500,
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
