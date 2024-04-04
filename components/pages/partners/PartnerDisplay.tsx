@@ -3,8 +3,6 @@ import { ScrollView, StyleSheet, View, Image, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Text, Title } from 'react-native-paper';
 import colors from '../../../theme/colors';
-import textStyles from '../../../theme/text';
-
 
 const PartnerDisplay = () => {
   const { width: screenWidth } = Dimensions.get('window');
@@ -13,7 +11,7 @@ const PartnerDisplay = () => {
 
   return (
     <View style={[styles.container, { width: containerWidth }]}>
-      <Title style={[styles.title, textStyles.h3]}>Our Partners</Title>
+      <Title style={styles.title}>Our Partners</Title>
       <View style={styles.swiperContainer}>
         <Swiper
             autoplay
@@ -26,7 +24,7 @@ const PartnerDisplay = () => {
                 style={[styles.partnerImage, { height: imageHeight }]}
                 resizeMode="contain"
             />
-            <Text style={[styles.partnerName, textStyles.h4]}>Walmart</Text>
+            <Text style={styles.partnerName}>Walmart</Text>
             </View>
 
             <View style={styles.slide}>
@@ -35,7 +33,7 @@ const PartnerDisplay = () => {
                 style={[styles.partnerImage, { height: imageHeight }]}
                 resizeMode="contain"
             />
-            <Text style={[styles.partnerName, textStyles.h4]}>Instacart</Text>
+            <Text style={styles.partnerName}>Instacart</Text>
             </View>
 
             <View style={styles.slide}>
@@ -44,7 +42,7 @@ const PartnerDisplay = () => {
                 style={[styles.partnerImage, { height: imageHeight }]}
                 resizeMode="contain"
             />
-            <Text style={[styles.partnerName, textStyles.h4]}>The Sunflower Farm</Text>
+            <Text style={styles.partnerName}>The Sunflower Farm</Text>
             </View>
 
             <View style={styles.slide}>
@@ -53,7 +51,7 @@ const PartnerDisplay = () => {
                 style={[styles.partnerImage, { height: imageHeight }]}
                 resizeMode="contain"
             />
-            <Text style={[styles.partnerName, textStyles.h4]}>Metro</Text>
+            <Text style={styles.partnerName}>Metro</Text>
             </View>
 
             <View style={styles.slide}>
@@ -62,7 +60,7 @@ const PartnerDisplay = () => {
                 style={[styles.partnerImage, { height: imageHeight }]}
                 resizeMode="contain"
             />
-            <Text style={[styles.partnerName, textStyles.h4]}>Covent Garden Market</Text>
+            <Text style={styles.partnerName}>Covent Garden Market</Text>
             </View>
         </Swiper>
       </View>
@@ -95,10 +93,12 @@ swiperContainer: {
     padding: 0
 },
   partnerName: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.highlight,
 },
   title: {
+    fontWeight: 'bold',
     color: colors.headline,
     marginBottom: 15,
     marginLeft: 15,
