@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -25,7 +27,23 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "fonts": {
+      "assets": [
+        "./assets/fonts/Poppins-Regular.ttf",
+        "./assets/fonts/Poppins-Black.ttf",
+        "./assets/fonts/Poppins-Bold.ttf",
+        "./assets/fonts/Poppins-SemiBold.ttf",
+        "./assets/fonts/Poppins-Light.ttf",
+        "./assets/fonts/Poppins-Medium.ttf",
+        "./assets/fonts/Poppins-BoldItalic.ttf",
+        "./assets/fonts/Poppins-Italic.ttf"
+      ]
+    }
+  ,
     "scheme": "my-only-pans"
   }
 }
